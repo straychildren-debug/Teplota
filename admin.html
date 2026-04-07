@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Теплота | Панель администратора</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --accent: #FF5722;
+      --accent-dark: #e64a1e;
+      --bg: #0d0d0d;
+      --card-bg: #ffffff;
+      --text: #1a1a1a;
+      --muted: #888;
+      --border: #e8e8e8;
+      --input-bg: #f8f8f8;
+    }
+
+    html, body {
+      height: 100%;
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .page {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      min-height: 100vh;
+    }
+
+    /* ── Left decorative panel ── */
+    .panel-left {
+      position: relative;
+      background: #111;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      padding: 60px;
+    }
+    .panel-left::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at 30% 60%, rgba(255,87,34,0.25) 0%, transparent 60%),
+                  radial-gradient(ellipse at 80% 20%, rgba(255,87,34,0.12) 0%, transparent 50%);
+    }
+    .panel-left-content {
+      position: relative;
+      z-index: 2;
+      text-align: center;
+    }
+    .panel-logo {
+      width: 280px;
+      margin: 0 auto 48px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .panel-logo img {
+      width: 100%;
+      height: auto;
+      filter: drop-shadow(0 15px 35px rgba(0,0,0,0.3));
+    }
+    .panel-left h1 {
+      display: none; /* Logo contains the name already */
+    }
+    .panel-left h1 span { color: var(--accent); }
+    .panel-left p {
+      color: rgba(255,255,255,0.45);
+      font-size: 24px;
+      max-width: 500px;
+      line-height: 1.5;
+    }
+
+    /* Decorative blobs */
+    .blob {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(60px);
+      pointer-events: none;
+    }
+    .blob-1 {
+      width: 350px; height: 350px;
+      background: rgba(255,87,34,0.15);
+      top: -80px; left: -80px;
+    }
+    .blob-2 {
+      width: 250px; height: 250px;
+      background: rgba(255,160,100,0.1);
+      bottom: 60px; right: -60px;
+    }
+
+    /* ── Right login panel ── */
+    .panel-right {
+      background: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 60px 40px;
+    }
+
+    .login-card {
+      width: 100%;
+      max-width: 420px;
+    }
+
+    .login-header { margin-bottom: 40px; }
+    .login-header .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 32px;
+    }
+    .brand-icon {
+      width: 100px;
+      height: auto;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .brand-icon img {
+      width: 100%;
+      /* removed filter to show original brand colors if any, or black */
+    }
+    .brand-name {
+      font-family: 'Outfit', sans-serif;
+      font-size: 18px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text);
+    }
+    .login-header h2 {
+      font-family: 'Outfit', sans-serif;
+      font-size: 30px;
+      font-weight: 800;
+      color: var(--text);
+      text-transform: uppercase;
+      letter-spacing: -0.02em;
+      margin-bottom: 8px;
+      line-height: 1.1;
+    }
+    .login-header p {
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .form-group {
+      margin-bottom: 18px;
+    }
+    .form-group label {
+      display: block;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+    .form-group input {
+      width: 100%;
+      padding: 14px 18px;
+      border: 1.5px solid var(--border);
+      border-radius: 10px;
+      font-size: 15px;
+      font-family: 'Inter', sans-serif;
+      color: var(--text);
+      background: var(--input-bg);
+      transition: all 0.2s ease;
+    }
+    .form-group input:focus {
+      outline: none;
+      border-color: var(--accent);
+      background: #fff;
+      box-shadow: 0 0 0 4px rgba(255,87,34,0.08);
+    }
+    .form-group input::placeholder { color: #ccc; }
+
+    .error-msg {
+      display: none;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 16px;
+      background: #fff3f0;
+      border: 1px solid #ffd5cc;
+      border-radius: 8px;
+      color: #c62828;
+      font-size: 13px;
+      font-weight: 500;
+      margin-bottom: 18px;
+    }
+    .error-msg.show { display: flex; }
+
+    .btn-login {
+      width: 100%;
+      padding: 15px;
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: 700;
+      font-family: 'Outfit', sans-serif;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      margin-top: 8px;
+    }
+    .btn-login:hover {
+      background: var(--accent-dark);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(255,87,34,0.3);
+    }
+    .btn-login:active { transform: translateY(0); }
+
+    .login-footer {
+      margin-top: 32px;
+      text-align: center;
+    }
+    .login-footer a {
+      color: var(--accent);
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 500;
+    }
+    .login-footer a:hover { text-decoration: underline; }
+
+    .copyright {
+      margin-top: 48px;
+      color: #ccc;
+      font-size: 12px;
+      text-align: center;
+    }
+
+    @media (max-width: 768px) {
+      .page { grid-template-columns: 1fr; }
+      .panel-left { display: none; }
+      .panel-right { padding: 40px 24px; }
+    }
+
+    /* Shake animation for error */
+    @keyframes shake {
+      0%,100% { transform: translateX(0); }
+      20% { transform: translateX(-8px); }
+      40% { transform: translateX(8px); }
+      60% { transform: translateX(-5px); }
+      80% { transform: translateX(5px); }
+    }
+    .shake { animation: shake 0.4s ease; }
+  </style>
+</head>
+<body>
+
+<div class="page">
+  <!-- ── Left decorative panel ── -->
+  <div class="panel-left">
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+    <div class="panel-left-content">
+      <div class="panel-logo">
+        <img src="assets/logo%20white.svg" alt="Теплота">
+      </div>
+      <p>Система управления сайтом. Полный контроль над контентом.</p>
+    </div>
+  </div>
+
+  <!-- ── Right login panel ── -->
+  <div class="panel-right">
+    <div class="login-card">
+      <div class="login-header">
+        <div class="brand">
+          <div class="brand-icon">
+            <img src="assets/logo.svg" alt="Теплота">
+          </div>
+          <span class="brand-name" style="margin-top: 4px; border-left: 1px solid #ddd; padding-left: 12px; height: 18px; display: flex; align-items: center;">CMS</span>
+        </div>
+        <h2>Вход в систему</h2>
+        <p>Введите логин и пароль администратора</p>
+      </div>
+
+      <form id="login-form" onsubmit="handleLogin(event)">
+        <div id="error-msg" class="error-msg">
+          ⚠️ Неверный логин или пароль
+        </div>
+
+        <div class="form-group">
+          <label for="login-input">Логин</label>
+          <input type="text" id="login-input" placeholder="admin" autocomplete="username" required>
+        </div>
+
+        <div class="form-group">
+          <label for="password-input">Пароль</label>
+          <input type="password" id="password-input" placeholder="••••••••" autocomplete="current-password" required>
+        </div>
+
+        <button type="submit" class="btn-login" id="submit-btn">Войти →</button>
+      </form>
+
+      <div class="login-footer">
+        <a href="/">← Вернуться на сайт</a>
+      </div>
+
+      <div class="copyright">Теплота CMS © 2026</div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // ─── Credentials (stored lightly — for production use server-side auth) ───
+  const ADMIN_USER = 'admin';
+  const ADMIN_PASS = 'teplota2026';
+  const SESSION_KEY = 'tep_admin_session';
+
+  // If already logged in, go directly to editor
+  if (sessionStorage.getItem(SESSION_KEY) === 'true') {
+    goToAdmin();
+  }
+
+  function handleLogin(e) {
+    e.preventDefault();
+    const user = document.getElementById('login-input').value.trim();
+    const pass = document.getElementById('password-input').value;
+    const errMsg = document.getElementById('error-msg');
+    const form = document.getElementById('login-form');
+
+    if (user === ADMIN_USER && pass === ADMIN_PASS) {
+      sessionStorage.setItem(SESSION_KEY, 'true');
+      document.getElementById('submit-btn').textContent = '✓ Входим...';
+      setTimeout(goToAdmin, 500);
+    } else {
+      errMsg.classList.add('show');
+      form.classList.add('shake');
+      setTimeout(() => form.classList.remove('shake'), 400);
+      document.getElementById('password-input').value = '';
+      document.getElementById('password-input').focus();
+    }
+  }
+
+  function goToAdmin() {
+    window.location.href = '/?admin=1';
+  }
+</script>
+
+</body>
+</html>

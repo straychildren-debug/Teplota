@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Теплота | Инженерные системы и сервис премиум-класса в Казани</title>
+  <meta name="description" content="Монтаж систем отопления, водоснабжения и канализации. Профессиональное проектирование и сервис отопительных систем в Казани и Татарстане.">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="admin.css">
+  <!-- Leaflet.js for interactive map -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+</head>
+<body>
+
+  <!-- ═══════════════════════════════════════════════════════════
+       CMS EDITOR UI - TOPBAR
+  ═══════════════════════════════════════════════════════════ -->
+  <div id="cms-topbar">
+    <div class="cms-topbar-title">
+      <span>✏️</span> Режим редактора — изменения сохраняются локально
+    </div>
+    <div id="cms-topbar-actions">
+      <button class="cms-topbar-btn" onclick="TepCMS.reset()">↩ Сброс</button>
+      <button class="cms-topbar-btn save" onclick="TepCMS.save()">💾 Сохранить</button>
+    </div>
+  </div>
+
+  <!-- Admin link (hidden — go to /admin.html to log in) -->
+  <button id="cms-toggle-btn" onclick="window.location.href='/admin.html'" style="display:none;">
+    <span class="btn-icon">✏️</span> Редактировать сайт
+  </button>
+
+  <!-- Toast Notification -->
+  <div id="cms-toast"></div>
+
+  <!-- ═══════════════════════════════════════════════════════════
+       HEADER
+  ═══════════════════════════════════════════════════════════ -->
+  <header id="main-header" style="position:relative;">
+    <div class="container">
+      <div class="logo">
+        <img src="assets/logo.svg" alt="Теплота" id="site-logo">
+      </div>
+      <nav>
+        <ul id="main-nav">
+          <!-- Rendered by CMS -->
+        </ul>
+      </nav>
+      <div class="nav-right">
+        <a href="#" id="header-cta" class="btn">Вызвать мастера</a>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <!-- ═══════════════════════════════════════════════════════
+         HERO
+    ═══════════════════════════════════════════════════════ -->
+    <section class="hero" style="position:relative;">
+      <div class="hero-bg-overlay"></div>
+      <div class="container">
+        <div class="hero-content reveal-item">
+          <h1 id="hero-title">Инженерные <span>системы</span><br>премиум-класса</h1>
+          <div class="hero-subtitle" id="hero-subtitle">Профессиональное проектирование и монтаж систем отопления, водоснабжения и канализации.</div>
+          <div class="hero-btns">
+            <a href="#contacts" id="hero-btn" class="btn">Получить консультацию</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════
+         ABOUT & PARTNERS
+    ═══════════════════════════════════════════════════════ -->
+    <section id="about" class="about" style="position:relative;">
+      <div class="container">
+        <div class="about-grid">
+          <div class="about-text reveal-item">
+            <span class="label" id="about-label">О компании</span>
+            <h2 id="about-title">Более 10 лет <span>заботимся</span><br>о вашем комфорте</h2>
+            <div class="stats-grid" id="stats-grid">
+              <!-- Rendered by CMS -->
+            </div>
+          </div>
+          <div class="about-info reveal-item">
+            <div class="large-p" id="about-text1">Мы специализируемся на проектировании и монтаже инженерных систем любой сложности.</div>
+            <div class="rich-text" id="about-text2">Наши специалисты проходят регулярную сертификацию у ведущих мировых производителей оборудования.</div>
+          </div>
+        </div>
+        <div class="partners-section reveal-item">
+          <div class="partners-grid" id="partners-grid">
+            <!-- Rendered by CMS -->
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════
+         SERVICES
+    ═══════════════════════════════════════════════════════ -->
+    <section id="services" class="services">
+      <div class="container">
+        <div class="section-head reveal-item">
+          <h2 id="services-title">Наши <span>услуги</span></h2>
+          <p>Комплексный подход к инженерным сетям</p>
+        </div>
+        <div class="service-grid" id="service-grid">
+          <!-- Rendered by CMS -->
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════
+         PRODUCTS
+    ═══════════════════════════════════════════════════════ -->
+    <section id="products" class="products">
+      <div class="container">
+        <div class="section-head reveal-item">
+          <h2 id="products-title">Наши <span>товары</span></h2>
+          <a href="#contacts" class="btn-link">Заказать оборудование →</a>
+        </div>
+        <div class="product-grid" id="product-grid">
+          <!-- Rendered by CMS -->
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════
+         GALLERY
+    ═══════════════════════════════════════════════════════ -->
+    <section id="gallery" class="gallery">
+      <div class="container">
+        <div class="section-head reveal-item">
+          <h2>Наши <span>работы</span></h2>
+          <p>Наведите на проект, чтобы узнать подробнее</p>
+        </div>
+        <div class="gallery-grid" id="gallery-grid">
+          <!-- Rendered by CMS -->
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════
+         CONTACT
+    ═══════════════════════════════════════════════════════ -->
+    <section id="contacts" class="contact" style="position:relative;">
+      <div class="container">
+        <div class="contact-grid">
+          <div class="contact-info reveal-item">
+            <span class="label">Связаться с нами</span>
+            <h2>Готовы начать <br><span>свой проект?</span></h2>
+            <a href="#" id="contact-phone" class="phone">+7 (843) 000-00-00</a>
+            <p id="contact-email" class="email">info@teplota-kazan.ru</p>
+            <p id="contact-address" class="address">г. Казань, ул. Техническая, д. 23</p>
+            <div class="contact-form">
+              <div class="form-group"><input type="text" placeholder="Ваше имя"></div>
+              <div class="form-group"><input type="tel" placeholder="Номер телефона"></div>
+              <button class="btn">Заказать звонок</button>
+            </div>
+          </div>
+          <div class="map-container reveal-item">
+            <div id="leaflet-map"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ═══════════════════════════════════════════════════════════
+       FOOTER
+  ═══════════════════════════════════════════════════════════ -->
+  <footer style="position:relative;">
+    <div class="container">
+      <div class="footer-top">
+        <div class="footer-logo">
+          <img src="assets/logo.svg" alt="Теплота" style="height:24px;opacity:0.6;">
+        </div>
+        <div class="social-icons" id="footer-socials">
+          <!-- Rendered by CMS -->
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p id="footer-copy">© 2026 Теплота. Все права защищены.</p>
+        <div class="footer-links" id="footer-links">
+          <!-- Rendered by CMS -->
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <!-- Modals and Scripts -->
+  
+  <!-- ═══════════════════════════════════════════════════════════
+       CMS MODAL (Editor panels)
+  ═══════════════════════════════════════════════════════════ -->
+  <div id="cms-modal-overlay" onclick="if(event.target===this)this.classList.remove('open')">
+    <div id="cms-modal">
+      <div id="cms-modal-header">
+        <h3 id="cms-modal-title">Редактировать</h3>
+        <button id="cms-modal-close" onclick="document.getElementById('cms-modal-overlay').classList.remove('open')">×</button>
+      </div>
+      <div id="cms-modal-body"></div>
+      <div id="cms-modal-footer">
+        <button class="cms-btn secondary" onclick="document.getElementById('cms-modal-overlay').classList.remove('open')">Отмена</button>
+        <button class="cms-btn primary" id="cms-modal-save">Сохранить</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════════
+       SERVICE DETAIL MODAL (Visitor view)
+  ═══════════════════════════════════════════════════════════ -->
+  <div id="service-modal-overlay" onclick="if(event.target===this)this.classList.remove('open')">
+    <div id="service-modal">
+      <button id="service-modal-close" onclick="document.getElementById('service-modal-overlay').classList.remove('open')">×</button>
+      <img id="service-modal-cover" src="" alt="">
+      <div id="service-modal-body">
+        <div id="service-modal-title"></div>
+        <p id="service-modal-desc"></p>
+        <div id="service-modal-photos"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════════
+       GALLERY PROJECT MODAL (Slider)
+  ═══════════════════════════════════════════════════════════ -->
+  <div id="gallery-modal-overlay" onclick="if(event.target===this)this.classList.remove('open')">
+    <div id="gallery-modal-container">
+      <button id="gallery-modal-close" onclick="document.getElementById('gallery-modal-overlay').classList.remove('open')">×</button>
+      
+      <div id="gallery-modal-slider">
+        <button class="slider-arrow prev" onclick="TepCMS.galleryPrev()">‹</button>
+        <div id="gallery-modal-main-img-wrap">
+          <img id="gallery-modal-main-img" src="" alt="">
+          <div id="gallery-image-caption"></div>
+        </div>
+        <button class="slider-arrow next" onclick="TepCMS.galleryNext()">›</button>
+        
+        <div id="gallery-modal-counter">1 / 1</div>
+      </div>
+
+      <div id="gallery-modal-info">
+        <h3 id="gallery-modal-title"></h3>
+        <p id="gallery-modal-desc"></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════════
+       PRODUCT DETAIL MODAL (Visitor view)
+  ═══════════════════════════════════════════════════════════ -->
+  <div id="product-modal-overlay" onclick="if(event.target===this)this.classList.remove('open')">
+    <div id="product-modal">
+      <button id="product-modal-close" onclick="document.getElementById('product-modal-overlay').classList.remove('open')">×</button>
+      <div id="product-modal-image-wrap">
+        <img id="product-modal-cover" src="" alt="">
+      </div>
+      <div id="product-modal-body">
+        <div id="product-modal-title"></div>
+        <div id="product-modal-desc"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════════
+       FULLSCREEN IMAGE VIEWER
+  ═══════════════════════════════════════════════════════════ -->
+  <div id="img-viewer-overlay" onclick="if(event.target===this)this.classList.remove('open')">
+    <button id="img-viewer-close" onclick="document.getElementById('img-viewer-overlay').classList.remove('open')">×</button>
+    <img src="" alt="Просмотр">
+  </div>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="cms.js"></script>
+  <script src="main.js"></script>
+</body>
+</html>
