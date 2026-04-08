@@ -127,7 +127,7 @@ body.cms-active .cms-add-btn { display: flex; align-items: center; justify-conte
 .cms-delete-btn {
   display: none;
   position: absolute;
-  top: 8px; right: 8px;
+  top: 8px; left: 8px;
   width: 28px; height: 28px;
   background: #e53935;
   color: #fff;

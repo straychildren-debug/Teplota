@@ -3,7 +3,7 @@
  * cms.js — Full in-browser visual editor with localStorage persistence
  */
 
-const TepCMS = (() => {
+window.TepCMS = (() => {
   // ─── Default Data ────────────────────────────────────────────────────────────
   const DEFAULT = {
     header: {
@@ -132,7 +132,15 @@ const TepCMS = (() => {
         { icon: 'assets/icons/Vector-1.png', url: '#', name: 'Telegram' },
         { icon: 'assets/icons/Vector-2.png', url: '#', name: 'WhatsApp' }
       ]
-    }
+    },
+    advantages: [
+      { id: 1, text: 'Скрупулезность - наше главное качество в работе', icon: '🎯' },
+      { id: 2, text: 'В работе мы используем качественные высокотехнологичные материалы и оборудование от проверенных поставщиков, что позволяет нам выполнять монтаж в короткие сроки с гарантией качества!', icon: '⚡' },
+      { id: 3, text: 'Гарантия на работы до 3х лет, гарантия на материалы до 15 лет', icon: '🛡️' },
+      { id: 4, text: 'С нами в вашем доме будет тепло, уютно и комфортно!', icon: '🏠' },
+      { id: 5, text: 'Мы индивидуально подходим к каждому заказчику и проектируем от бюджетных систем ОВК до премиальных', icon: '🤝' },
+      { id: 6, text: 'Беремся за любую сложность задач', icon: '💎' }
+    ]
   };
 
   // ─── State ────────────────────────────────────────────────────────────────────
@@ -151,7 +159,17 @@ const TepCMS = (() => {
   function load() {
     try {
       const saved = localStorage.getItem('tepData');
-      data = saved ? JSON.parse(saved) : JSON.parse(JSON.stringify(DEFAULT));
+      if (saved) {
+        data = JSON.parse(saved);
+        // Migrate/Merge: Ensure any new keys in DEFAULT (like 'advantages') are added to old saved data
+        Object.keys(DEFAULT).forEach(key => {
+          if (data[key] === undefined) {
+            data[key] = JSON.parse(JSON.stringify(DEFAULT[key]));
+          }
+        });
+      } else {
+        data = JSON.parse(JSON.stringify(DEFAULT));
+      }
       
       // Migrate gallery photos from string[] to {url, caption}[]
       if (data.gallery) {
@@ -409,6 +427,20 @@ const TepCMS = (() => {
     }
   }
 
+  // ─── Render: Advantages ─────────────────────────────────────────────────────
+  function renderAdvantages() {
+    const grid = document.getElementById('advantage-grid');
+    if (!grid) return;
+    grid.innerHTML = (data.advantages || []).map((a, i) => `
+      <div class="advantage-card reveal-item" style="position:relative;">
+        <div class="adv-icon">${a.icon || '✨'}</div>
+        <p>${a.text}</p>
+        ${editMode ? `<button class="cms-delete-btn" onclick="TepCMS.deleteAdvantage(${i})">×</button>` : ''}
+      </div>
+    `).join('');
+    reObserve();
+  }
+
   // ─── Render: Services ────────────────────────────────────────────────────────
   function renderServices() {
     const grid = document.getElementById('service-grid');
@@ -622,6 +654,7 @@ const TepCMS = (() => {
     renderHeader();
     renderHero();
     renderAbout();
+    renderAdvantages();
     renderServices();
     renderProducts();
     renderGallery();
@@ -636,6 +669,7 @@ const TepCMS = (() => {
       { id: 'main-header', label: 'Шапку', fn: 'editHeader' },
       { sel: '.hero', label: 'Hero', fn: 'editHero' },
       { id: 'about', label: 'О нас', fn: 'editAbout' },
+      { id: 'advantages', label: 'Преимущества', fn: 'editAdvantages' },
       { id: 'contacts', label: 'Контакты', fn: 'editContact' },
       { sel: 'footer', label: 'Футер', fn: 'editFooter' }
     ];
@@ -933,7 +967,11 @@ const TepCMS = (() => {
     if (s) { s.photos.splice(idx, 1); editService(id); }
   }
   function deleteService(id) {
-    if (confirm('Удалить эту услугу?')) { data.services = data.services.filter(s => s.id !== id); renderServices(); }
+    if (confirm('Удалить эту услугу?')) { 
+      data.services = data.services.filter(s => s.id !== id); 
+      renderServices(); 
+      toast('Услуга удалена. Не забудьте сохранить!');
+    }
   }
   function addService() {
     const newId = Date.now();
@@ -950,7 +988,11 @@ const TepCMS = (() => {
     });
   }
   function deleteProduct(id) {
-    if (confirm('Удалить этот товар?')) { data.products = data.products.filter(p => p.id !== id); renderProducts(); }
+    if (confirm('Удалить этот товар?')) { 
+      data.products = data.products.filter(p => p.id !== id); 
+      renderProducts(); 
+      toast('Товар удален. Не забудьте сохранить!');
+    }
   }
   function addProduct() {
     const newId = Date.now();
@@ -1098,7 +1140,11 @@ const TepCMS = (() => {
     if (g) { g.photos.splice(idx, 1); editGallery(id); }
   }
   function deleteGallery(id) {
-    if (confirm('Удалить эту галерею?')) { data.gallery = data.gallery.filter(g => g.id !== id); renderGallery(); }
+    if (confirm('Удалить эту галерею?')) { 
+      data.gallery = data.gallery.filter(g => g.id !== id); 
+      renderGallery(); 
+      toast('Проект удален. Не забудьте сохранить!');
+    }
   }
   function addGallery() {
     const newId = Date.now();
@@ -1284,6 +1330,53 @@ const TepCMS = (() => {
     });
   }
 
+  // ─── Advantages CRUD ────────────────────────────────────────────────────────
+  function editAdvantages() {
+    const list = data.advantages || [];
+    const body = `
+      <div id="adv-editor-list">
+        ${list.map((a, i) => `
+          <div class="cms-field" style="border: 1px solid #eee; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
+            <div style="display:flex; gap:10px; margin-bottom:10px;">
+              <div style="flex: 0 0 60px;">
+                <label>Иконка</label>
+                <input type="text" class="adv-icon-input" value="${a.icon||'✨'}" style="text-align:center; font-size:20px;">
+              </div>
+              <div style="flex: 1;">
+                <label>Текст преимущества</label>
+                <textarea class="adv-text-input" style="min-height:60px;">${a.text}</textarea>
+              </div>
+            </div>
+            <button class="cms-btn secondary" onclick="TepCMS.deleteAdvantage(${i}); TepCMS.editAdvantages();" style="width:100%;">Удалить это преимущество</button>
+          </div>
+        `).join('')}
+      </div>
+      <button class="cms-btn" onclick="TepCMS.addAdvantage(); TepCMS.editAdvantages();" style="width:100%; border:2px dashed var(--primary-accent); background:none; color:var(--primary-accent);">+ Добавить новое преимущество</button>
+    `;
+    openModal('Редактировать преимущества', body, () => {
+      const texts = document.querySelectorAll('.adv-text-input');
+      const icons = document.querySelectorAll('.adv-icon-input');
+      data.advantages = [];
+      texts.forEach((el, i) => {
+        data.advantages.push({ id: Date.now() + i, text: el.value, icon: icons[i].value });
+      });
+      renderAdvantages();
+    });
+  }
+
+  function addAdvantage() {
+    if (!data.advantages) data.advantages = [];
+    data.advantages.push({ id: Date.now(), text: 'Новое преимущество...', icon: '✨' });
+    renderAdvantages();
+  }
+
+  function deleteAdvantage(i) {
+    if (confirm('Удалить это преимущество?')) {
+      data.advantages.splice(i, 1);
+      renderAdvantages();
+    }
+  }
+
   // ─── Edit Contact Modal ───────────────────────────────────────────────────────
   function editContact() {
     const d = data.contact;
@@ -1384,13 +1477,14 @@ const TepCMS = (() => {
     openGallery, editGallery, deleteGallery, addGallery,
     galleryNext, galleryPrev,
     _pickGalleryCover, _addGalleryPhoto, _deleteGalleryPhoto, _updateGalleryCaption,
-    editHero, editAbout, editContact,
+    editHero, editAbout, editAdvantages, editContact,
     editHeader, editFooter,
     _updateNavLink, _deleteNavLink, _addNavLink,
     _updateSocial, _deleteHeaderSocial, _addHeaderSocial, _changeHeaderIcon,
     _updateFooterLink, _deleteFooterLink, _addFooterLink,
     _updateFooterSocial, _deleteFooterSocial, _addFooterSocial, _changeFooterIcon,
     addFooterLink, deleteFooterSocial, addFooterSocial,
+    deleteAdvantage, addAdvantage,
     viewImage
   };
 })();
