@@ -1,7 +1,10 @@
 /**
  * TEPLOTA CMS ENGINE
- * cms.js — Full in-browser visual editor with localStorage persistence
+ * cms.js — Integrated with Sanity CMS
  */
+
+import { client, builder } from './sanity-client.js';
+import { toHTML } from '@portabletext/to-html';
 
 window.TepCMS = (() => {
   // ─── Default Data ────────────────────────────────────────────────────────────
@@ -157,12 +160,83 @@ window.TepCMS = (() => {
 
   // ─── Persistence ─────────────────────────────────────────────────────────────
   async function load() {
-    // First, try to load from disk (auto-sync with files)
+    try {
+      console.log('CMS: Loading from Sanity (Project ID: 77e5oip8)...');
+      // GROQ Query to get everything in one request
+      const query = `{
+          "siteSettings": *[_type == "siteSettings"][0],
+          "about": *[_type == "about"][0],
+          "services": *[_type == "service"],
+          "products": *[_type == "product"],
+          "gallery": *[_type == "gallery"],
+          "advantages": *[_type == "advantage"]
+      }`;
+      const s = await client.fetch(query);
+
+      if (s.siteSettings || s.about || (s.services && s.services.length > 0)) {
+        // Map Sanity schema to our internal app data structure
+        data = {
+          header: s.siteSettings?.header || DEFAULT.header,
+          hero: s.siteSettings?.hero || DEFAULT.hero,
+          contact: s.siteSettings?.contact || DEFAULT.contact,
+          footer: s.siteSettings?.footer || DEFAULT.footer,
+          about: {
+            label: s.about?.label || DEFAULT.about.label,
+            title: s.about?.title || DEFAULT.about.title,
+            text1: s.about?.text1 || DEFAULT.about.text1,
+            text2: s.about?.text2 ? toHTML(s.about.text2) : DEFAULT.about.text2,
+            stats: s.about?.stats || DEFAULT.about.stats,
+            partners: s.about?.partners?.map(p => ({
+              name: p.name,
+              img: builder.image(p.img)
+            })) || DEFAULT.about.partners
+          },
+          services: s.services?.map(item => ({
+            id: item._id,
+            title: item.title,
+            image: builder.image(item.image),
+            description: item.description,
+            photos: item.photos?.map(p => ({ url: builder.image(p), caption: '' })) || []
+          })) || DEFAULT.services,
+          products: s.products?.map(item => ({
+            id: item._id,
+            title: item.title,
+            image: builder.image(item.image),
+            description: item.description,
+            details: item.details ? toHTML(item.details) : ''
+          })) || DEFAULT.products,
+          gallery: s.gallery?.map(item => ({
+            id: item._id,
+            title: item.title,
+            description: item.description,
+            cover: builder.image(item.cover),
+            photos: item.photos?.map(p => ({ 
+              url: builder.image(p), 
+              caption: p.caption || '' 
+            })) || []
+          })) || DEFAULT.gallery,
+          advantages: s.advantages?.map((item, idx) => ({
+            id: item._id || idx,
+            text: item.text,
+            icon: item.icon
+          })) || DEFAULT.advantages
+        };
+
+        // Ensure header nav links are there
+        if (!data.header.navLinks) data.header.navLinks = DEFAULT.header.navLinks;
+        
+        console.log('CMS: Sanity data loaded and mapped.');
+        return;
+      }
+    } catch (e) {
+      console.warn('CMS: Sanity fetch failed or empty, using fallbacks.', e);
+    }
+
+    // --- FALLBACK LOGIC (Original) ---
     try {
       const resp = await fetch('/cms-data.json');
       if (resp.ok) {
         data = await resp.json();
-        // Sync to localStorage for redundancy
         localStorage.setItem('tepData', JSON.stringify(data));
         return;
       }
@@ -172,23 +246,11 @@ window.TepCMS = (() => {
       const saved = localStorage.getItem('tepData');
       if (saved) {
         data = JSON.parse(saved);
-        // Migrate/Merge: Ensure any new keys in DEFAULT (like 'advantages') are added to old saved data
         Object.keys(DEFAULT).forEach(key => {
-          if (data[key] === undefined) {
-            data[key] = JSON.parse(JSON.stringify(DEFAULT[key]));
-          }
+          if (data[key] === undefined) data[key] = JSON.parse(JSON.stringify(DEFAULT[key]));
         });
       } else {
         data = JSON.parse(JSON.stringify(DEFAULT));
-      }
-      
-      // Migrate gallery photos from string[] to {url, caption}[]
-      if (data.gallery) {
-        data.gallery.forEach(g => {
-          if (g.photos) {
-            g.photos = g.photos.map(p => typeof p === 'string' ? { url: p, caption: '' } : p);
-          }
-        });
       }
     } catch(e) {
       data = JSON.parse(JSON.stringify(DEFAULT));
