@@ -65,6 +65,20 @@ export default {
       ],
     },
     {
+      name: 'advantages',
+      title: 'Преимущества (список)',
+      type: 'array',
+      of: [
+        {
+          type: 'object',
+          fields: [
+            { name: 'text', title: 'Текст преимущества', type: 'text' },
+            { name: 'icon', title: 'Иконка (эмодзи)', type: 'string' }
+          ]
+        }
+      ]
+    },
+    {
       name: 'footer',
       title: 'Подвал (Footer)',
       type: 'object',

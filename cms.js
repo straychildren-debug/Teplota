@@ -223,8 +223,8 @@ window.TepCMS = (() => {
               caption: p.caption || '' 
             })) || []
           })) || DEFAULT.gallery,
-          advantages: s.advantages?.map((item, idx) => ({
-            id: item._id || idx,
+          advantages: s.siteSettings?.advantages?.map((item, idx) => ({
+            id: idx,
             text: item.text,
             icon: item.icon
           })) || DEFAULT.advantages
