@@ -139,6 +139,7 @@ const TepCMS = (() => {
   let data = {};
   let editMode = false;
   let map = null, marker = null;
+  let previewMode = false;
   let currentGalleryPhotos = [];
   let currentGalleryIndex = 0;
   let lastImagePickerCallback = null;
@@ -177,6 +178,35 @@ const TepCMS = (() => {
     }
   }
 
+  function preview() {
+    previewMode = !previewMode;
+    
+    // Toggle editor classes and elements
+    document.body.classList.toggle('cms-active', !previewMode && editMode);
+    
+    const previewBtn = document.getElementById('cms-preview-btn');
+    if (previewBtn) {
+      previewBtn.innerHTML = previewMode ? '✏️ Вернуться к правкам' : '👁 Предпросмотр';
+    }
+
+    // Hide/show the bottom toggle button and topbar title
+    const toggleBtn = document.getElementById('cms-toggle-btn');
+    if (toggleBtn) toggleBtn.style.display = previewMode ? 'none' : (isAdmin() ? 'flex' : 'none');
+    
+    const topbarTitle = document.querySelector('.cms-topbar-title');
+    if (topbarTitle) {
+      topbarTitle.innerHTML = previewMode 
+        ? '<span>👁</span> Режим предпросмотра — так сайт видят посетители' 
+        : '<span>✏️</span> Режим редактора — изменения сохраняются локально';
+    }
+
+    // Refresh views to remove/add edit buttons
+    renderAll();
+    if (!previewMode && editMode) attachInlineEditors();
+    
+    toast(previewMode ? 'Режим просмотра включен' : 'Возврат в режим редактирования');
+  }
+
   // ─── Toast ────────────────────────────────────────────────────────────────────
   function toast(msg, type = '') {
     const el = document.getElementById('cms-toast');
@@ -196,6 +226,18 @@ const TepCMS = (() => {
         <button type="button" class="rich-btn" onclick="document.execCommand('italic')" title="Курсив"><i>I</i></button>
         <button type="button" class="rich-btn" onclick="document.execCommand('insertUnorderedList')" title="Список">≡</button>
         <button type="button" class="rich-btn" onclick="document.execCommand('removeFormat')" title="Очистить форматирование">✕</button>
+        <select class="rich-btn" onchange="TepCMS.applyFontSize('${id}', this.value)" title="Размер шрифта">
+          <option value="">Размер</option>
+          <option value="12">12px</option>
+          <option value="14">14px</option>
+          <option value="16">16px</option>
+          <option value="18">18px</option>
+          <option value="20">20px</option>
+          <option value="24">24px</option>
+          <option value="32">32px</option>
+          <option value="48">48px</option>
+          <option value="64">64px</option>
+        </select>
         <span style="margin-left:auto;font-size:11px;color:#bbb;">Ctrl+B = жирный&nbsp;&nbsp;Enter = новая строка</span>
       </div>
       <div class="rich-editor" id="${id}" contenteditable="true">${content}</div>
@@ -211,6 +253,31 @@ const TepCMS = (() => {
       .replace(/<br\s*\/?>(\s*<br\s*\/?>)+\s*$/gi, '')
       .trim();
     return html;
+  }
+
+  function applyFontSize(id, size) {
+    if (!size) return;
+    const el = document.getElementById(id);
+    if (!el) return;
+    
+    // Focus the editor first to make sure execCommand works on the right place
+    el.focus();
+    
+    // Use a temporary font size to find the selection
+    document.execCommand('fontSize', false, '7');
+    
+    // Find all <font size="7"> elements and replace them with <span style="font-size: ...px">
+    const fontEls = el.querySelectorAll('font[size="7"]');
+    fontEls.forEach(f => {
+      f.removeAttribute('size');
+      f.style.fontSize = size + 'px';
+      // Change to span if you prefer cleaner HTML, but font with style also works.
+      // Let's keep it as is or change to span.
+      const span = document.createElement('span');
+      span.style.fontSize = size + 'px';
+      span.innerHTML = f.innerHTML;
+      f.parentNode.replaceChild(span, f);
+    });
   }
 
   // ─── File to Base64 ───────────────────────────────────────────────────────────
@@ -788,6 +855,8 @@ const TepCMS = (() => {
 
   function cmsToHtml(text) {
     if (!text) return '';
+    // If it already contains HTML tags, return as is (to support font-size spans)
+    if (text.includes('<') && text.includes('>')) return text;
     return text.split('\n').map(l => {
       let line = l.trim();
       return line.replace(/\*([^\*]+)\*/g, '<span>$1</span>');
@@ -796,6 +865,8 @@ const TepCMS = (() => {
 
   function htmlToCms(html) {
     if (!html) return '';
+    // If it contains styles, don't convert spans to asterisks
+    if (html.includes('style=')) return html.replace(/<br\s*\/?>/gi, '\n');
     return html
       .replace(/<span>(.*?)<\/span>/gi, '*$1*')
       .replace(/<br\s*\/?>/gi, '\n');
@@ -1158,9 +1229,9 @@ const TepCMS = (() => {
     const d = data.hero;
     const body = `
       <div class="cms-field">
-        <label>Заголовок (без HTML)</label>
-        <p style="font-size:11px;color:#999;margin-bottom:5px;">Используйте *слово* для выделения цветом, перенос строки — для новой строки.</p>
-        <textarea id="eh2-title" style="min-height:80px;">${d.title}</textarea>
+        <label>Заголовок</label>
+        <p style="font-size:11px;color:#999;margin-bottom:5px;">Используйте *слово* для выделения цветом или выберите размер шрифта.</p>
+        ${richEditorHTML('eh2-title', d.title)}
       </div>
       <div class="cms-field">
         <label>Подзаголовок</label>
@@ -1170,7 +1241,7 @@ const TepCMS = (() => {
       <div class="cms-field"><label>Ссылка кнопки</label><input id="eh2-btn-url" value="${d.btnUrl}"></div>
     `;
     const sync = () => {
-      d.title = document.getElementById('eh2-title').value;
+      d.title = getRichEditorValue('eh2-title');
       d.subtitle = getRichEditorValue('eh2-sub');
       d.btnText = document.getElementById('eh2-btn-text').value;
       d.btnUrl = document.getElementById('eh2-btn-url').value;
@@ -1187,9 +1258,9 @@ const TepCMS = (() => {
     const body = `
       <div class="cms-field"><label>Метка раздела</label><input id="ea-label" value="${d.label}"></div>
       <div class="cms-field">
-        <label>Заголовок (без HTML)</label>
-        <p style="font-size:11px;color:#999;margin-bottom:5px;">Используйте *слово* для выделения цветом.</p>
-        <textarea id="ea-title">${d.title}</textarea>
+        <label>Заголовок</label>
+        <p style="font-size:11px;color:#999;margin-bottom:5px;">Используйте *слово* для выделения цветом или выберите размер шрифта.</p>
+        ${richEditorHTML('ea-title', d.title)}
       </div>
       <div class="cms-field">
         <label>Текст 1 (основной)</label>
@@ -1202,7 +1273,7 @@ const TepCMS = (() => {
     `;
     const sync = () => {
       d.label = document.getElementById('ea-label').value;
-      d.title = document.getElementById('ea-title').value;
+      d.title = getRichEditorValue('ea-title');
       d.text1 = getRichEditorValue('ea-text1');
       d.text2 = getRichEditorValue('ea-text2');
     };
@@ -1304,7 +1375,7 @@ const TepCMS = (() => {
       url.searchParams.delete('admin');
       window.location.href = url.toString();
     },
-    toggleEdit, save, reset,
+    toggleEdit, save, reset, preview, applyFontSize,
     openService, editService, deleteService, addService,
     openProduct, editProduct,
     _pickServiceCover, _addServicePhoto, _deleteServicePhoto,
