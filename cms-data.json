@@ -1,0 +1,190 @@
+{
+  "header": {
+    "phone": "+7 (927) 432-63-36",
+    "btnText": "Позвонить нам",
+    "btnUrl": "tel:+7 (927) 432-63-36",
+    "navLinks": [
+      {
+        "label": "О нас",
+        "url": "#about"
+      },
+      {
+        "label": "Услуги",
+        "url": "#services"
+      },
+      {
+        "label": "Товары",
+        "url": "#products"
+      },
+      {
+        "label": "Наши работы",
+        "url": "#gallery"
+      },
+      {
+        "label": "Контакты",
+        "url": "#contacts"
+      }
+    ],
+    "socials": [
+      {
+        "icon": "assets/icons/Vector.png",
+        "url": "#",
+        "name": "Social 1"
+      },
+      {
+        "icon": "assets/icons/Vector-1.png",
+        "url": "#",
+        "name": "Social 2"
+      },
+      {
+        "icon": "assets/icons/Vector-2.png",
+        "url": "#",
+        "name": "Social 3"
+      },
+      {
+        "icon": "assets/icons/Vector-3.png",
+        "url": "#",
+        "name": "Social 4"
+      }
+    ]
+  },
+  "hero": {
+    "title": "Комплексный монтаж",
+    "subtitle": "<span style=\"font-size: 32px;\"><span style=\"white-space-collapse: preserve;\">систем отопления, водоснабжения</span><br><span style=\"white-space-collapse: preserve;\">и&nbsp;канализации в&nbsp;КАЗАНИ</span></span>",
+    "btnText": "Связаться с нами",
+    "btnUrl": "#contacts"
+  },
+  "about": {
+    "label": "О компании",
+    "title": "<span style=\"font-size: 48px;\"><b>Теплота&nbsp;— мы профессиональная инженерная компания!</b></span><br><span style=\"font-size: 32px;\"></span>",
+    "text1": "<span style=\"font-size: 24px;\">Огромный опыт в&nbsp;сфере монтажа систем ОВК&nbsp;<br>(отопления, водоснабжения и&nbsp;канализации)</span>",
+    "text2": "<ul><li><span style=\"white-space-collapse: preserve;\"><span style=\"font-size: 16px;\">С&nbsp;2010&nbsp;продаём отопительное оборудование и&nbsp;осуществляем монтаж</span></span></li><li><span style=\"font-size: 16px;\"><span style=\"white-space-collapse: preserve;\">Я</span><span style=\"white-space-collapse: preserve;\">вляемся официальным дилером таких производителей как&nbsp;Stout, Romer, Arrouhead</span></span></li><li><span style=\"white-space-collapse: preserve;\"><span style=\"font-size: 16px;\">Выполняем работу в&nbsp;короткие сроки с&nbsp;гарантией качества</span></span></li><li><span style=\"white-space-collapse: preserve;\"><span style=\"font-size: 16px;\">Любая сложность монтажа нам&nbsp;по&nbsp;плечу!</span></span></li><li><span style=\"white-space-collapse: preserve;\"><span style=\"font-size: 16px;\">Мы&nbsp;индивидуально подходим к&nbsp;каждому заказчику</span></span></li></ul>",
+    "stats": [
+      {
+        "num": "500+",
+        "label": "Реализованных проектов"
+      },
+      {
+        "num": "15 лет",
+        "label": "Гарантия на материалы"
+      }
+    ],
+    "partners": [
+      {
+        "img": "assets/partner logo/logo_stout.jpg",
+        "name": "Stout"
+      },
+      {
+        "img": "assets/partner logo/logo_rommer.jpg",
+        "name": "Rommer"
+      },
+      {
+        "img": "assets/partner logo/logo_arrow.jpg",
+        "name": "Arrow"
+      }
+    ]
+  },
+  "advantages": [
+    {
+      "id": 1,
+      "text": "<span style=\"font-size: 16px;\"><b>Скрупулезность - наше главное качество.</b> Каждая деталь системы будет установлена идеально.</span>",
+      "icon": "✨"
+    },
+    {
+      "id": 2,
+      "text": "<span style=\"font-size: 16px;\"><b>Индивидуальный проект</b> для каждого дома. Подбираем оборудование под ваш бюджет и задачи.</span>",
+      "icon": "📐"
+    },
+    {
+      "id": 3,
+      "text": "<span style=\"font-size: 16px;\"><b>Команда профессионалов.</b> Наши мастера регулярно проходят обучение у ведущих производителей.</span>",
+      "icon": "👨‍🔧"
+    },
+    {
+      "id": 4,
+      "text": "<span style=\"font-size: 16px;\"><b>Гарантийный сервис.</b> Мы не только устанавливаем, но и обеспечиваем поддержку 24/7.</span>",
+      "icon": "🛡️"
+    }
+  ],
+  "services": [
+    {
+      "id": 1,
+      "title": "Монтаж отопления",
+      "image": "assets/Наши услуги/Frame 20.jpg",
+      "description": "<span style=\"white-space-collapse: preserve;\"><b style=\"\"><span style=\"font-size: 24px;\">Услуги по монтажу тёплых полов — тепло, которое вы заслужили</span></b></span><br><br>Мы предлагаем полный спектр работ по установке тёплого пола в квартирах, частных домах, офисах и коммерческих помещениях. Работаем с водяными и электрическими системами — быстро, надёжно и с гарантией."
+    },
+    {
+      "id": 2,
+      "title": "Водоснабжение",
+      "image": "assets/Наши услуги/Frame 21.jpg",
+      "description": "Проектирование и монтаж систем водоснабжения: от скважины до смесителя. Используем только проверенные материалы."
+    },
+    {
+      "id": 3,
+      "title": "Канализация",
+      "image": "assets/Наши услуги/Frame 22.jpg",
+      "description": "Установка септиков и прокладка труб канализации любой сложности."
+    },
+    {
+      "id": 4,
+      "title": "Сервис и обслуживание",
+      "image": "assets/Наши услуги/Frame 19.jpg",
+      "description": "Регулярное техническое обслуживание систем для их долгой и бесперебойной работы."
+    }
+  ],
+  "products": [
+    {
+      "id": 1,
+      "name": "Коллекторный узел Stout",
+      "price": "от 15 000 ₽",
+      "image": "assets/Товары/image 11.png",
+      "description": "Профессиональный коллекторный узел для систем отопления и теплого пола."
+    },
+    {
+      "id": 2,
+      "name": "Насос циркуляционный",
+      "price": "от 8 500 ₽",
+      "image": "assets/Товары/image 13.png",
+      "description": "Высокоэффективный насос для обеспечения циркуляции в системе."
+    },
+    {
+      "id": 3,
+      "name": "Котел газовый Bosch",
+      "price": "от 45 000 ₽",
+      "image": "assets/Товары/image 12.png",
+      "description": "Надежный двухконтурный котел для отопления и ГВС."
+    }
+  ],
+  "gallery": [
+    {
+      "id": 1,
+      "title": "Монтаж в ЖК «Победа»",
+      "cover": "assets/Наши работы/Mask group.jpg",
+      "photos": [
+        { "url": "assets/Наши работы/Mask group.jpg", "caption": "Общий вид котельной" }
+      ]
+    },
+    {
+      "id": 2,
+      "title": "Частный дом в п. Алтан",
+      "cover": "assets/Наши работы/Mask group-1.jpg",
+      "photos": [
+        { "url": "assets/Наши работы/Mask group-1.jpg", "caption": "Теплый пол в гостиной" }
+      ]
+    },
+    {
+      "id": 3,
+      "title": "Проект в г. Иннополис",
+      "cover": "assets/Наши работы/Mask group-2.jpg",
+      "photos": [
+        { "url": "assets/Наши работы/Mask group-2.jpg", "caption": "Система водоснабжения" }
+      ]
+    }
+  ],
+  "contact": {
+    "phone": "+7 (927) 432-63-36",
+    "email": "teplota-kzn@mail.ru",
+    "address": "г. Казань, ул. Техническая, д. 23",
+    "coords": [55.77, 49.12]
+  }
+}
