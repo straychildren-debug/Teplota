@@ -309,12 +309,34 @@ main { padding-top: 0; }
 .contact-grid { display: grid; grid-template-columns: 1fr 1.3fr; gap: 80px; align-items: start; }
 .contact-info .label { margin-bottom: 14px; }
 .contact-info h2 { font-size: clamp(28px, 3vw, 40px); margin-bottom: 32px; }
-.phone {
-  display: block; font-family: var(--font-heading); font-size: 30px;
-  font-weight: 900; color: var(--text-head); text-decoration: none;
-  margin-bottom: 8px; transition: var(--transition-fast);
+.contact-phones-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-bottom: 32px;
 }
-.phone:hover { color: var(--primary-accent); }
+.contact-phone-item {
+  display: flex;
+  flex-direction: column;
+}
+.phone-link {
+  font-family: var(--font-heading);
+  font-size: 30px;
+  font-weight: 900;
+  color: var(--text-head);
+  text-decoration: none;
+  line-height: 1;
+  transition: var(--transition-fast);
+}
+.phone-link:hover { color: var(--primary-accent); }
+.phone-label {
+  font-size: 13px;
+  color: var(--text-muted);
+  font-weight: 500;
+  margin-top: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
 .email, .address { font-size: 16px; color: var(--text-body); margin-bottom: 6px; }
 
 .contact-form {

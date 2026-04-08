@@ -119,7 +119,9 @@ window.TepCMS = (() => {
       }
     ],
     contact: {
-      phone: '+7 (843) 000-00-00',
+      phones: [
+        { number: '+7 (843) 000-00-00', label: '' }
+      ],
       email: 'info@teplota-kazan.ru',
       address: 'г. Казань, ул. Техническая, д. 23',
       mapLat: 55.7963, mapLng: 49.1061
@@ -178,7 +180,13 @@ window.TepCMS = (() => {
         data = {
           header: s.siteSettings?.header || DEFAULT.header,
           hero: s.siteSettings?.hero || DEFAULT.hero,
-          contact: s.siteSettings?.contact || DEFAULT.contact,
+          contact: {
+            phones: s.siteSettings?.contact?.phones || DEFAULT.contact.phones,
+            email: s.siteSettings?.contact?.email || DEFAULT.contact.email,
+            address: s.siteSettings?.contact?.address || DEFAULT.contact.address,
+            mapLat: s.siteSettings?.contact?.mapLat || DEFAULT.contact.mapLat,
+            mapLng: s.siteSettings?.contact?.mapLng || DEFAULT.contact.mapLng,
+          },
           footer: s.siteSettings?.footer || DEFAULT.footer,
           about: {
             label: s.about?.label || DEFAULT.about.label,
@@ -713,10 +721,19 @@ window.TepCMS = (() => {
   // ─── Render: Contact ────────────────────────────────────────────────────────
   function renderContact() {
     const d = data.contact;
-    const phone = document.getElementById('contact-phone');
+    const container = document.getElementById('contact-phones-list');
     const email = document.getElementById('contact-email');
     const address = document.getElementById('contact-address');
-    if (phone) { phone.href = `tel:${d.phone.replace(/[^+\d]/g,'')}`;  phone.textContent = d.phone; }
+    
+    if (container) {
+      container.innerHTML = (d.phones || []).map(p => `
+        <div class="contact-phone-item">
+          <a href="tel:${p.number.replace(/[^+\d]/g,'')}" class="phone-link">${p.number}</a>
+          ${p.label ? `<span class="phone-label">${p.label}</span>` : ''}
+        </div>
+      `).join('');
+    }
+    
     if (email) email.textContent = d.email;
     if (address) address.textContent = d.address;
     initMap();
@@ -891,12 +908,11 @@ window.TepCMS = (() => {
       });
     });
     // Contact inline
-    ['contact-phone', 'contact-email', 'contact-address'].forEach(id => {
+    ['contact-email', 'contact-address'].forEach(id => {
       const el = document.getElementById(id);
       if (el) {
         el.contentEditable = 'true';
         el.addEventListener('blur', () => {
-          if (id === 'contact-phone') data.contact.phone = el.textContent;
           if (id === 'contact-email') data.contact.email = el.textContent;
           if (id === 'contact-address') data.contact.address = el.textContent;
         });
@@ -1483,7 +1499,19 @@ window.TepCMS = (() => {
   function editContact() {
     const d = data.contact;
     const body = `
-      <div class="cms-field"><label>Телефон</label><input id="ec-phone" value="${d.phone}"></div>
+      <div class="cms-field">
+        <label>Список телефонов</label>
+        <div id="ec-phones-list">
+          ${(d.phones || []).map((p, i) => `
+            <div class="cms-social-item" style="margin-bottom:8px;">
+              <input placeholder="Номер телефона" value="${p.number}" onchange="TepCMS._updateContactPhone(${i}, 'number', this.value)">
+              <input placeholder="Описание (напр. отдел продаж)" value="${p.label || ''}" onchange="TepCMS._updateContactPhone(${i}, 'label', this.value)">
+              <button onclick="TepCMS._deleteContactPhone(${i})" class="cms-delete-btn" style="position:static;">×</button>
+            </div>
+          `).join('')}
+        </div>
+        <button class="cms-btn secondary" onclick="TepCMS._addContactPhone()" style="margin-top:5px;">+ Добавить телефон</button>
+      </div>
       <div class="cms-field"><label>Email</label><input id="ec-email" value="${d.email}"></div>
       <div class="cms-field"><label>Адрес</label><input id="ec-address" value="${d.address}"></div>
       <div class="cms-field">
@@ -1492,7 +1520,6 @@ window.TepCMS = (() => {
       </div>
     `;
     openModal('Редактировать контакты', body, () => {
-      d.phone = document.getElementById('ec-phone').value;
       d.email = document.getElementById('ec-email').value;
       d.address = document.getElementById('ec-address').value;
       renderContact();
@@ -1501,6 +1528,14 @@ window.TepCMS = (() => {
     if (map) {
       toast('Кликните на карте, чтобы переместить пин', '');
     }
+  }
+
+  function _updateContactPhone(i, field, val) { data.contact.phones[i][field] = val; }
+  function _deleteContactPhone(i) { data.contact.phones.splice(i, 1); editContact(); }
+  function _addContactPhone() { 
+    if(!data.contact.phones) data.contact.phones = [];
+    data.contact.phones.push({ number: '', label: '' }); 
+    editContact(); 
   }
 
   // ─── Scroll Reveal Re-init ───────────────────────────────────────────────────
@@ -1587,6 +1622,7 @@ window.TepCMS = (() => {
     _updateFooterSocial, _deleteFooterSocial, _addFooterSocial, _changeFooterIcon,
     addFooterLink, deleteFooterSocial, addFooterSocial,
     deleteAdvantage, addAdvantage,
+    _updateContactPhone, _deleteContactPhone, _addContactPhone,
     viewImage
   };
 })();

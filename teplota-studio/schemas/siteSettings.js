@@ -44,7 +44,20 @@ export default {
       title: 'Контакты',
       type: 'object',
       fields: [
-        { name: 'phone', title: 'Телефон', type: 'string' },
+        {
+          name: 'phones',
+          title: 'Телефоны',
+          type: 'array',
+          of: [
+            {
+              type: 'object',
+              fields: [
+                { name: 'number', title: 'Номер телефона', type: 'string' },
+                { name: 'label', title: 'Описание (отдел)', type: 'string' }
+              ]
+            }
+          ]
+        },
         { name: 'email', title: 'Email', type: 'string' },
         { name: 'address', title: 'Адрес', type: 'string' },
         { name: 'mapLat', title: 'Широта (Lat)', type: 'number' },
