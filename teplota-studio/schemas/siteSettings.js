@@ -18,6 +18,8 @@ export default {
           type: 'array',
           of: [
             {
+              name: 'navItem',
+              title: 'Пункт навигации',
               type: 'object',
               fields: [
                 { name: 'label', type: 'string', title: 'Название' },
@@ -50,11 +52,16 @@ export default {
           type: 'array',
           of: [
             {
+              name: 'phoneItem',
+              title: 'Телефон',
               type: 'object',
               fields: [
                 { name: 'number', title: 'Номер телефона', type: 'string' },
                 { name: 'label', title: 'Описание (отдел)', type: 'string' }
-              ]
+              ],
+              preview: {
+                select: { title: 'number', subtitle: 'label' }
+              }
             }
           ]
         },
@@ -70,11 +77,16 @@ export default {
       type: 'array',
       of: [
         {
+          name: 'advantageItem',
+          title: 'Преимущество',
           type: 'object',
           fields: [
             { name: 'text', title: 'Текст преимущества', type: 'text' },
             { name: 'icon', title: 'Иконка (эмодзи)', type: 'string' }
-          ]
+          ],
+          preview: {
+            select: { title: 'text', subtitle: 'icon' }
+          }
         }
       ]
     },
