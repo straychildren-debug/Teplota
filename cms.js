@@ -156,7 +156,18 @@ window.TepCMS = (() => {
   const isAdmin = () => sessionStorage.getItem(SESSION_KEY) === 'true';
 
   // ─── Persistence ─────────────────────────────────────────────────────────────
-  function load() {
+  async function load() {
+    // First, try to load from disk (auto-sync with files)
+    try {
+      const resp = await fetch('/cms-data.json');
+      if (resp.ok) {
+        data = await resp.json();
+        // Sync to localStorage for redundancy
+        localStorage.setItem('tepData', JSON.stringify(data));
+        return;
+      }
+    } catch (e) {}
+
     try {
       const saved = localStorage.getItem('tepData');
       if (saved) {
@@ -184,9 +195,38 @@ window.TepCMS = (() => {
     }
   }
 
-  function save() {
+  async function save() {
     localStorage.setItem('tepData', JSON.stringify(data));
-    toast('Сохранено!', 'success');
+    toast('Сохранено в браузере!', 'success');
+
+    // Attempt to save to disk if running locally
+    try {
+      const resp = await fetch('/api/save', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      });
+      if (resp.ok) {
+        toast('Сохранено в код (GitHub)!', 'success');
+      }
+    } catch (e) {
+      console.warn('CMS: Disk save unavailable.');
+    }
+  }
+
+  function exportData() {
+    const json = JSON.stringify(data, null, 2);
+    console.log('CMS_DATA_EXPORT:', json);
+    
+    // Create a temporary textarea to copy to clipboard
+    const el = document.createElement('textarea');
+    el.value = json;
+    document.body.appendChild(el);
+    el.select();
+    document.execCommand('copy');
+    document.body.removeChild(el);
+
+    alert('Все измененные данные скопированы в буфер обмена!\n\nВставьте этот текст в чат со мной (Antigravity), чтобы я мог обновить код и сохранить их навсегда (в GitHub).');
   }
 
   function reset() {
@@ -1412,9 +1452,9 @@ window.TepCMS = (() => {
 
   // ─── Public API ──────────────────────────────────────────────────────────────
   return {
-    init() {
+    async init() {
       console.log('TepCMS: Initializing...');
-      load();
+      await load();
 
       // Check admin auth — URL ?admin=1 activates edit mode only if session is valid
       const urlParams = new URLSearchParams(window.location.search);
@@ -1468,7 +1508,7 @@ window.TepCMS = (() => {
       url.searchParams.delete('admin');
       window.location.href = url.toString();
     },
-    toggleEdit, save, reset, preview, applyFontSize,
+    toggleEdit, save, reset, preview, applyFontSize, exportData,
     openService, editService, deleteService, addService,
     openProduct, editProduct,
     _pickServiceCover, _addServicePhoto, _deleteServicePhoto,
