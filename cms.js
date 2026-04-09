@@ -1649,7 +1649,6 @@ window.TepCMS = (() => {
     addFooterLink, deleteFooterSocial, addFooterSocial,
     deleteAdvantage, addAdvantage,
     _updateContactPhone, _deleteContactPhone, _addContactPhone,
-    viewImage,
-    init
+    viewImage
   };
 })();
