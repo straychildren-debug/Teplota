@@ -108,7 +108,7 @@ a { color: inherit; }
   padding: 10px 24px;
   font-size: 0.8rem;
 }
-.logo img { height: 25px; width: auto; }
+.logo img { height: 30px; width: auto; }
 .nav-right { display: flex; align-items: center; gap: 32px; flex-shrink: 0; }
 nav ul { display: flex; gap: 28px; list-style: none; }
 nav ul a {
