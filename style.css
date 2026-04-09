@@ -350,11 +350,11 @@ main { padding-top: 0; }
 .product-card:hover::after { opacity: 1; transform: translateY(0); }
 
 /* ─── Gallery ──────────────────────────────────────────────────────────────── */
-.gallery { background: var(--panel-bg); }
+.gallery { background: var(--surface-container); }
 .gallery-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
 .gallery-item {
   position: relative; border-radius: var(--border-radius);
-  overflow: hidden; height: 280px;
+  overflow: hidden; height: 420px;
   box-shadow: var(--shadow-soft);
   transition: var(--transition-smooth); cursor: pointer;
 }
