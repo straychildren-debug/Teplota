@@ -228,19 +228,9 @@
           </div>
         </div>
         
-        <div class="relative group max-w-6xl mx-auto rounded-[2.5rem] overflow-hidden shadow-2xl bg-gray-900 border-8 border-white">
-          <!-- Main Stage -->
-          <div id="gallery-stage" class="relative h-[400px] md:h-[650px] overflow-hidden">
-            <!-- Main image will be injected here -->
-          </div>
-          
-          <!-- Arrows -->
-          <button onclick="TepCMS.prevGallery()" class="absolute left-6 top-1/2 -translate-y-1/2 w-14 h-14 rounded-full bg-white/20 backdrop-blur-md text-white flex items-center justify-center hover:bg-white hover:text-gray-900 transition-all z-20">←</button>
-          <button onclick="TepCMS.nextGallery()" class="absolute right-6 top-1/2 -translate-y-1/2 w-14 h-14 rounded-full bg-white/20 backdrop-blur-md text-white flex items-center justify-center hover:bg-white hover:text-gray-900 transition-all z-20">→</button>
-
-          <!-- Thumbnails -->
-          <div class="absolute bottom-10 left-0 w-full flex justify-center gap-4 px-6 z-20" id="gallery-thumbs">
-             <!-- Thumbs will be injected here -->
+        <div class="relative group">
+          <div id="gallery-grid" class="flex overflow-x-auto gap-6 pb-12 hide-scrollbar snap-x snap-mandatory scroll-smooth">
+            <!-- Gallery items will be injected here as horizontal cards -->
           </div>
         </div>
       </div>
