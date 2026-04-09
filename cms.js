@@ -752,72 +752,52 @@ window.TepCMS = (() => {
   // ─── Render: Gallery (Works) ────────────────────────────────────────────────
   let galleryInterval = null;
   function renderGallery() {
-    const grid = document.getElementById('gallery-grid');
-    if (!grid) return;
+    const stage = document.getElementById('gallery-stage');
+    const thumbs = document.getElementById('gallery-thumbs');
+    if (!stage || !thumbs) return;
     
-    if (galleryInterval) clearInterval(galleryInterval);
+    const items = data.gallery || [];
+    if (!items.length) {
+      stage.innerHTML = `<div class="flex items-center justify-center h-full text-white">Нет фотографий</div>`;
+      return;
+    }
 
-    grid.innerHTML = (data.gallery || []).map((g, i) => `
-      <div class="gallery-item flex-shrink-0 w-[85%] md:w-[70%] lg:w-[800px] snap-center reveal-item" 
-           onclick="TepCMS.openGallery('${g.id}')">
-        <div class="h-full w-full relative">
-          <img src="${g.cover}" alt="${g.title}" class="w-full h-full object-cover">
-          <div class="absolute inset-0 bg-gradient-to-t from-black/95 via-black/20 to-transparent"></div>
-          <div class="absolute bottom-0 left-0 p-8 md:p-14 text-white w-full">
-            <span class="text-xs font-bold text-brand uppercase tracking-widest mb-3 block">Проект</span>
-            <h3 class="font-serif text-3xl md:text-5xl font-bold leading-tight">${g.title}</h3>
-          </div>
+    // Wrap index
+    if (currentGalleryIndex >= items.length) currentGalleryIndex = 0;
+    if (currentGalleryIndex < 0) currentGalleryIndex = items.length - 1;
+
+    // Render Stage
+    stage.innerHTML = items.map((g, i) => `
+      <div class="gallery-stage-item ${i === currentGalleryIndex ? 'active' : ''}">
+        <img src="${g.cover}" alt="${g.title}">
+        <div class="gallery-stage-info">
+          <span class="text-xs font-bold text-brand uppercase tracking-widest mb-3 block">Наши проекты</span>
+          <h3 class="font-serif text-3xl md:text-5xl font-bold leading-tight">${g.title}</h3>
+          ${g.description ? `<p class="text-gray-200 mt-4 max-w-2xl text-sm md:text-base">${g.description}</p>` : ''}
         </div>
         ${editMode ? `
-          <div class="absolute top-4 right-4 flex gap-2 z-[100]">
-            <button class="w-10 h-10 bg-white shadow-lg rounded-full flex items-center justify-center text-gray-900" onclick="event.stopPropagation(); TepCMS.editGallery('${g.id}')">✏️</button>
-            <button class="w-10 h-10 bg-white shadow-lg rounded-full flex items-center justify-center text-red-500" onclick="event.stopPropagation(); TepCMS.deleteGallery('${g.id}')">×</button>
+          <div class="absolute top-6 right-6 flex gap-2 z-[100]">
+            <button class="w-12 h-12 bg-white shadow-xl rounded-full flex items-center justify-center text-gray-900 border-2 border-gray-100" onclick="event.stopPropagation(); TepCMS.editGallery('${g.id}')">✏️</button>
+            <button class="w-12 h-12 bg-white shadow-xl rounded-full flex items-center justify-center text-red-500 border-2 border-gray-100" onclick="event.stopPropagation(); TepCMS.deleteGallery('${g.id}')">×</button>
           </div>
         ` : ''}
       </div>
     `).join('');
 
-    const updateGalleryEffect = () => {
-      const items = grid.querySelectorAll('.gallery-item');
-      if (!items.length) return;
-      
-      const gridRect = grid.getBoundingClientRect();
-      const gridCenterX = gridRect.left + gridRect.width / 2;
-      
-      items.forEach(item => {
-        const rect = item.getBoundingClientRect();
-        const itemCenterX = rect.left + rect.width / 2;
-        const absDistance = Math.abs(itemCenterX - gridCenterX);
-        
-        // Calculate ratio (1 at center, 0 at edge of view)
-        const ratio = Math.max(0, 1 - (absDistance / (gridRect.width / 1.2)));
-        
-        const scale = 0.8 + (ratio * 0.2);
-        const opacity = 0.5 + (ratio * 0.5);
-        const zIndex = Math.round(ratio * 100);
-        
-        item.style.transform = `scale(${scale})`;
-        item.style.opacity = opacity;
-        item.style.zIndex = zIndex;
-      });
-    };
-
-    grid.onscroll = updateGalleryEffect;
-    window.onresize = updateGalleryEffect;
-    
-    // Initial sync
-    setTimeout(updateGalleryEffect, 100);
-
-    if (editMode) {
-      grid.insertAdjacentHTML('beforeend', `
-        <div class="flex-shrink-0 w-[80%] md:w-[70%] lg:w-[800px] h-[650px] snap-center rounded-[2rem] border-2 border-dashed border-gray-300 flex items-center justify-center group cursor-pointer hover:border-brand transition-colors">
-          <span class="text-4xl text-gray-300 group-hover:text-brand transition-colors" onclick="TepCMS.addGallery()">+</span>
-        </div>
-      `);
-    }
-
-    reObserve();
+    // Render Thumbs
+    thumbs.innerHTML = items.map((g, i) => `
+      <div class="gallery-thumb ${i === currentGalleryIndex ? 'active' : ''}" onclick="TepCMS.goToGallery(${i})">
+        <img src="${g.cover}" alt="thumb">
+      </div>
+    `).join('') + (editMode ? `
+      <div class="gallery-thumb flex items-center justify-center bg-white/20 text-white font-bold text-xl border-dashed" onclick="TepCMS.addGallery()">+</div>
+    ` : '');
   }
+
+  // Gallery Navigation
+  TepCMS.nextGallery = () => { currentGalleryIndex++; renderGallery(); };
+  TepCMS.prevGallery = () => { currentGalleryIndex--; renderGallery(); };
+  TepCMS.goToGallery = (i) => { currentGalleryIndex = i; renderGallery(); };
 
   // ─── Render: Contact ────────────────────────────────────────────────────────
   function renderContact() {
