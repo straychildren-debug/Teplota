@@ -4,7 +4,21 @@ export default {
   title: 'Преимущества',
   type: 'document',
   fields: [
-    { name: 'text', title: 'Текст преимущества', type: 'text' },
-    { name: 'icon', title: 'Иконка (эмодзи)', type: 'string' },
+    {
+      name: 'title',
+      title: 'Заголовок',
+      type: 'string',
+    },
+    {
+      name: 'description',
+      title: 'Описание',
+      type: 'text',
+    },
+    {
+      name: 'icon',
+      title: 'Иконка (Картинка)',
+      type: 'image',
+      options: { hotspot: true },
+    },
   ],
 }

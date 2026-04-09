@@ -240,12 +240,14 @@ window.TepCMS = (() => {
           })) || DEFAULT.gallery,
           advantages: s.advantages?.map((item, idx) => ({
             id: item._id || idx,
-            text: item.text,
-            icon: item.icon
+            title: item.title,
+            description: item.description || item.text,
+            icon: item.icon ? builder.image(item.icon) : ''
           })) || s.siteSettings?.advantages?.map((item, idx) => ({
             id: idx,
-            text: item.text,
-            icon: item.icon
+            title: item.title,
+            description: item.description || item.text,
+            icon: item.icon ? builder.image(item.icon) : ''
           })) || DEFAULT.advantages
         };
 
@@ -556,15 +558,26 @@ window.TepCMS = (() => {
     grid.innerHTML = (data.advantages || []).map((a, i) => {
       const isHighlighted = i === 2; // Make the 3rd card highlighted for visual variety
       const cardClass = isHighlighted 
-        ? "glass-effect-orange p-8 rounded-2xl shadow-lg transform md:-translate-y-2 reveal-item" 
-        : "bg-white p-8 rounded-2xl shadow-sm border border-brand-border hover:shadow-md transition-shadow reveal-item";
-      const iconClass = isHighlighted ? "text-white text-3xl mb-4" : "text-brand text-3xl mb-4";
-      const textClass = isHighlighted ? "text-white/90 text-sm" : "text-gray-600 text-sm";
+        ? "glass-effect-orange p-8 rounded-2xl shadow-lg transform md:-translate-y-2 reveal-item group transition-all duration-300 hover:scale-[1.02]" 
+        : "bg-white p-8 rounded-2xl shadow-sm border border-brand-border hover:shadow-md transition-all duration-300 hover:scale-[1.02] reveal-item group";
       
+      const iconContainerClass = "w-14 h-14 mb-6 rounded-2xl flex items-center justify-center transition-colors " + 
+        (isHighlighted ? "bg-white/20" : "bg-orange-50 group-hover:bg-orange-100");
+      
+      const titleClass = isHighlighted ? "text-white font-serif text-xl font-bold mb-3" : "text-gray-900 font-serif text-xl font-bold mb-3";
+      const descClass = isHighlighted ? "text-white/80 text-sm leading-relaxed" : "text-gray-600 text-sm leading-relaxed";
+      
+      const iconHtml = a.icon && a.icon.length > 5 // Check if it's a URL/Path or a simple Emoji
+        ? `<img src="${a.icon}" alt="icon" class="w-10 h-10 object-contain">`
+        : `<span class="text-3xl">${a.icon || '✨'}</span>`;
+
       return `
       <div class="${cardClass}" style="position:relative;">
-        <div class="${iconClass}">${a.icon || '✨'}</div>
-        <p class="${textClass}">${a.text}</p>
+        <div class="${iconContainerClass}">
+          ${iconHtml}
+        </div>
+        <h3 class="${titleClass}">${a.title || 'Преимущество'}</h3>
+        <p class="${descClass}">${a.description || a.text || ''}</p>
         ${editMode ? `<button class="cms-delete-btn" onclick="TepCMS.deleteAdvantage(${i})">×</button>` : ''}
       </div>
     `}).join('');
