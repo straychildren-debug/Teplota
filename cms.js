@@ -656,7 +656,7 @@ window.TepCMS = (() => {
           <p class="text-brand font-semibold mb-4">${p.price || ''}</p>
         </div>
         <button class="w-full py-2 border border-brand text-brand hover:bg-brand hover:text-white rounded-full transition-colors text-sm font-medium mt-auto" onclick="event.stopPropagation(); TepCMS.openProduct(${p.id})">
-          В каталог
+          Подробнее
         </button>
         ${editMode ? `
           <button class="cms-section-btn" data-edit-product="${p.id}">✏️ Изменить</button>
