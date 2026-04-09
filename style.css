@@ -350,7 +350,7 @@ main { padding-top: 0; }
 .product-card:hover::after { opacity: 1; transform: translateY(0); }
 
 /* ─── Gallery ──────────────────────────────────────────────────────────────── */
-.gallery { background: var(--surface-container); }
+.gallery { background: #fff; }
 .gallery-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
 .gallery-item {
   position: relative; border-radius: var(--border-radius);
