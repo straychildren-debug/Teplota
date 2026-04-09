@@ -759,8 +759,7 @@ window.TepCMS = (() => {
     if (galleryInterval) clearInterval(galleryInterval);
 
     grid.innerHTML = (data.gallery || []).map((g, i) => `
-      <div class="gallery-item flex-shrink-0 w-[85%] md:w-[70%] lg:w-[800px] snap-center rounded-3xl overflow-hidden relative group cursor-pointer shadow-lg transition-all duration-500 reveal-item" 
-           style="margin-inline: -5%; md:margin-inline: -10%;"
+      <div class="gallery-item flex-shrink-0 w-[80%] md:w-[70%] lg:w-[800px] snap-center rounded-3xl overflow-hidden relative group cursor-pointer shadow-lg transition-all duration-500 reveal-item" 
            onclick="TepCMS.openGallery('${g.id}')">
         <div class="h-[500px] md:h-[600px] relative overflow-hidden">
           <img src="${g.cover}" alt="${g.title}" class="w-full h-full object-cover">
@@ -781,21 +780,28 @@ window.TepCMS = (() => {
 
     const updateGalleryEffect = () => {
       const items = grid.querySelectorAll('.gallery-item');
-      const centerX = grid.scrollLeft + grid.clientWidth / 2;
+      if (!items.length) return;
       
-      items.forEach(item => {
-        const itemCenterX = item.offsetLeft + item.clientWidth / 2;
-        const distanceFromCenter = Math.abs(centerX - itemCenterX);
-        const maxDistance = grid.clientWidth;
+      const gridRect = grid.getBoundingClientRect();
+      const centerX = gridRect.left + gridRect.width / 2;
+      
+      items.forEach((item, idx) => {
+        const rect = item.getBoundingClientRect();
+        const itemCenterX = rect.left + rect.width / 2;
+        const distanceFromCenter = itemCenterX - centerX;
+        const absDistance = Math.abs(distanceFromCenter);
+        const ratio = Math.min(1, absDistance / (gridRect.width / 1.5));
         
-        // Calculate scale (1 at center, ~0.8 at edges)
-        const scale = Math.max(0.8, 1 - (distanceFromCenter / maxDistance) * 0.4);
-        // Calculate opacity (1 at center, ~0.5 at edges)
-        const opacity = Math.max(0.5, 1 - (distanceFromCenter / maxDistance) * 0.8);
-        // Z-index based on proximity to center
-        const zIndex = Math.round(100 - (distanceFromCenter / 10));
+        // Scale (1 to 0.75)
+        const scale = 1 - ratio * 0.25;
+        // Opacity (1 to 0.4)
+        const opacity = 1 - ratio * 0.6;
+        // Z-index (highest in center)
+        const zIndex = Math.round(100 - ratio * 50);
+        // Overlap effect (translate toward center)
+        const overlap = distanceFromCenter * -0.2; // This pulls cards together
         
-        item.style.transform = `scale(${scale})`;
+        item.style.transform = `translateX(${overlap}px) scale(${scale})`;
         item.style.opacity = opacity;
         item.style.zIndex = zIndex;
       });
@@ -804,12 +810,12 @@ window.TepCMS = (() => {
     grid.addEventListener('scroll', updateGalleryEffect);
     window.addEventListener('resize', updateGalleryEffect);
     
-    // Initial call
-    setTimeout(updateGalleryEffect, 100);
+    // Trigger on scroll and once initially
+    setTimeout(updateGalleryEffect, 50);
 
     if (editMode) {
       grid.insertAdjacentHTML('beforeend', `
-        <div class="flex-shrink-0 w-[85%] md:w-[70%] lg:w-[800px] h-[500px] md:h-[600px] snap-center rounded-3xl border-2 border-dashed border-gray-300 flex items-center justify-center group cursor-pointer hover:border-brand transition-colors" onclick="TepCMS.addGallery()" style="margin-inline: -10%;">
+        <div class="flex-shrink-0 w-[80%] md:w-[70%] lg:w-[800px] h-[500px] md:h-[600px] snap-center rounded-3xl border-2 border-dashed border-gray-300 flex items-center justify-center group cursor-pointer hover:border-brand transition-colors" onclick="TepCMS.addGallery()">
           <span class="text-4xl text-gray-300 group-hover:text-brand transition-colors">+</span>
         </div>
       `);
