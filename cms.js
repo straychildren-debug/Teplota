@@ -143,7 +143,8 @@ window.TepCMS = (() => {
       { id: 2, text: 'Используем качественные высокотехнологичные материалы от проверенных поставщиков.', icon: 'assets/icons/tech.svg' },
       { id: 3, text: 'Гарантия на работы до 3х лет, на материалы — до 15 лет.', icon: 'assets/icons/speed.svg' },
       { id: 4, text: 'Индивидуально проектируем системы от бюджетных до премиальных.', icon: 'assets/icons/team.svg' },
-      { id: 5, text: 'Всегда на связи и беремся за задачи любой сложности.', icon: 'assets/icons/support.svg' }
+      { id: 5, text: 'Всегда на связи и беремся за задачи любой сложности.', icon: 'assets/icons/support.svg' },
+      { id: 6, text: 'Беремся за любую сложность задач.', icon: 'assets/icons/complexity.svg' }
     ]
   };
 
