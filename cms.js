@@ -795,9 +795,9 @@ window.TepCMS = (() => {
   }
 
   // Gallery Navigation
-  TepCMS.nextGallery = () => { currentGalleryIndex++; renderGallery(); };
-  TepCMS.prevGallery = () => { currentGalleryIndex--; renderGallery(); };
-  TepCMS.goToGallery = (i) => { currentGalleryIndex = i; renderGallery(); };
+  function nextGallery() { currentGalleryIndex++; renderGallery(); }
+  function prevGallery() { currentGalleryIndex--; renderGallery(); }
+  function goToGallery(i) { currentGalleryIndex = i; renderGallery(); }
 
   // ─── Render: Contact ────────────────────────────────────────────────────────
   function renderContact() {
@@ -1691,7 +1691,7 @@ window.TepCMS = (() => {
     uploadProductImage, deleteProduct, addProduct,
     addStat, deleteStat, uploadPartner, deletePartner, addPartner,
     openGallery, editGallery, deleteGallery, addGallery,
-    galleryNext, galleryPrev,
+    nextGallery, prevGallery, goToGallery,
     _pickGalleryCover, _addGalleryPhoto, _deleteGalleryPhoto, _updateGalleryCaption,
     editHero, editAbout, editAdvantages, editContact,
     editHeader, editFooter,
