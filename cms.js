@@ -603,19 +603,26 @@ window.TepCMS = (() => {
   function renderServices() {
     const grid = document.getElementById('service-grid');
     if (!grid) return;
-    grid.innerHTML = data.services.map(s => `
-      <div class="group relative h-80 rounded-2xl overflow-hidden block cursor-pointer reveal-item" style="position:relative;" data-service-id="${s.id}">
-        <img src="${s.image}" alt="${s.title}" class="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
-        <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent"></div>
-        <div class="absolute bottom-0 left-0 p-6 text-white w-full">
-          <h3 class="font-bold text-xl mb-1">${s.title}</h3>
+    grid.innerHTML = data.services.map((s, i) => {
+      const isBig = i === 0;
+      const gridClasses = isBig 
+        ? 'md:col-span-2 md:row-span-2 h-full min-h-[400px]' 
+        : 'h-80 md:h-full';
+      
+      return `
+        <div class="group relative ${gridClasses} rounded-2xl overflow-hidden block cursor-pointer reveal-item" style="position:relative;" data-service-id="${s.id}">
+          <img src="${s.image}" alt="${s.title}" class="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
+          <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent"></div>
+          <div class="absolute bottom-0 left-0 p-6 text-white w-full">
+            <h3 class="font-bold ${isBig ? 'text-3xl' : 'text-xl'} mb-1">${s.title}</h3>
+          </div>
+          ${editMode ? `
+            <button class="cms-section-btn" data-edit-btn="${s.id}">✏️ Редактировать</button>
+            <button class="cms-delete-btn" data-del-btn="${s.id}">×</button>
+          ` : ''}
         </div>
-        ${editMode ? `
-          <button class="cms-section-btn" data-edit-btn="${s.id}">✏️ Редактировать</button>
-          <button class="cms-delete-btn" data-del-btn="${s.id}">×</button>
-        ` : ''}
-      </div>
-    `).join('');
+      `;
+    }).join('');
 
     // Attach listeners
     grid.querySelectorAll('[data-service-id]').forEach(card => {
