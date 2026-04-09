@@ -759,14 +759,14 @@ window.TepCMS = (() => {
     if (galleryInterval) clearInterval(galleryInterval);
 
     grid.innerHTML = (data.gallery || []).map((g, i) => `
-      <div class="flex-shrink-0 w-80 md:w-[675px] snap-start rounded-3xl overflow-hidden relative group cursor-pointer shadow-lg hover:shadow-2xl transition-all duration-500 reveal-item" onclick="TepCMS.openGallery('${g.id}')">
-        <div class="h-[480px] relative overflow-hidden">
+      <div class="flex-shrink-0 w-[85%] md:w-[70%] lg:w-[800px] snap-center rounded-3xl overflow-hidden relative group cursor-pointer shadow-lg hover:shadow-2xl transition-all duration-500 reveal-item" onclick="TepCMS.openGallery('${g.id}')">
+        <div class="h-[500px] md:h-[600px] relative overflow-hidden">
           <img src="${g.cover}" alt="${g.title}" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
           <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
         </div>
-        <div class="absolute bottom-0 left-0 p-8 text-white w-full">
+        <div class="absolute bottom-0 left-0 p-8 md:p-12 text-white w-full">
           <span class="text-xs font-bold text-brand uppercase tracking-widest mb-2 block">Проект</span>
-          <h3 class="font-serif text-3xl font-bold leading-tight">${g.title}</h3>
+          <h3 class="font-serif text-3xl md:text-5xl font-bold leading-tight">${g.title}</h3>
         </div>
         ${editMode ? `
           <div class="absolute top-4 right-4 flex gap-2">
@@ -779,7 +779,7 @@ window.TepCMS = (() => {
 
     if (editMode) {
       grid.insertAdjacentHTML('beforeend', `
-        <div class="flex-shrink-0 w-80 md:w-[675px] h-[480px] snap-start rounded-3xl border-2 border-dashed border-gray-300 flex items-center justify-center group cursor-pointer hover:border-brand transition-colors" onclick="TepCMS.addGallery()">
+        <div class="flex-shrink-0 w-[85%] md:w-[70%] lg:w-[800px] h-[500px] md:h-[600px] snap-center rounded-3xl border-2 border-dashed border-gray-300 flex items-center justify-center group cursor-pointer hover:border-brand transition-colors" onclick="TepCMS.addGallery()">
           <span class="text-4xl text-gray-300 group-hover:text-brand transition-colors">+</span>
         </div>
       `);
