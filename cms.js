@@ -568,7 +568,7 @@ window.TepCMS = (() => {
       const descClass = isHighlighted ? "text-white/80 text-sm leading-relaxed" : "text-gray-600 text-sm leading-relaxed";
       
       const iconHtml = a.icon && a.icon.length > 5 // Check if it's a URL/Path or a simple Emoji
-        ? `<img src="${a.icon}" alt="icon" class="w-10 h-10 object-contain">`
+        ? `<img src="${a.icon}" alt="icon" class="w-10 h-10 object-contain" style="${isHighlighted ? 'filter: brightness(0) invert(1);' : ''}">`
         : `<span class="text-3xl">${a.icon || '✨'}</span>`;
 
       return `
