@@ -178,7 +178,17 @@ window.TepCMS = (() => {
       if (s.siteSettings || s.about || (s.services && s.services.length > 0)) {
         // Map Sanity schema to our internal app data structure
         data = {
-          header: s.siteSettings?.header || DEFAULT.header,
+          header: {
+            phone: s.siteSettings?.header?.phone || DEFAULT.header.phone,
+            btnText: s.siteSettings?.header?.btnText || DEFAULT.header.btnText,
+            btnUrl: s.siteSettings?.header?.btnUrl || DEFAULT.header.btnUrl,
+            navLinks: s.siteSettings?.header?.navLinks || DEFAULT.header.navLinks,
+            socials: s.siteSettings?.header?.socials?.map(soc => ({
+              name: soc.name,
+              url: soc.url,
+              icon: soc.icon ? builder.image(soc.icon) : ''
+            })) || DEFAULT.header.socials
+          },
           hero: s.siteSettings?.hero || DEFAULT.hero,
           contact: {
             phones: s.siteSettings?.contact?.phones || DEFAULT.contact.phones,
@@ -187,7 +197,15 @@ window.TepCMS = (() => {
             mapLat: s.siteSettings?.contact?.mapLat || DEFAULT.contact.mapLat,
             mapLng: s.siteSettings?.contact?.mapLng || DEFAULT.contact.mapLng,
           },
-          footer: s.siteSettings?.footer || DEFAULT.footer,
+          footer: {
+            copyright: s.siteSettings?.footer?.copyright || DEFAULT.footer.copyright,
+            links: s.siteSettings?.footer?.links || DEFAULT.footer.links,
+            socials: s.siteSettings?.footer?.socials?.map(soc => ({
+              name: soc.name,
+              url: soc.url,
+              icon: soc.icon ? builder.image(soc.icon) : ''
+            })) || DEFAULT.footer.socials
+          },
           about: {
             label: s.about?.label || DEFAULT.about.label,
             title: s.about?.title || DEFAULT.about.title,
@@ -196,20 +214,20 @@ window.TepCMS = (() => {
             stats: s.about?.stats || DEFAULT.about.stats,
             partners: s.about?.partners?.map(p => ({
               name: p.name,
-              img: builder.image(p.img)
+              img: p.img ? builder.image(p.img) : ''
             })) || DEFAULT.about.partners
           },
           services: s.services?.map(item => ({
             id: item._id,
             title: item.title,
-            image: builder.image(item.image),
-            description: item.description,
-            photos: item.photos?.map(p => ({ url: builder.image(p), caption: '' })) || []
+            image: item.image ? builder.image(item.image) : '',
+            description: item.content ? toHTML(item.content) : (item.description || ''),
+            photos: item.photos?.map(p => builder.image(p)) || []
           })) || DEFAULT.services,
           products: s.products?.map(item => ({
             id: item._id,
             title: item.title,
-            image: builder.image(item.image),
+            image: item.image ? builder.image(item.image) : '',
             description: item.description,
             details: item.details ? toHTML(item.details) : ''
           })) || DEFAULT.products,
@@ -217,13 +235,14 @@ window.TepCMS = (() => {
             id: item._id,
             title: item.title,
             description: item.description,
-            cover: builder.image(item.cover),
-            photos: item.photos?.map(p => ({ 
-              url: builder.image(p), 
-              caption: p.caption || '' 
-            })) || []
+            cover: item.cover ? builder.image(item.cover) : '',
+            photos: item.photos?.map(p => builder.image(p)) || []
           })) || DEFAULT.gallery,
-          advantages: s.siteSettings?.advantages?.map((item, idx) => ({
+          advantages: s.advantages?.map((item, idx) => ({
+            id: item._id || idx,
+            text: item.text,
+            icon: item.icon
+          })) || s.siteSettings?.advantages?.map((item, idx) => ({
             id: idx,
             text: item.text,
             icon: item.icon
@@ -468,17 +487,11 @@ window.TepCMS = (() => {
   // ─── Render: Header ──────────────────────────────────────────────────────────
   function renderHeader() {
     const d = data.header;
-    const nav = document.getElementById('main-nav');
-    if (nav) {
-      nav.innerHTML = d.navLinks.map(l => `<li><a href="${l.url}">${l.label}</a></li>`).join('');
+    const phoneEl = document.getElementById('header-phone-val');
+    if (phoneEl) { 
+        phoneEl.href = `tel:${d.phone.replace(/[^+\d]/g, '')}`; 
+        phoneEl.textContent = d.phone; 
     }
-    if (nav) {
-      nav.innerHTML = d.navLinks.map(l => `<li><a href="${l.url}">${l.label}</a></li>`).join('');
-    }
-    const ctaBtn = document.getElementById('header-cta');
-    if (ctaBtn) { ctaBtn.href = d.btnUrl; ctaBtn.textContent = d.btnText; }
-    const phoneEl = document.getElementById('header-phone');
-    if (phoneEl) { phoneEl.href = `tel:${d.phone.replace(/[^+\d]/g, '')}`; phoneEl.textContent = d.phone; }
   }
 
   // ─── Render: Hero ────────────────────────────────────────────────────────────
@@ -502,21 +515,20 @@ window.TepCMS = (() => {
     const t2 = document.getElementById('about-text2');
     if (lbl) lbl.textContent = d.label;
     if (ttl) ttl.innerHTML = cmsToHtml(d.title);
-    // text1 and text2 stored as raw HTML
     if (t1) t1.innerHTML = d.text1 || '';
     if (t2) t2.innerHTML = d.text2 || '';
 
     const statsEl = document.getElementById('stats-grid');
     if (statsEl) {
       statsEl.innerHTML = d.stats.map((s, i) => `
-        <div class="stat-card" data-index="${i}">
-          <span class="stat-num" data-edit="about.stats.${i}.num">${s.num}</span>
-          <span class="stat-label" data-edit="about.stats.${i}.label">${s.label}</span>
+        <div class="stat-item reveal-item" data-index="${i}" style="position:relative;">
+          <div class="text-4xl font-bold text-brand mb-2" data-edit="about.stats.${i}.num">${s.num}</div>
+          <div class="text-sm font-medium text-gray-500 uppercase tracking-wide" data-edit="about.stats.${i}.label">${s.label}</div>
           ${editMode ? `<button class="cms-delete-btn" onclick="TepCMS.deleteStat(${i})">×</button>` : ''}
         </div>
       `).join('');
       if (editMode) {
-        statsEl.insertAdjacentHTML('beforeend', `<button class="cms-add-btn" onclick="TepCMS.addStat()">+ Добавить статистику</button>`);
+        statsEl.insertAdjacentHTML('beforeend', `<button class="cms-add-btn" onclick="TepCMS.addStat()">+ Статистика</button>`);
       }
     }
 
@@ -524,7 +536,7 @@ window.TepCMS = (() => {
     if (partnersEl) {
       partnersEl.innerHTML = d.partners.map((p, i) => `
         <div class="partner-item" style="position:relative; display:flex; align-items:center; justify-content:center;">
-          <img src="${p.img}" alt="${p.name}" style="max-height:35px; max-width:120px; object-fit:contain;">
+          <img src="${p.img}" alt="${p.name}" class="h-8 object-contain">
           ${editMode ? `
             <button class="cms-delete-btn" onclick="TepCMS.deletePartner(${i})" style="top:50%;transform:translateY(-50%);">×</button>
             <div class="cms-upload-overlay" onclick="TepCMS.uploadPartner(${i})"><span>📷</span> Загрузить</div>
@@ -532,7 +544,7 @@ window.TepCMS = (() => {
         </div>
       `).join('');
       if (editMode) {
-        partnersEl.insertAdjacentHTML('beforeend', `<button class="cms-add-btn" onclick="TepCMS.addPartner()">+ Добавить партнёра</button>`);
+        partnersEl.insertAdjacentHTML('beforeend', `<button class="cms-add-btn" onclick="TepCMS.addPartner()">+ Партнёр</button>`);
       }
     }
   }
@@ -541,13 +553,21 @@ window.TepCMS = (() => {
   function renderAdvantages() {
     const grid = document.getElementById('advantage-grid');
     if (!grid) return;
-    grid.innerHTML = (data.advantages || []).map((a, i) => `
-      <div class="advantage-card reveal-item" style="position:relative;">
-        <div class="adv-icon">${a.icon || '✨'}</div>
-        <p>${a.text}</p>
+    grid.innerHTML = (data.advantages || []).map((a, i) => {
+      const isHighlighted = i === 2; // Make the 3rd card highlighted for visual variety
+      const cardClass = isHighlighted 
+        ? "glass-effect-orange p-8 rounded-2xl shadow-lg transform md:-translate-y-2 reveal-item" 
+        : "bg-white p-8 rounded-2xl shadow-sm border border-brand-border hover:shadow-md transition-shadow reveal-item";
+      const iconClass = isHighlighted ? "text-white text-3xl mb-4" : "text-brand text-3xl mb-4";
+      const textClass = isHighlighted ? "text-white/90 text-sm" : "text-gray-600 text-sm";
+      
+      return `
+      <div class="${cardClass}" style="position:relative;">
+        <div class="${iconClass}">${a.icon || '✨'}</div>
+        <p class="${textClass}">${a.text}</p>
         ${editMode ? `<button class="cms-delete-btn" onclick="TepCMS.deleteAdvantage(${i})">×</button>` : ''}
       </div>
-    `).join('');
+    `}).join('');
     reObserve();
   }
 
@@ -556,10 +576,11 @@ window.TepCMS = (() => {
     const grid = document.getElementById('service-grid');
     if (!grid) return;
     grid.innerHTML = data.services.map(s => `
-      <div class="service-card reveal-item" style="position:relative;" data-service-id="${s.id}">
-        <img src="${s.image}" alt="${s.title}" style="pointer-events: none;">
-        <div class="service-overlay" style="pointer-events: none;">
-          <h3>${s.title}</h3>
+      <div class="group relative h-80 rounded-2xl overflow-hidden block cursor-pointer reveal-item" style="position:relative;" data-service-id="${s.id}">
+        <img src="${s.image}" alt="${s.title}" class="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
+        <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent"></div>
+        <div class="absolute bottom-0 left-0 p-6 text-white w-full">
+          <h3 class="font-bold text-xl mb-1">${s.title}</h3>
         </div>
         ${editMode ? `
           <button class="cms-section-btn" data-edit-btn="${s.id}">✏️ Редактировать</button>
@@ -569,7 +590,7 @@ window.TepCMS = (() => {
     `).join('');
 
     // Attach listeners
-    grid.querySelectorAll('.service-card').forEach(card => {
+    grid.querySelectorAll('[data-service-id]').forEach(card => {
       const id = card.dataset.serviceId;
       card.onclick = (e) => {
         TepCMS.openService(id);
@@ -595,14 +616,19 @@ window.TepCMS = (() => {
   function renderProducts() {
     const grid = document.getElementById('product-grid');
     if (!grid) return;
-    grid.innerHTML = data.products.map(p => `
-      <div class="product-card reveal-item" style="position:relative;" data-product-id="${p.id}">
-        <div class="product-image" style="position:relative;">
-          <img src="${p.image}" alt="${p.title}" id="prod-img-${p.id}" style="pointer-events:none;">
+    grid.innerHTML = (data.products || []).map(p => `
+      <div class="bg-white rounded-2xl p-6 shadow-sm border border-brand-border flex flex-col items-center cursor-pointer reveal-item" style="position:relative;" data-product-id="${p.id}">
+        <div class="h-48 w-full flex items-center justify-center mb-6 relative">
+          <img src="${p.image}" alt="${p.name || p.title}" id="prod-img-${p.id}" class="max-h-full object-contain">
           ${editMode ? `<div class="cms-upload-overlay" data-upload-product="${p.id}"><span>📷</span> Фото</div>` : ''}
         </div>
-        <h3>${p.title}</h3>
-        <p>${p.description}</p>
+        <div class="text-center">
+          <h4 class="font-bold text-lg mb-1">${p.name || p.title}</h4>
+          <p class="text-brand font-semibold mb-4">${p.price || ''}</p>
+        </div>
+        <button class="w-full py-2 border border-brand text-brand hover:bg-brand hover:text-white rounded-full transition-colors text-sm font-medium mt-auto" onclick="event.stopPropagation(); TepCMS.openProduct(${p.id})">
+          В каталог
+        </button>
         ${editMode ? `
           <button class="cms-section-btn" data-edit-product="${p.id}">✏️ Изменить</button>
           <button class="cms-delete-btn" data-del-product="${p.id}">×</button>
@@ -611,11 +637,10 @@ window.TepCMS = (() => {
     `).join('');
 
     // Programmatic listeners
-    grid.querySelectorAll('.product-card').forEach(card => {
+    grid.querySelectorAll('[data-product-id]').forEach(card => {
       const id = card.dataset.productId;
-      // click to open modal (visitor mode)
       card.addEventListener('click', (e) => {
-        if (editMode) return; // in edit mode clicks go to edit buttons
+        if (editMode) return;
         TepCMS.openProduct(id);
       });
       if (editMode) {
@@ -700,18 +725,21 @@ window.TepCMS = (() => {
   function renderGallery() {
     const grid = document.getElementById('gallery-grid');
     if (!grid) return;
-    grid.innerHTML = data.gallery.map(g => `
-      <div class="gallery-item reveal-item" style="position:relative; cursor:pointer;" onclick="TepCMS.openGallery('${g.id}')">
-        <img src="${g.cover}" alt="${g.title}">
-        <div class="gallery-overlay">
-          <span>${g.title}</span>
+    grid.innerHTML = data.gallery.map((g, i) => {
+        const span = i === 0 ? 'md:col-span-2' : '';
+        return `
+      <div class="${span} rounded-2xl overflow-hidden relative group cursor-pointer reveal-item" style="position:relative;" onclick="TepCMS.openGallery('${g.id}')">
+        <img src="${g.cover}" alt="${g.title}" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
+        <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center text-white text-center p-4">
+          <span class="font-bold text-xl mb-2">${g.title}</span>
+          <span class="border-2 border-white px-6 py-2 rounded-full text-sm">Подробнее</span>
         </div>
         ${editMode ? `
           <button class="cms-section-btn" onclick="event.stopPropagation(); TepCMS.editGallery('${g.id}')">✏️ Редактировать</button>
           <button class="cms-delete-btn" onclick="event.stopPropagation(); TepCMS.deleteGallery('${g.id}')">×</button>
         ` : ''}
       </div>
-    `).join('');
+    `}).join('');
     if (editMode) {
       grid.insertAdjacentHTML('beforeend', `<button class="cms-add-btn" onclick="TepCMS.addGallery()" style="height:300px;">+ Новая галерея</button>`);
     }
@@ -727,15 +755,15 @@ window.TepCMS = (() => {
     
     if (container) {
       container.innerHTML = (d.phones || []).map(p => `
-        <div class="contact-phone-item">
-          <a href="tel:${p.number.replace(/[^+\d]/g,'')}" class="phone-link">${p.number}</a>
-          ${p.label ? `<span class="phone-label">${p.label}</span>` : ''}
+        <div class="contact-phone-item flex flex-col">
+          <a href="tel:${p.number.replace(/[^+\d]/g,'')}" class="text-2xl font-bold text-gray-900 hover:text-brand">${p.number}</a>
+          ${p.label ? `<span class="text-xs text-brand uppercase font-bold tracking-widest">${p.label}</span>` : ''}
         </div>
       `).join('');
     }
     
-    if (email) email.textContent = d.email;
-    if (address) address.textContent = d.address;
+    if (email) email.innerHTML = `<span class="text-brand">✉</span> ${d.email}`;
+    if (address) address.innerHTML = `<span class="text-brand">📍</span> ${d.address}`;
     initMap();
   }
 
@@ -747,24 +775,18 @@ window.TepCMS = (() => {
 
     const linksEl = document.getElementById('footer-links');
     if (linksEl) {
-      linksEl.innerHTML = d.links.map((l, i) => `
-        <a href="${l.url}" data-footer-link="${i}">${l.label}</a>
+      linksEl.innerHTML = (d.links || []).map((l, i) => `
+        <a href="${l.url}" class="hover:text-brand transition-colors" data-footer-link="${i}">${l.label}</a>
       `).join('');
-      if (editMode) {
-        linksEl.insertAdjacentHTML('beforeend', `<button class="cms-add-btn" onclick="TepCMS.addFooterLink()" style="margin-top:8px; height:auto; padding:8px;">+ Ссылка</button>`);
-      }
     }
     const socialsEl = document.getElementById('footer-socials');
     if (socialsEl) {
-      socialsEl.innerHTML = d.socials.map((s, i) => `
-        <a href="${s.url}" target="_blank" style="position:relative; display:inline-block;">
-          <img src="${s.icon}" alt="${s.name}">
+      socialsEl.innerHTML = (d.socials || []).map((s, i) => `
+        <a href="${s.url}" target="_blank" class="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center text-gray-600 hover:bg-brand hover:text-white transition-colors" style="position:relative;">
+          <img src="${s.icon}" alt="${s.name}" class="w-5 h-5 object-contain">
           ${editMode ? `<button class="cms-delete-btn" onclick="TepCMS.deleteFooterSocial(${i})" style="top:-4px;right:-4px;">×</button>` : ''}
         </a>
       `).join('');
-      if (editMode) {
-        socialsEl.insertAdjacentHTML('beforeend', `<button class="cms-add-btn" onclick="TepCMS.addFooterSocial()" style="height:auto;padding:8px 16px;">+ Соцсеть</button>`);
-      }
     }
   }
 
@@ -817,16 +839,20 @@ window.TepCMS = (() => {
       return;
     }
     const d = data.contact;
+    const lat = d.mapLat || (d.coords && d.coords[0]) || 55.7961;
+    const lng = d.mapLng || (d.coords && d.coords[1]) || 49.1061;
+    
     if (map) { map.remove(); map = null; }
     try {
-      map = L.map('leaflet-map').setView([d.mapLat, d.mapLng], 14);
+      map = L.map('leaflet-map').setView([lat, lng], 14);
       L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '© OpenStreetMap'
       }).addTo(map);
-      marker = L.marker([d.mapLat, d.mapLng], { draggable: editMode }).addTo(map);
+      marker = L.marker([lat, lng], { draggable: editMode }).addTo(map);
       if (editMode) {
         marker.on('dragend', e => {
           const pos = marker.getLatLng();
+          if (data.contact.coords) data.contact.coords = [pos.lat, pos.lng];
           data.contact.mapLat = pos.lat;
           data.contact.mapLng = pos.lng;
           toast('Позиция маркера обновлена');

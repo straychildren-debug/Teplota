@@ -28,6 +28,21 @@ export default {
             },
           ],
         },
+        {
+          name: 'socials',
+          title: 'Соцсети (в шапке)',
+          type: 'array',
+          of: [
+            {
+              type: 'object',
+              fields: [
+                { name: 'name', title: 'Название', type: 'string' },
+                { name: 'icon', title: 'Иконка', type: 'image' },
+                { name: 'url', title: 'Ссылка', type: 'string' },
+              ]
+            }
+          ]
+        }
       ],
     },
     {
@@ -96,6 +111,35 @@ export default {
       type: 'object',
       fields: [
         { name: 'copyright', title: 'Копирайт', type: 'string' },
+        {
+          name: 'links',
+          title: 'Ссылки в подвале',
+          type: 'array',
+          of: [
+            {
+              type: 'object',
+              fields: [
+                { name: 'label', title: 'Текст', type: 'string' },
+                { name: 'url', title: 'Ссылка', type: 'string' },
+              ]
+            }
+          ]
+        },
+        {
+          name: 'socials',
+          title: 'Соцсети в подвале',
+          type: 'array',
+          of: [
+            {
+              type: 'object',
+              fields: [
+                { name: 'name', title: 'Название', type: 'string' },
+                { name: 'icon', title: 'Иконка', type: 'image' },
+                { name: 'url', title: 'Ссылка', type: 'string' },
+              ]
+            }
+          ]
+        }
       ],
     },
   ],

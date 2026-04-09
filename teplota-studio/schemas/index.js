@@ -12,4 +12,5 @@ export const schemaTypes = [
   service,
   product,
   gallery,
+  advantage,
 ]

@@ -1,296 +1,363 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Теплота | Инженерные системы и сервис премиум-класса в Казани</title>
-  <meta name="description" content="Монтаж систем отопления, водоснабжения и канализации. Профессиональное проектирование и сервис отопительных систем в Казани и Татарстане.">
-  <link rel="stylesheet" href="style.css">
-  <link rel="stylesheet" href="admin.css">
-  <!-- Leaflet.js for interactive map -->
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Teplota - Инженерные системы под ключ</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com" rel="preconnect"/>
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Playfair+Display:wght@700&display=swap" rel="stylesheet"/>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ['Montserrat', 'sans-serif'],
+              serif: ['Playfair Display', 'serif'],
+            },
+            colors: {
+              brand: {
+                DEFAULT: '#E65100', // Orange primary
+                dark: '#BF360C',
+                light: '#FFCC80',
+                bg: '#F5F5F5',
+                text: '#333333',
+                gray: '#757575',
+                border: '#E0E0E0'
+              }
+            },
+            backgroundImage: {
+              'hero-pattern': "url('assets/hero_bg_1775505447491.png')",
+              'pipes-pattern': "url('https://placehold.co/800x600/f5f5f5/e0e0e0?text=Pipes+Graphic')",
+              'map-bg': "url('https://placehold.co/1920x600/e0e0e0/ffffff?text=Map+Background')"
+            }
+          }
+        }
+      }
+    </script>
+    <style data-purpose="custom-styles">
+        .glass-effect {
+          background: rgba(255, 255, 255, 0.75);
+          backdrop-filter: blur(16px);
+          -webkit-backdrop-filter: blur(16px);
+          border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        .glass-effect-orange {
+           background: rgba(230, 81, 0, 0.85);
+           backdrop-filter: blur(8px);
+           color: white;
+        }
+        .glass-effect-dark {
+           background: rgba(0, 0, 0, 0.6);
+           backdrop-filter: blur(8px);
+           color: white;
+        }
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        
+        /* Reveal animation */
+        .reveal-item { opacity: 0; transform: translateY(30px); transition: all 0.8s ease-out; }
+        .reveal-item.active { opacity: 1; transform: translateY(0); }
+        
+        /* Modal Visibility */
+        .modal-overlay {
+          display: none;
+        }
+        .modal-overlay.open {
+          display: flex !important;
+          animation: fadeIn 0.3s ease-out;
+        }
+        @keyframes fadeIn {
+          from { opacity: 0; }
+          to { opacity: 1; }
+        }
+    </style>
+    <link rel="stylesheet" href="admin.css"> <!-- Fallback for editor styles -->
 </head>
-<body>
+<body class="font-sans text-brand-text bg-brand-bg antialiased selection:bg-brand selection:text-white">
 
-  <!-- ═══════════════════════════════════════════════════════════
-       CMS EDITOR UI - TOPBAR
-  ═══════════════════════════════════════════════════════════ -->
-  <div id="cms-topbar">
-    <div class="cms-topbar-title">
-      <span>✏️</span> Режим редактора — изменения сохраняются локально
-    </div>
-    <div id="cms-topbar-actions">
-      <button class="cms-topbar-btn" id="cms-preview-btn" onclick="TepCMS.preview()">👁 Предпросмотр</button>
-      <button class="cms-topbar-btn save" onclick="TepCMS.save()">💾 Сохранить</button>
-      <button class="cms-topbar-btn" onclick="TepCMS.exportData()" title="Скопировать все данные для переноса на гитхаб">📤 Экспорт для GitHub</button>
+  <!-- CMS EDITOR UI - TOPBAR -->
+  <div id="cms-topbar" class="fixed top-0 left-0 w-full z-[100] bg-gray-900 text-white flex items-center justify-between px-6 py-2 text-xs font-semibold" style="display:none;">
+    <div class="cms-topbar-title"><span>✏️</span> Режим редактора</div>
+    <div id="cms-topbar-actions" class="flex gap-2">
+      <button class="cms-topbar-btn" id="cms-preview-btn">Предпросмотр</button>
+      <button class="cms-topbar-btn save" onclick="TepCMS.save()">Сохранить</button>
     </div>
   </div>
 
-  <!-- Admin link (hidden — go to /admin.html to log in) -->
-  <button id="cms-toggle-btn" onclick="window.location.href='/admin.html'" style="display:none;">
-    <span class="btn-icon">✏️</span> Редактировать сайт
-  </button>
-
-  <!-- Toast Notification -->
-  <div id="cms-toast"></div>
-
-  <!-- ═══════════════════════════════════════════════════════════
-       HEADER
-  ═══════════════════════════════════════════════════════════ -->
-  <header id="main-header" style="position:relative;">
-    <div class="container">
-      <div class="logo">
-        <img src="assets/logo.svg" alt="Теплота" id="site-logo">
-      </div>
-      <nav>
-        <ul id="main-nav">
-          <!-- Rendered by CMS -->
-        </ul>
+  <header class="fixed top-0 left-0 w-full z-50 bg-white/90 backdrop-blur-md shadow-sm" id="main-header">
+    <div class="container mx-auto px-4 md:px-8 py-4 flex items-center justify-between">
+      <a class="flex items-center gap-2" href="#">
+        <img src="assets/logo.svg" alt="Teplota" class="h-10 w-auto">
+      </a>
+      <nav class="hidden md:flex items-center gap-8 font-medium text-sm text-gray-700">
+        <a class="hover:text-brand transition-colors" href="#about">О нас</a>
+        <a class="hover:text-brand transition-colors" href="#services">Услуги</a>
+        <a class="hover:text-brand transition-colors" href="#products">Товары</a>
+        <a class="hover:text-brand transition-colors" href="#gallery">Наши работы</a>
+        <a class="hover:text-brand transition-colors" href="#contacts">Контакты</a>
       </nav>
-      <div class="nav-right">
-        <a href="#" id="header-cta" class="btn">Вызвать мастера</a>
+      <div class="flex items-center gap-6">
+        <a class="hidden lg:block font-semibold text-gray-800 hover:text-brand transition-colors" href="tel:+79274326336" id="header-phone-val">+7 (927) 432-63-36</a>
+        <button class="bg-brand hover:bg-brand-dark text-white px-6 py-2.5 rounded-full font-medium text-sm transition-colors shadow-md">
+          Заказать звонок
+        </button>
       </div>
     </div>
   </header>
 
   <main>
-    <!-- ═══════════════════════════════════════════════════════
-         HERO
-    ═══════════════════════════════════════════════════════ -->
-    <section class="hero" style="position:relative;">
-      <div class="hero-bg-overlay"></div>
-      <div class="container">
-        <div class="hero-content reveal-item">
-          <h1 id="hero-title">Инженерные <span>системы</span><br>премиум-класса</h1>
-          <div class="hero-subtitle" id="hero-subtitle">Профессиональное проектирование и монтаж систем отопления, водоснабжения и канализации.</div>
-          <div class="hero-btns">
-            <a href="#contacts" id="hero-btn" class="btn">Получить консультацию</a>
+    <!-- HERO SECTION -->
+    <section class="relative h-[85vh] min-h-[600px] flex items-center overflow-hidden" id="home">
+      <div class="absolute inset-0 bg-hero-pattern bg-cover bg-center transition-transform duration-1000 scale-105"></div>
+      <div class="container mx-auto px-4 md:px-8 relative z-10">
+        <div class="glass-effect rounded-3xl p-8 md:p-12 max-w-2xl shadow-2xl reveal-item">
+          <p class="text-xs font-bold tracking-widest text-brand uppercase mb-4" id="hero-label">Инженерные системы под ключ</p>
+          <h1 class="font-serif text-5xl md:text-7xl font-bold text-gray-900 leading-tight mb-6" id="hero-title">
+            КОМПЛЕКСНЫЙ<br/><span class="text-brand">МОНТАЖ</span>
+          </h1>
+          <div class="text-gray-700 mb-8 leading-relaxed max-w-lg" id="hero-subtitle">
+            <span style="font-size: 32px;">систем отопления, водоснабжения<br>и канализации в КАЗАНИ</span>
+          </div>
+          <div class="flex flex-wrap gap-4">
+            <button class="bg-brand hover:bg-brand-dark text-white px-8 py-3.5 rounded-full font-semibold transition-colors shadow-lg shadow-brand/20">
+              Связаться с нами
+            </button>
+            <button class="bg-white hover:bg-gray-50 text-gray-800 px-8 py-3.5 rounded-full font-semibold transition-colors shadow-md border border-gray-100">
+              Наши работы
+            </button>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- ═══════════════════════════════════════════════════════
-         ABOUT & PARTNERS
-    ═══════════════════════════════════════════════════════ -->
-    <section id="about" class="about" style="position:relative;">
-      <div class="container">
-        <div class="about-grid">
-          <div class="about-text reveal-item">
-            <span class="label" id="about-label">О компании</span>
-            <h2 id="about-title">Более 10 лет <span>заботимся</span><br>о вашем комфорте</h2>
-            <div class="stats-grid" id="stats-grid">
-              <!-- Rendered by CMS -->
+    <!-- ABOUT SECTION -->
+    <section id="about" class="py-24 bg-white relative overflow-hidden">
+      <!-- Decorative element -->
+      <div class="absolute right-0 top-0 bottom-0 w-1/3 bg-pipes-pattern bg-cover bg-left opacity-10 pointer-events-none"></div>
+      
+      <div class="container mx-auto px-4 md:px-8 relative z-10">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
+          <div class="reveal-item">
+            <span class="inline-block text-xs font-bold tracking-widest text-brand uppercase mb-4" id="about-label">О компании</span>
+            <h2 class="font-serif text-4xl md:text-5xl font-bold text-gray-900 leading-tight mb-8" id="about-title">
+                Теплота — мы профессиональная<br/> инженерная компания!
+            </h2>
+            <div class="flex gap-12 mt-12" id="stats-grid">
+               <!-- Stats from CMS -->
             </div>
           </div>
-          <div class="about-info reveal-item">
-            <div class="large-p" id="about-text1">Мы специализируемся на проектировании и монтаже инженерных систем любой сложности.</div>
-            <div class="rich-text" id="about-text2">Наши специалисты проходят регулярную сертификацию у ведущих мировых производителей оборудования.</div>
-          </div>
-        </div>
-        <div class="partners-section reveal-item">
-          <div class="partners-grid" id="partners-grid">
-            <!-- Rendered by CMS -->
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- ═══════════════════════════════════════════════════════
-         ADVANTAGES
-    ═══════════════════════════════════════════════════════ -->
-    <section id="advantages" class="advantages">
-      <div class="container">
-        <div class="section-head reveal-item">
-          <h2 id="advantages-title">Наши <span>преимущества</span></h2>
-        </div>
-        <div class="advantage-grid" id="advantage-grid">
-          <!-- Rendered by CMS -->
-        </div>
-      </div>
-    </section>
-
-    <!-- ═══════════════════════════════════════════════════════
-         SERVICES
-    ═══════════════════════════════════════════════════════ -->
-    <section id="services" class="services">
-      <div class="container">
-        <div class="section-head reveal-item">
-          <h2 id="services-title">Наши <span>услуги</span></h2>
-          <p>Комплексный подход к инженерным сетям</p>
-        </div>
-        <div class="service-grid" id="service-grid">
-          <!-- Rendered by CMS -->
-        </div>
-      </div>
-    </section>
-
-    <!-- ═══════════════════════════════════════════════════════
-         PRODUCTS
-    ═══════════════════════════════════════════════════════ -->
-    <section id="products" class="products">
-      <div class="container">
-        <div class="section-head reveal-item">
-          <h2 id="products-title">Наши <span>товары</span></h2>
-          <a href="#contacts" class="btn-link">Заказать оборудование →</a>
-        </div>
-        <div class="product-grid" id="product-grid">
-          <!-- Rendered by CMS -->
-        </div>
-      </div>
-    </section>
-
-    <!-- ═══════════════════════════════════════════════════════
-         GALLERY
-    ═══════════════════════════════════════════════════════ -->
-    <section id="gallery" class="gallery">
-      <div class="container">
-        <div class="section-head reveal-item">
-          <h2>Наши <span>работы</span></h2>
-          <p>Наведите на проект, чтобы узнать подробнее</p>
-        </div>
-        <div class="gallery-grid" id="gallery-grid">
-          <!-- Rendered by CMS -->
-        </div>
-      </div>
-    </section>
-
-    <!-- ═══════════════════════════════════════════════════════
-         CONTACT
-    ═══════════════════════════════════════════════════════ -->
-    <section id="contacts" class="contact" style="position:relative;">
-      <div class="container">
-        <div class="contact-grid">
-          <div class="contact-info reveal-item">
-            <span class="label">Связаться с нами</span>
-            <h2>Готовы начать <br><span>свой проект?</span></h2>
-            <div id="contact-phones-list" class="contact-phones-list">
-              <!-- Rendered by CMS -->
+          <div class="reveal-item">
+            <div class="text-xl text-gray-700 font-medium mb-8 leading-relaxed" id="about-text1">
+                Огромный опыт в сфере монтажа систем ОВК (отопления, водоснабжения и канализации)
             </div>
-            <p id="contact-email" class="email">info@teplota-kazan.ru</p>
-            <p id="contact-address" class="address">г. Казань, ул. Техническая, д. 23</p>
-            <div class="contact-form">
-              <div class="form-group"><input type="text" placeholder="Ваше имя"></div>
-              <div class="form-group"><input type="tel" placeholder="Номер телефона"></div>
-              <button class="btn">Заказать звонок</button>
+            <div class="text-gray-600 leading-relaxed mb-12 rich-text" id="about-text2">
+                <ul>
+                    <li class="mb-4">• С 2010 года продаём отопительное оборудование и осуществляем качественный монтаж.</li>
+                    <li class="mb-4">• Являемся официальным дилером таких производителей как Stout, Rommer, Arrow.</li>
+                    <li class="mb-4">• Выполняем работу в короткие сроки с гарантией качества.</li>
+                </ul>
+            </div>
+            
+            <div class="mt-8">
+                <p class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-6">Нам доверяют</p>
+                <div class="flex flex-wrap items-center gap-8 opacity-40 grayscale hover:grayscale-0 transition-all duration-300" id="partners-grid">
+                  <!-- Partners from CMS -->
+                </div>
             </div>
           </div>
-          <div class="map-container reveal-item">
-            <div id="leaflet-map"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ADVANTAGES -->
+    <section id="advantages" class="py-24 bg-brand-bg">
+      <div class="container mx-auto px-4 md:px-8">
+        <div class="text-center mb-16 reveal-item">
+          <h2 class="font-serif text-3xl md:text-5xl font-bold text-gray-900" id="advantages-title">НАШИ <span class="text-brand">ПРЕИМУЩЕСТВА</span></h2>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6" id="advantage-grid">
+          <!-- Advantages from CMS -->
+        </div>
+      </div>
+    </section>
+
+    <!-- SERVICES -->
+    <section id="services" class="py-24 bg-white">
+      <div class="container mx-auto px-4 md:px-8">
+        <div class="flex flex-col md:flex-row justify-between items-end mb-16 gap-6 reveal-item">
+          <div>
+            <h2 class="font-serif text-3xl md:text-5xl font-bold text-gray-900 mb-4" id="services-title">НАШИ <span class="text-brand">УСЛУГИ</span></h2>
+            <p class="text-gray-500 text-lg">Комплексный монтаж инженерных систем любой сложности</p>
           </div>
+          <div class="text-brand font-bold hover:translate-x-2 transition-transform cursor-pointer">Все услуги →</div>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6" id="service-grid">
+          <!-- Services from CMS -->
+        </div>
+      </div>
+    </section>
+
+    <!-- PRODUCTS -->
+    <section id="products" class="py-24 bg-brand-bg">
+      <div class="container mx-auto px-4 md:px-8">
+        <div class="flex flex-col md:flex-row justify-between items-end mb-16 gap-6 reveal-item">
+          <div>
+            <h2 class="font-serif text-3xl md:text-5xl font-bold text-gray-900 mb-4" id="products-title">НАШИ <span class="text-brand">ТОВАРЫ</span></h2>
+            <p class="text-gray-500 text-lg">Сертифицированное оборудование для вашего дома</p>
+          </div>
+          <a href="#contacts" class="bg-white border border-gray-200 px-6 py-2 rounded-full text-sm font-bold hover:bg-gray-50 transition-colors shadow-sm">Заказать оборудование</a>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" id="product-grid">
+          <!-- Products from CMS -->
+        </div>
+      </div>
+    </section>
+
+    <!-- GALLERY / PORTFOLIO -->
+    <section id="gallery" class="py-24 bg-white">
+      <div class="container mx-auto px-4 md:px-8">
+        <div class="text-center mb-16 reveal-item">
+          <h2 class="font-serif text-3xl md:text-5xl font-bold text-gray-900 mb-4">НАШИ <span class="text-brand">РАБОТЫ</span></h2>
+          <p class="text-gray-500">Примеры реализованных нами проектов</p>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 auto-rows-[300px]" id="gallery-grid">
+          <!-- Gallery from CMS -->
+        </div>
+      </div>
+    </section>
+
+    <!-- CONTACTS -->
+    <section id="contacts" class="py-24 relative min-h-[600px] flex items-center">
+      <div class="absolute inset-0 z-0">
+          <div id="leaflet-map" style="height: 100%; width: 100%;"></div>
+      </div>
+      <div class="container mx-auto px-4 md:px-8 relative z-10 pointer-events-none">
+        <div class="grid grid-cols-1 lg:grid-cols-2">
+            <div class="bg-white/95 backdrop-blur-md p-8 md:p-12 rounded-3xl shadow-2xl max-w-xl pointer-events-auto reveal-item">
+                <span class="inline-block text-xs font-bold tracking-widest text-brand uppercase mb-4">Связаться с нами</span>
+                <h2 class="font-serif text-3xl md:text-4xl font-bold text-gray-900 mb-8 leading-tight">Готовы начать<br/><span class="text-brand">свой проект?</span></h2>
+                
+                <div id="contact-phones-list" class="space-y-4 mb-8">
+                    <!-- Phones from CMS -->
+                </div>
+                
+                <div class="space-y-4 mb-10">
+                    <p id="contact-email" class="text-lg font-semibold text-gray-800 flex items-center gap-3">
+                        <span class="text-brand">✉</span> teplota-kzn@mail.ru
+                    </p>
+                    <p id="contact-address" class="text-gray-600 flex items-center gap-3">
+                        <span class="text-brand">📍</span> г. Казань, ул. Техническая, д. 23
+                    </p>
+                </div>
+                
+                <form class="space-y-4">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <input type="text" placeholder="Ваше имя" class="w-full px-5 py-3 rounded-xl border-gray-200 bg-gray-50 focus:ring-2 focus:ring-brand focus:border-brand outline-none transition-all">
+                        <input type="tel" placeholder="Номер телефона" class="w-full px-5 py-3 rounded-xl border-gray-200 bg-gray-50 focus:ring-2 focus:ring-brand focus:border-brand outline-none transition-all">
+                    </div>
+                    <button class="w-full bg-brand hover:bg-brand-dark text-white font-bold py-4 rounded-xl shadow-lg shadow-brand/20 transition-all transform hover:-translate-y-1">Заказать звонок</button>
+                </form>
+            </div>
         </div>
       </div>
     </section>
   </main>
 
-  <!-- ═══════════════════════════════════════════════════════════
-       FOOTER
-  ═══════════════════════════════════════════════════════════ -->
-  <footer style="position:relative;">
-    <div class="container">
-      <div class="footer-top">
-        <div class="footer-logo">
-          <img src="assets/logo.svg" alt="Теплота" style="height:24px;opacity:0.6;">
+  <footer class="py-16 bg-white border-t border-gray-100">
+    <div class="container mx-auto px-4 md:px-8">
+      <div class="flex flex-col md:flex-row justify-between items-center gap-8 border-b border-gray-100 pb-12 mb-8">
+        <div class="flex items-center gap-2">
+            <img src="assets/logo.svg" alt="Теплота" class="h-7 w-auto opacity-80">
         </div>
-        <div class="social-icons" id="footer-socials">
-          <!-- Rendered by CMS -->
+        <div id="footer-socials" class="flex gap-4">
+          <!-- Socials from CMS -->
         </div>
       </div>
-      <div class="footer-bottom">
-        <p id="footer-copy">© 2026 Теплота. Все права защищены.</p>
-        <div class="footer-links" id="footer-links">
-          <!-- Rendered by CMS -->
+      <div class="flex flex-col md:flex-row justify-between items-center gap-6">
+        <p id="footer-copy" class="text-sm text-gray-400">© 2026 Теплота. Все права защищены.</p>
+        <div id="footer-links" class="flex gap-8 text-sm text-gray-500 font-medium">
+          <!-- Links from CMS -->
         </div>
       </div>
     </div>
   </footer>
 
-  <!-- Scripts -->
-  <!-- Modals and Scripts -->
-  
-  <!-- ═══════════════════════════════════════════════════════════
-       CMS MODAL (Editor panels)
-  ═══════════════════════════════════════════════════════════ -->
-  <div id="cms-modal-overlay" onclick="if(event.target===this)this.classList.remove('open')">
-    <div id="cms-modal">
-      <div id="cms-modal-header">
-        <h3 id="cms-modal-title">Редактировать</h3>
-        <button id="cms-modal-close" onclick="document.getElementById('cms-modal-overlay').classList.remove('open')">×</button>
-      </div>
-      <div id="cms-modal-body"></div>
-      <div id="cms-modal-footer">
-        <button class="cms-btn secondary" onclick="document.getElementById('cms-modal-overlay').classList.remove('open')">Отмена</button>
-        <button class="cms-btn primary" id="cms-modal-save">Сохранить</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- ═══════════════════════════════════════════════════════════
-       SERVICE DETAIL MODAL (Visitor view)
-  ═══════════════════════════════════════════════════════════ -->
-  <div id="service-modal-overlay" onclick="if(event.target===this)this.classList.remove('open')">
-    <div id="service-modal">
-      <button id="service-modal-close" onclick="document.getElementById('service-modal-overlay').classList.remove('open')">×</button>
-      <img id="service-modal-cover" src="" alt="">
-      <div id="service-modal-body">
-        <div id="service-modal-title"></div>
-        <p id="service-modal-desc"></p>
-        <div id="service-modal-photos"></div>
-      </div>
-    </div>
-  </div>
-
-  <!-- ═══════════════════════════════════════════════════════════
-       GALLERY PROJECT MODAL (Slider)
-  ═══════════════════════════════════════════════════════════ -->
-  <div id="gallery-modal-overlay" onclick="if(event.target===this)this.classList.remove('open')">
-    <div id="gallery-modal-container">
-      <button id="gallery-modal-close" onclick="document.getElementById('gallery-modal-overlay').classList.remove('open')">×</button>
-      
-      <div id="gallery-modal-slider">
-        <button class="slider-arrow prev" onclick="TepCMS.galleryPrev()">‹</button>
-        <div id="gallery-modal-main-img-wrap">
-          <img id="gallery-modal-main-img" src="" alt="">
-          <div id="gallery-image-caption"></div>
+  <!-- MODALS -->
+  <div id="cms-modal-overlay" class="modal-overlay fixed inset-0 z-[10000] items-center justify-center bg-black/60 backdrop-blur-sm" onclick="if(event.target===this)this.classList.remove('open')">
+    <div id="cms-modal" class="bg-white rounded-3xl w-full max-w-2xl max-h-[90vh] overflow-hidden shadow-2xl relative">
+        <div class="p-6 border-b flex justify-between items-center">
+            <h3 id="cms-modal-title" class="text-xl font-bold">Редактировать</h3>
+            <button onclick="TepCMS.closeModal()" class="text-gray-400 hover:text-gray-600">✕</button>
         </div>
-        <button class="slider-arrow next" onclick="TepCMS.galleryNext()">›</button>
-        
-        <div id="gallery-modal-counter">1 / 1</div>
-      </div>
-
-      <div id="gallery-modal-info">
-        <h3 id="gallery-modal-title"></h3>
-        <p id="gallery-modal-desc"></p>
-      </div>
+        <div id="cms-modal-body" class="p-6 overflow-y-auto max-h-[70vh]"></div>
+        <div id="cms-modal-footer" class="p-6 border-t flex justify-end gap-3">
+            <button onclick="TepCMS.closeModal()" class="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-lg">Отмена</button>
+            <button id="cms-modal-save" class="px-6 py-2 bg-brand text-white rounded-lg font-bold hover:bg-brand-dark transition-colors">Сохранить</button>
+        </div>
     </div>
   </div>
 
-  <!-- ═══════════════════════════════════════════════════════════
-       PRODUCT DETAIL MODAL (Visitor view)
-  ═══════════════════════════════════════════════════════════ -->
-  <div id="product-modal-overlay" onclick="if(event.target===this)this.classList.remove('open')">
-    <div id="product-modal">
-      <button id="product-modal-close" onclick="document.getElementById('product-modal-overlay').classList.remove('open')">×</button>
-      <div id="product-modal-image-wrap">
-        <img id="product-modal-cover" src="" alt="">
-      </div>
-      <div id="product-modal-body">
-        <div id="product-modal-title"></div>
-        <div id="product-modal-desc"></div>
-      </div>
+  <div id="service-modal-overlay" class="modal-overlay fixed inset-0 z-[9998] items-center justify-center bg-black/60 backdrop-blur-sm" onclick="if(event.target===this)this.classList.remove('open')">
+    <div id="service-modal" class="bg-white rounded-3xl w-full max-w-3xl max-h-[90vh] overflow-y-auto shadow-2xl relative">
+        <button onclick="this.closest('.modal-overlay').classList.remove('open')" class="absolute top-6 right-6 z-10 w-10 h-10 bg-white shadow-md rounded-full flex items-center justify-center text-gray-500 hover:text-gray-800 transition-colors">✕</button>
+        <div class="p-8">
+            <img id="service-modal-cover" src="" alt="" class="w-full h-64 object-cover rounded-2xl mb-8">
+            <h2 id="service-modal-title" class="font-serif text-3xl font-bold mb-4"></h2>
+            <div id="service-modal-desc" class="text-gray-600 leading-relaxed mb-8"></div>
+            <div id="service-modal-photos" class="grid grid-cols-2 md:grid-cols-4 gap-4"></div>
+        </div>
     </div>
   </div>
 
-  <!-- ═══════════════════════════════════════════════════════════
-       FULLSCREEN IMAGE VIEWER
-  ═══════════════════════════════════════════════════════════ -->
-  <div id="img-viewer-overlay" onclick="if(event.target===this)this.classList.remove('open')">
-    <button id="img-viewer-close" onclick="document.getElementById('img-viewer-overlay').classList.remove('open')">×</button>
-    <img src="" alt="Просмотр">
+  <div id="gallery-modal-overlay" class="modal-overlay fixed inset-0 z-[9999] items-center justify-center bg-black/90 backdrop-blur-md p-4" onclick="if(event.target===this)this.classList.remove('open')">
+    <div id="gallery-modal-container" class="max-w-4xl w-full max-h-[95vh] bg-white rounded-2xl overflow-hidden relative shadow-2xl flex flex-col">
+        <button onclick="this.closest('.modal-overlay').classList.remove('open')" class="absolute top-4 right-4 z-20 w-8 h-8 bg-black/50 text-white rounded-full flex items-center justify-center hover:bg-black transition-colors">✕</button>
+        <div class="relative w-full aspect-video md:aspect-[16/10] bg-black flex items-center justify-center">
+            <img id="gallery-modal-main-img" src="" alt="" class="max-w-full max-h-full object-contain">
+            <button onclick="TepCMS.galleryPrev()" class="absolute left-4 top-1/2 -translate-y-1/2 w-12 h-12 bg-white/20 hover:bg-white/40 backdrop-blur-md rounded-full text-white flex items-center justify-center transition-all">←</button>
+            <button onclick="TepCMS.galleryNext()" class="absolute right-4 top-1/2 -translate-y-1/2 w-12 h-12 bg-white/20 hover:bg-white/40 backdrop-blur-md rounded-full text-white flex items-center justify-center transition-all">→</button>
+            <div id="gallery-modal-counter" class="absolute bottom-4 right-4 bg-black/50 text-white px-3 py-1 rounded-full text-xs"></div>
+        </div>
+        <div class="p-6 md:p-10 overflow-y-auto">
+            <h3 id="gallery-modal-title" class="text-2xl font-bold mb-3"></h3>
+            <p id="gallery-modal-desc" class="text-gray-600"></p>
+            <div id="gallery-image-caption" class="mt-4 bg-gray-50 p-4 rounded-xl text-sm border-l-4 border-brand italic hidden"></div>
+        </div>
+    </div>
   </div>
 
+  <div id="product-modal-overlay" class="modal-overlay fixed inset-0 z-[9998] items-center justify-center bg-black/60 backdrop-blur-sm" onclick="if(event.target===this)this.classList.remove('open')">
+    <div id="product-modal" class="bg-white rounded-3xl w-full max-w-4xl max-h-[90vh] overflow-y-auto shadow-2xl flex flex-col md:flex-row relative">
+        <button onclick="this.closest('.modal-overlay').classList.remove('open')" class="absolute top-6 right-6 z-10 w-10 h-10 bg-white shadow-md rounded-full flex items-center justify-center text-gray-500 hover:text-gray-800 transition-colors">✕</button>
+        <div class="md:w-1/2 bg-gray-50 flex items-center justify-center p-12">
+            <img id="product-modal-cover" src="" alt="" class="max-w-full max-h-[400px] object-contain drop-shadow-2xl">
+        </div>
+        <div class="md:w-1/2 p-8 md:p-12">
+            <h2 id="product-modal-title" class="text-3xl font-bold text-gray-900 mb-6"></h2>
+            <div id="product-modal-desc" class="text-gray-600 leading-relaxed mb-8"></div>
+            <div class="mt-8 pt-8 border-t border-gray-100 italic text-sm text-gray-500">
+                Свяжитесь с нами для уточнения актуальной цены и наличия.
+            </div>
+            <div class="mt-8 flex gap-4">
+                <a href="tel:+79274326336" class="bg-brand text-white px-8 py-3 rounded-full font-bold hover:bg-brand-dark transition-colors inline-block text-center">Заказать</a>
+                <button onclick="this.closest('.modal-overlay').classList.remove('open')" class="px-8 py-3 rounded-full border border-gray-200 text-gray-600 font-bold hover:bg-gray-50 transition-colors">Закрыть</button>
+            </div>
+        </div>
+    </div>
+  </div>
+
+  <div id="img-viewer-overlay" class="modal-overlay fixed inset-0 z-[10002] items-center justify-center bg-black/95 p-4" onclick="if(event.target===this)this.classList.remove('open')">
+    <img src="" alt="" class="max-w-full max-h-full rounded-lg shadow-2xl">
+  </div>
+
+  <div id="cms-toast"></div>
+
+  <!-- Scripts -->
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script type="module" src="cms.js"></script>
-<script type="module" src="main.js"></script>
+  <script type="module" src="main.js"></script>
 </body>
 </html>

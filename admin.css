@@ -12,21 +12,21 @@
   display: flex;
   align-items: center;
   gap: 10px;
-  padding: 14px 24px;
-  background: #1A1A1A;
+  padding: 16px 28px;
+  background: #1A1A1C;
   color: #fff;
   border: none;
   border-radius: 100px;
-  font-family: 'Inter', sans-serif;
+  font-family: 'Plus Jakarta Sans', sans-serif;
   font-size: 14px;
-  font-weight: 600;
+  font-weight: 700;
   cursor: pointer;
-  box-shadow: 0 8px 30px rgba(0,0,0,0.25);
-  transition: all 0.3s ease;
+  box-shadow: 0 12px 32px rgba(0,0,0,0.2);
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
-#cms-toggle-btn:hover { background: #FF5722; transform: translateY(-3px); }
+#cms-toggle-btn:hover { background: #b02f00; transform: translateY(-4px); }
 #cms-toggle-btn .btn-icon { font-size: 18px; }
-#cms-toggle-btn.active { background: #FF5722; }
+#cms-toggle-btn.active { background: #b02f00; }
 
 /* ---- Editor Top Bar (save / cancel) ---- */
 #cms-topbar {
@@ -37,13 +37,14 @@
   align-items: center;
   justify-content: space-between;
   padding: 0 32px;
-  height: 56px;
-  background: #FF5722;
+  height: 64px;
+  background: rgba(176, 47, 0, 0.95);
+  backdrop-filter: blur(16px);
   color: #fff;
-  font-family: 'Inter', sans-serif;
+  font-family: 'Plus Jakarta Sans', sans-serif;
   font-size: 14px;
-  font-weight: 600;
-  box-shadow: 0 4px 20px rgba(255,87,34,0.4);
+  font-weight: 700;
+  box-shadow: 0 4px 30px rgba(176,47,0,0.3);
 }
 #cms-topbar.visible { display: flex; }
 #cms-topbar .cms-topbar-title { display: flex; align-items: center; gap: 10px; }
@@ -62,8 +63,8 @@
   transition: all 0.2s;
 }
 .cms-topbar-btn:hover { background: rgba(255,255,255,0.15); }
-.cms-topbar-btn.save { background: #fff; color: #FF5722; border-color: #fff; }
-.cms-topbar-btn.save:hover { background: #fff3f0; }
+.cms-topbar-btn.save { background: #fff; color: #b02f00; border-color: #fff; }
+.cms-topbar-btn.save:hover { background: #ffffff; transform: scale(1.05); }
 
 /* ---- Editable Elements ---- */
 body.cms-active [data-editable] {
@@ -182,7 +183,7 @@ body.cms-active .cms-upload-overlay { display: flex; }
   width: 90%;
   max-width: 720px;
   max-height: 90vh;
-  border-radius: 16px;
+  border-radius: 24px;
   overflow-y: auto;
   box-shadow: 0 30px 80px rgba(0,0,0,0.25);
   position: relative;
@@ -195,11 +196,12 @@ body.cms-active .cms-upload-overlay { display: flex; }
   align-items: center;
 }
 #cms-modal-header h3 {
-  font-family: 'Outfit', sans-serif;
-  font-size: 20px;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 22px;
+  font-weight: 800;
   color: #1A1A1A;
   text-transform: none;
-  letter-spacing: 0;
+  letter-spacing: -0.01em;
 }
 #cms-modal-close {
   width: 36px; height: 36px;
@@ -239,8 +241,9 @@ body.cms-active .cms-upload-overlay { display: flex; }
 }
 .cms-field input:focus, .cms-field textarea:focus {
   outline: none;
-  border-color: #FF5722;
+  border-color: #b02f00;
   background: #fff;
+  box-shadow: 0 0 0 4px rgba(176, 47, 0, 0.08);
 }
 .cms-field textarea { min-height: 120px; resize: vertical; }
 
