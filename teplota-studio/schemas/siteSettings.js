@@ -12,6 +12,7 @@ export default {
         { name: 'phone', title: 'Телефон', type: 'string' },
         { name: 'btnText', title: 'Текст кнопки', type: 'string' },
         { name: 'btnUrl', title: 'Ссылка кнопки', type: 'string' },
+        { name: 'favicon', title: 'Фавиконка (иконка сайта)', type: 'image' },
         {
           name: 'navLinks',
           title: 'Навигация',

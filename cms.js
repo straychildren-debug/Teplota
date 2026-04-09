@@ -183,6 +183,7 @@ window.TepCMS = (() => {
             btnText: s.siteSettings?.header?.btnText || DEFAULT.header.btnText,
             btnUrl: s.siteSettings?.header?.btnUrl || DEFAULT.header.btnUrl,
             navLinks: s.siteSettings?.header?.navLinks || DEFAULT.header.navLinks,
+            favicon: s.siteSettings?.header?.favicon ? builder.image(s.siteSettings.header.favicon) : '',
             socials: s.siteSettings?.header?.socials?.map(soc => ({
               name: soc.name,
               url: soc.url,
@@ -496,9 +497,14 @@ window.TepCMS = (() => {
   function renderHeader() {
     const d = data.header;
     const phoneEl = document.getElementById('header-phone-val');
+    const favEl = document.getElementById('site-favicon');
+    
     if (phoneEl) { 
         phoneEl.href = `tel:${d.phone.replace(/[^+\d]/g, '')}`; 
         phoneEl.textContent = d.phone; 
+    }
+    if (favEl && d.favicon) {
+        favEl.href = d.favicon;
     }
   }
 
@@ -744,28 +750,52 @@ window.TepCMS = (() => {
     }, 50);
   }
 
-  // ─── Render: Gallery ────────────────────────────────────────────────────────
+  // ─── Render: Gallery (Works) ────────────────────────────────────────────────
+  let galleryInterval = null;
   function renderGallery() {
     const grid = document.getElementById('gallery-grid');
     if (!grid) return;
-    grid.innerHTML = data.gallery.map((g, i) => {
-        const span = i === 0 ? 'md:col-span-2' : '';
-        return `
-      <div class="${span} rounded-2xl overflow-hidden relative group cursor-pointer reveal-item" style="position:relative;" onclick="TepCMS.openGallery('${g.id}')">
-        <img src="${g.cover}" alt="${g.title}" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
-        <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center text-white text-center p-4">
-          <span class="font-bold text-xl mb-2">${g.title}</span>
-          <span class="border-2 border-white px-6 py-2 rounded-full text-sm">Подробнее</span>
+    
+    // Clear interval if exists to prevent duplicates
+    if (galleryInterval) clearInterval(galleryInterval);
+
+    grid.innerHTML = (data.gallery || []).map((g, i) => `
+      <div class="flex-shrink-0 w-80 md:w-[450px] snap-start rounded-3xl overflow-hidden relative group cursor-pointer shadow-lg hover:shadow-2xl transition-all duration-500 reveal-item" onclick="TepCMS.openGallery('${g.id}')">
+        <div class="h-80 relative overflow-hidden">
+          <img src="${g.cover}" alt="${g.title}" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+          <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
+        </div>
+        <div class="absolute bottom-0 left-0 p-8 text-white w-full">
+          <span class="text-xs font-bold text-brand uppercase tracking-widest mb-2 block">Проект</span>
+          <h3 class="font-serif text-2xl font-bold leading-tight">${g.title}</h3>
         </div>
         ${editMode ? `
-          <button class="cms-section-btn" onclick="event.stopPropagation(); TepCMS.editGallery('${g.id}')">✏️ Редактировать</button>
-          <button class="cms-delete-btn" onclick="event.stopPropagation(); TepCMS.deleteGallery('${g.id}')">×</button>
+          <div class="absolute top-4 right-4 flex gap-2">
+            <button class="w-10 h-10 bg-white shadow-lg rounded-full flex items-center justify-center text-gray-900" onclick="event.stopPropagation(); TepCMS.editGallery('${g.id}')">✏️</button>
+            <button class="w-10 h-10 bg-white shadow-lg rounded-full flex items-center justify-center text-red-500" onclick="event.stopPropagation(); TepCMS.deleteGallery('${g.id}')">×</button>
+          </div>
         ` : ''}
       </div>
-    `}).join('');
+    `).join('');
+
     if (editMode) {
-      grid.insertAdjacentHTML('beforeend', `<button class="cms-add-btn" onclick="TepCMS.addGallery()" style="height:300px;">+ Новая галерея</button>`);
+      grid.insertAdjacentHTML('beforeend', `
+        <div class="flex-shrink-0 w-80 md:w-[450px] snap-start rounded-3xl border-2 border-dashed border-gray-300 flex items-center justify-center group cursor-pointer hover:border-brand transition-colors" onclick="TepCMS.addGallery()">
+          <span class="text-4xl text-gray-300 group-hover:text-brand transition-colors">+</span>
+        </div>
+      `);
     }
+
+    // Auto-scroll logic
+    let scrollDir = 1;
+    galleryInterval = setInterval(() => {
+        if (!grid) return;
+        const maxScroll = grid.scrollWidth - grid.clientWidth;
+        if (grid.scrollLeft >= maxScroll - 10) scrollDir = -1;
+        if (grid.scrollLeft <= 10) scrollDir = 1;
+        grid.scrollBy({ left: 400 * scrollDir, behavior: 'smooth' });
+    }, 5000);
+    
     reObserve();
   }
 
