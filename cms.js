@@ -759,10 +759,12 @@ window.TepCMS = (() => {
     if (galleryInterval) clearInterval(galleryInterval);
 
     grid.innerHTML = (data.gallery || []).map((g, i) => `
-      <div class="flex-shrink-0 w-[85%] md:w-[70%] lg:w-[800px] snap-center rounded-3xl overflow-hidden relative group cursor-pointer shadow-lg hover:shadow-2xl transition-all duration-500 reveal-item" onclick="TepCMS.openGallery('${g.id}')">
+      <div class="gallery-item flex-shrink-0 w-[85%] md:w-[70%] lg:w-[800px] snap-center rounded-3xl overflow-hidden relative group cursor-pointer shadow-lg transition-all duration-500 reveal-item" 
+           style="margin-inline: -5%; md:margin-inline: -10%;"
+           onclick="TepCMS.openGallery('${g.id}')">
         <div class="h-[500px] md:h-[600px] relative overflow-hidden">
-          <img src="${g.cover}" alt="${g.title}" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
-          <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
+          <img src="${g.cover}" alt="${g.title}" class="w-full h-full object-cover">
+          <div class="absolute inset-0 bg-gradient-to-t from-black/95 via-black/20 to-transparent"></div>
         </div>
         <div class="absolute bottom-0 left-0 p-8 md:p-12 text-white w-full">
           <span class="text-xs font-bold text-brand uppercase tracking-widest mb-2 block">Проект</span>
@@ -777,24 +779,42 @@ window.TepCMS = (() => {
       </div>
     `).join('');
 
+    const updateGalleryEffect = () => {
+      const items = grid.querySelectorAll('.gallery-item');
+      const centerX = grid.scrollLeft + grid.clientWidth / 2;
+      
+      items.forEach(item => {
+        const itemCenterX = item.offsetLeft + item.clientWidth / 2;
+        const distanceFromCenter = Math.abs(centerX - itemCenterX);
+        const maxDistance = grid.clientWidth;
+        
+        // Calculate scale (1 at center, ~0.8 at edges)
+        const scale = Math.max(0.8, 1 - (distanceFromCenter / maxDistance) * 0.4);
+        // Calculate opacity (1 at center, ~0.5 at edges)
+        const opacity = Math.max(0.5, 1 - (distanceFromCenter / maxDistance) * 0.8);
+        // Z-index based on proximity to center
+        const zIndex = Math.round(100 - (distanceFromCenter / 10));
+        
+        item.style.transform = `scale(${scale})`;
+        item.style.opacity = opacity;
+        item.style.zIndex = zIndex;
+      });
+    };
+
+    grid.addEventListener('scroll', updateGalleryEffect);
+    window.addEventListener('resize', updateGalleryEffect);
+    
+    // Initial call
+    setTimeout(updateGalleryEffect, 100);
+
     if (editMode) {
       grid.insertAdjacentHTML('beforeend', `
-        <div class="flex-shrink-0 w-[85%] md:w-[70%] lg:w-[800px] h-[500px] md:h-[600px] snap-center rounded-3xl border-2 border-dashed border-gray-300 flex items-center justify-center group cursor-pointer hover:border-brand transition-colors" onclick="TepCMS.addGallery()">
+        <div class="flex-shrink-0 w-[85%] md:w-[70%] lg:w-[800px] h-[500px] md:h-[600px] snap-center rounded-3xl border-2 border-dashed border-gray-300 flex items-center justify-center group cursor-pointer hover:border-brand transition-colors" onclick="TepCMS.addGallery()" style="margin-inline: -10%;">
           <span class="text-4xl text-gray-300 group-hover:text-brand transition-colors">+</span>
         </div>
       `);
     }
 
-    // Auto-scroll logic
-    let scrollDir = 1;
-    galleryInterval = setInterval(() => {
-        if (!grid) return;
-        const maxScroll = grid.scrollWidth - grid.clientWidth;
-        if (grid.scrollLeft >= maxScroll - 10) scrollDir = -1;
-        if (grid.scrollLeft <= 10) scrollDir = 1;
-        grid.scrollBy({ left: 400 * scrollDir, behavior: 'smooth' });
-    }, 5000);
-    
     reObserve();
   }
 
