@@ -570,7 +570,7 @@ window.TepCMS = (() => {
 
     // Attach listeners
     grid.querySelectorAll('.service-card').forEach(card => {
-      const id = parseInt(card.dataset.serviceId);
+      const id = card.dataset.serviceId;
       card.onclick = (e) => {
         TepCMS.openService(id);
       };
@@ -612,7 +612,7 @@ window.TepCMS = (() => {
 
     // Programmatic listeners
     grid.querySelectorAll('.product-card').forEach(card => {
-      const id = parseInt(card.dataset.productId);
+      const id = card.dataset.productId;
       // click to open modal (visitor mode)
       card.addEventListener('click', (e) => {
         if (editMode) return; // in edit mode clicks go to edit buttons
@@ -640,7 +640,7 @@ window.TepCMS = (() => {
 
   // ─── Open Product Modal (visitor) ────────────────────────────────────────────
   function openProduct(id) {
-    const p = data.products.find(x => x.id === id);
+    const p = data.products.find(x => x.id == id);
     if (!p) return;
     document.getElementById('product-modal-cover').src = p.image;
     document.getElementById('product-modal-title').textContent = p.title;
@@ -701,14 +701,14 @@ window.TepCMS = (() => {
     const grid = document.getElementById('gallery-grid');
     if (!grid) return;
     grid.innerHTML = data.gallery.map(g => `
-      <div class="gallery-item reveal-item" style="position:relative; cursor:pointer;" onclick="TepCMS.openGallery(${g.id})">
+      <div class="gallery-item reveal-item" style="position:relative; cursor:pointer;" onclick="TepCMS.openGallery('${g.id}')">
         <img src="${g.cover}" alt="${g.title}">
         <div class="gallery-overlay">
           <span>${g.title}</span>
         </div>
         ${editMode ? `
-          <button class="cms-section-btn" onclick="event.stopPropagation(); TepCMS.editGallery(${g.id})">✏️ Редактировать</button>
-          <button class="cms-delete-btn" onclick="event.stopPropagation(); TepCMS.deleteGallery(${g.id})">×</button>
+          <button class="cms-section-btn" onclick="event.stopPropagation(); TepCMS.editGallery('${g.id}')">✏️ Редактировать</button>
+          <button class="cms-delete-btn" onclick="event.stopPropagation(); TepCMS.deleteGallery('${g.id}')">×</button>
         ` : ''}
       </div>
     `).join('');
@@ -960,7 +960,7 @@ window.TepCMS = (() => {
 
   // ─── Services CRUD ───────────────────────────────────────────────────────────
   function openService(id) {
-    const s = data.services.find(x => x.id === id);
+    const s = data.services.find(x => x.id == id);
     if (!s) return;
     console.log('Opening service modal for:', s.title);
     document.getElementById('service-modal-cover').src = s.image;
@@ -1146,7 +1146,7 @@ window.TepCMS = (() => {
 
   // ─── Gallery Slider logic ───────────────────────────────────────────────────
   function openGallery(id) {
-    const g = data.gallery.find(x => x.id === id);
+    const g = data.gallery.find(x => x.id == id);
     if (!g || !g.photos || g.photos.length === 0) return;
     
     currentGalleryPhotos = g.photos;
@@ -1201,7 +1201,7 @@ window.TepCMS = (() => {
   });
 
   function editGallery(id) {
-    const g = data.gallery.find(x => x.id === id);
+    const g = data.gallery.find(x => x.id == id);
     if (!g) return;
     const body = `
       <div class="cms-field"><label>Название проекта</label><input id="eg-title" value="${g.title}"></div>
@@ -1250,11 +1250,11 @@ window.TepCMS = (() => {
     pickImage(b64 => { const g = data.gallery.find(x => x.id === id); if (g) { g.photos.push({ url: b64, caption: '' }); editGallery(id); } });
   }
   function _updateGalleryCaption(id, idx, val) {
-    const g = data.gallery.find(x => x.id === id);
+    const g = data.gallery.find(x => x.id == id);
     if (g && g.photos[idx]) g.photos[idx].caption = val;
   }
   function _deleteGalleryPhoto(id, idx) {
-    const g = data.gallery.find(x => x.id === id);
+    const g = data.gallery.find(x => x.id == id);
     if (g) { g.photos.splice(idx, 1); editGallery(id); }
   }
   function deleteGallery(id) {
