@@ -54,6 +54,7 @@ export default {
         { name: 'subtitle', title: 'Подзаголовок', type: 'text' },
         { name: 'btnText', title: 'Текст кнопки', type: 'string' },
         { name: 'btnUrl', title: 'Ссылка кнопки', type: 'string' },
+        { name: 'background', title: 'Фоновое изображение', type: 'image', options: { hotspot: true } },
       ],
     },
     {

@@ -189,7 +189,13 @@ window.TepCMS = (() => {
               icon: soc.icon ? builder.image(soc.icon) : ''
             })) || DEFAULT.header.socials
           },
-          hero: s.siteSettings?.hero || DEFAULT.hero,
+          hero: s.siteSettings?.hero ? {
+            title: s.siteSettings.hero.title,
+            subtitle: s.siteSettings.hero.subtitle,
+            btnText: s.siteSettings.hero.btnText,
+            btnUrl: s.siteSettings.hero.btnUrl,
+            bg: s.siteSettings.hero.background ? builder.image(s.siteSettings.hero.background) : DEFAULT.hero.bg
+          } : DEFAULT.hero,
           contact: {
             phones: s.siteSettings?.contact?.phones || DEFAULT.contact.phones,
             email: s.siteSettings?.contact?.email || DEFAULT.contact.email,
@@ -502,10 +508,14 @@ window.TepCMS = (() => {
     const h1 = document.getElementById('hero-title');
     const sub = document.getElementById('hero-subtitle');
     const btn = document.getElementById('hero-btn');
+    const bg = document.getElementById('hero-bg');
+    
     if (h1) h1.innerHTML = cmsToHtml(d.title);
-    // subtitle is stored as raw HTML
     if (sub) sub.innerHTML = d.subtitle || '';
     if (btn) { btn.href = d.btnUrl; btn.textContent = d.btnText; }
+    if (bg && d.bg) {
+      bg.style.backgroundImage = `url(${d.bg})`;
+    }
   }
 
   // ─── Render: About ───────────────────────────────────────────────────────────
