@@ -641,14 +641,14 @@ window.TepCMS = (() => {
     grid.innerHTML = data.services.map((s, i) => {
       const isBig = i === 0;
       const gridClasses = isBig 
-        ? 'md:col-span-2 md:row-span-2 h-[400px] md:min-h-[400px] flex-shrink-0 w-[85%] md:w-auto snap-center ml-[7.5%] first:ml-[7.5%] last:mr-[7.5%] md:ml-0 md:mr-0' 
+        ? 'md:col-span-2 md:row-span-2 h-[400px] md:min-h-[400px] flex-shrink-0 w-[85%] md:w-auto snap-center ml-[7.5%] first:ml-[7.5%] md:first:ml-0 last:mr-[7.5%] md:last:mr-0 md:ml-0 md:mr-0' 
         : 'h-[400px] md:h-full flex-shrink-0 w-[85%] md:w-auto snap-center ml-[7.5%] md:ml-0 md:mr-0';
       
       const titleSize = isBig ? 'text-xl md:text-3xl' : 'text-xl';
       
       return `
         <div class="group relative ${gridClasses} rounded-2xl overflow-hidden block cursor-pointer reveal-item" style="position:relative;" data-service-id="${s.id}">
-          <img src="${s.image}" alt="${s.title}" class="absolute inset-0 w-full h-full object-cover transition-all duration-700 brightness-110 grayscale-[0.6] group-hover:brightness-100 group-hover:grayscale-0 group-hover:scale-105">
+          <img src="${s.image}" alt="${s.title}" class="absolute inset-0 w-full h-full object-cover transition-all duration-700 brightness-[1.25] grayscale-[0.8] group-hover:brightness-100 group-hover:grayscale-0 group-hover:scale-105">
           <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent"></div>
           <div class="absolute bottom-0 left-0 p-6 text-white w-full">
             <h3 class="font-bold ${titleSize} mb-1">${s.title}</h3>
