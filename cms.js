@@ -1087,6 +1087,12 @@ window.TepCMS = (() => {
         maxBoundsViscosity: 1.0
       };
       map = L.map('leaflet-map', mapOptions).setView([lat, lng], 14);
+      
+      // Shift center on desktop so pin is visible between form and right edge
+      if (window.innerWidth >= 1024 && !editMode) {
+        map.panBy([-280, 0], { animate: false });
+      }
+
       L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '© OpenStreetMap'
       }).addTo(map);
