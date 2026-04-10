@@ -897,14 +897,14 @@ window.TepCMS = (() => {
     if (galleryInterval) clearInterval(galleryInterval);
 
     grid.innerHTML = (data.gallery || []).map((g, i) => `
-      <div class="flex-shrink-0 w-80 md:w-[675px] snap-start rounded-[2.5rem] overflow-hidden relative group cursor-pointer shadow-xl hover:shadow-[0_30px_60px_-15px_rgba(0,0,0,0.3)] transition-all duration-700 reveal-item active:scale-95" onclick="TepCMS.openGallery('${g.id}')">
-        <div class="h-[480px] relative overflow-hidden">
+      <div class="flex-shrink-0 w-full snap-center rounded-[2.5rem] overflow-hidden relative group cursor-pointer shadow-xl hover:shadow-[0_30px_60px_-15px_rgba(0,0,0,0.3)] transition-all duration-700 reveal-item active:scale-95" onclick="TepCMS.openGallery('${g.id}')">
+        <div class="h-[450px] md:h-[600px] relative overflow-hidden">
           <img src="${g.cover}" alt="${g.title}" class="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110">
-          <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent transition-opacity duration-500 group-hover:from-black/100"></div>
+          <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent transition-opacity duration-500 group-hover:from-black/100"></div>
         </div>
-        <div class="absolute bottom-0 left-0 p-10 text-white w-full transform transition-transform duration-500 group-hover:-translate-y-2">
-          <span class="text-xs font-bold text-brand uppercase tracking-[0.2em] mb-3 block opacity-80 group-hover:opacity-100">Реализованный объект</span>
-          <h3 class="font-serif text-3xl font-bold leading-tight group-hover:text-brand-light transition-colors">${g.title}</h3>
+        <div class="absolute bottom-0 left-0 p-8 md:p-14 text-white w-full transform transition-transform duration-500 group-hover:-translate-y-2">
+          <span class="text-xs font-bold text-brand uppercase tracking-[0.2em] mb-4 block opacity-80 group-hover:opacity-100">Реализованный объект</span>
+          <h3 class="font-serif text-3xl md:text-5xl font-bold leading-tight group-hover:text-brand-light transition-colors">${g.title}</h3>
         </div>
         ${editMode ? `
           <div class="absolute top-6 right-6 flex gap-3 opacity-0 group-hover:opacity-100 transition-opacity">
@@ -917,7 +917,7 @@ window.TepCMS = (() => {
 
     if (editMode) {
       grid.insertAdjacentHTML('beforeend', `
-        <div class="flex-shrink-0 w-80 md:w-[675px] h-[480px] snap-start rounded-[2.5rem] border-4 border-dashed border-gray-200 flex items-center justify-center group cursor-pointer hover:border-brand transition-all bg-gray-50/50" onclick="TepCMS.addGallery()">
+        <div class="flex-shrink-0 w-full h-[450px] md:h-[600px] snap-center rounded-[2.5rem] border-4 border-dashed border-gray-200 flex items-center justify-center group cursor-pointer hover:border-brand transition-all bg-gray-50/50" onclick="TepCMS.addGallery()">
           <div class="text-center">
             <span class="text-6xl text-gray-200 group-hover:text-brand transition-colors block mb-4">+</span>
             <span class="text-gray-400 font-bold uppercase tracking-widest text-xs">Добавить проект</span>
@@ -929,7 +929,8 @@ window.TepCMS = (() => {
     // Render dots
     const dotsContainer = document.getElementById('gallery-dots');
     if (dotsContainer) {
-      const itemsCount = (data.gallery || []).length + (editMode ? 1 : 0);
+      const gList = data.gallery || [];
+      const itemsCount = gList.length + (editMode ? 1 : 0);
       dotsContainer.innerHTML = Array.from({ length: itemsCount }).map((_, i) => `
         <button class="gallery-dot w-2 h-2 rounded-full bg-gray-300 transition-all duration-300 hover:bg-brand/50" data-index="${i}"></button>
       `).join('');
@@ -937,8 +938,8 @@ window.TepCMS = (() => {
       const dots = dotsContainer.querySelectorAll('.gallery-dot');
       const updateGalleryDots = () => {
         const scrollPos = grid.scrollLeft;
-        const cardWidth = grid.querySelector('.flex-shrink-0')?.offsetWidth || 320;
-        const activeIndex = Math.round(scrollPos / (cardWidth + 24)); // 24 is gap-6
+        const width = grid.offsetWidth;
+        const activeIndex = Math.round(scrollPos / width);
         
         dots.forEach((dot, idx) => {
           if (idx === activeIndex) {
@@ -957,23 +958,22 @@ window.TepCMS = (() => {
       dots.forEach(dot => {
         dot.onclick = () => {
           const idx = parseInt(dot.dataset.index);
-          const cardWidth = grid.querySelector('.flex-shrink-0')?.offsetWidth || 320;
-          grid.scrollTo({ left: idx * (cardWidth + 24), behavior: 'smooth' });
+          grid.scrollTo({ left: idx * grid.offsetWidth, behavior: 'smooth' });
         };
       });
     }
 
-    // Auto-scroll logic synced with dots
-    let scrollDir = 1;
+    // Auto-scroll logic synced with dots - for full width
     galleryInterval = setInterval(() => {
         if (!grid) return;
         const maxScroll = grid.scrollWidth - grid.clientWidth;
-        if (grid.scrollLeft >= maxScroll - 50) scrollDir = -1;
-        if (grid.scrollLeft <= 50) scrollDir = 1;
-
-        const cardWidth = grid.querySelector('.flex-shrink-0')?.offsetWidth || 320;
-        const step = cardWidth + 24;
-        grid.scrollBy({ left: step * scrollDir, behavior: 'smooth' });
+        const width = grid.offsetWidth;
+        
+        if (grid.scrollLeft >= maxScroll - 10) {
+            grid.scrollTo({ left: 0, behavior: 'smooth' });
+        } else {
+            grid.scrollTo({ left: grid.scrollLeft + width, behavior: 'smooth' });
+        }
     }, 8000);
     
     reObserve();
