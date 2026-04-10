@@ -863,8 +863,8 @@ window.TepCMS = (() => {
     const socialsEl = document.getElementById('footer-socials');
     if (socialsEl) {
       socialsEl.innerHTML = (d.socials || []).map((s, i) => `
-        <a href="${s.url}" target="_blank" class="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center text-gray-600 hover:bg-brand hover:text-white transition-colors" style="position:relative;">
-          <img src="${fixPath(s.icon)}" alt="${s.name}" class="w-5 h-5 object-contain">
+        <a href="${s.url}" target="_blank" class="w-10 h-10 rounded-full bg-gray-50 flex items-center justify-center text-gray-500 hover:bg-gray-200 transition-all shadow-sm" style="position:relative;">
+          <img src="${fixPath(s.icon)}" alt="${s.name}" class="w-5 h-5 object-contain" style="filter: grayscale(1) brightness(0.3); opacity: 0.7;">
           ${editMode ? `<button class="cms-delete-btn" onclick="TepCMS.deleteFooterSocial(${i})" style="top:-4px;right:-4px;">×</button>` : ''}
         </a>
       `).join('');
