@@ -523,17 +523,28 @@ window.TepCMS = (() => {
         phoneEl.textContent = d.phone; 
     }
     if (d.favicon) {
-        // Remove ALL existing favicon tags
-        document.querySelectorAll('link[rel*="icon"]').forEach(el => el.remove());
-        // Create a fresh link element — browsers always pick up new elements
-        const newFav = document.createElement('link');
-        newFav.id = 'site-favicon';
-        newFav.rel = 'icon';
-        if (d.favicon.toLowerCase().includes('svg')) {
-            newFav.type = 'image/svg+xml';
-        }
-        newFav.href = d.favicon + '?v=' + Date.now();
-        document.head.appendChild(newFav);
+        // Fetch favicon as blob to bypass browser CDN/cache restrictions
+        fetch(d.favicon)
+          .then(r => r.blob())
+          .then(blob => {
+            const blobUrl = URL.createObjectURL(blob);
+            document.querySelectorAll('link[rel*="icon"]').forEach(el => el.remove());
+            const newFav = document.createElement('link');
+            newFav.id = 'site-favicon';
+            newFav.rel = 'icon';
+            newFav.type = blob.type || 'image/svg+xml';
+            newFav.href = blobUrl;
+            document.head.appendChild(newFav);
+            console.log('CMS: Favicon applied as blob:', blob.type);
+          })
+          .catch(() => {
+            // Fallback: direct link
+            document.querySelectorAll('link[rel*="icon"]').forEach(el => el.remove());
+            const newFav = document.createElement('link');
+            newFav.rel = 'icon';
+            newFav.href = d.favicon + '?v=' + Date.now();
+            document.head.appendChild(newFav);
+          });
     }
     
     // Header Socials (used in mobile menu)
