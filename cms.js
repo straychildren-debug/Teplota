@@ -648,9 +648,9 @@ window.TepCMS = (() => {
       const imgId = isBig ? 'id="service-main-img"' : '';
       const titleId = isBig ? 'id="service-main-title"' : '';
       
-      // Main image has hover filters, small ones don't
+      // Main image is full-color by default, small ones are lightened/grayscale
       const imgClasses = isBig 
-        ? "absolute inset-0 w-full h-full object-cover transition-all duration-700 brightness-[1.25] grayscale-[0.8] group-hover:brightness-100 group-hover:grayscale-0 group-hover:scale-105"
+        ? "absolute inset-0 w-full h-full object-cover transition-all duration-700 brightness-100 grayscale-0 group-hover:scale-105"
         : "absolute inset-0 w-full h-full object-cover transition-all duration-700 brightness-[1.4] grayscale opacity-50";
 
       return `
