@@ -1081,7 +1081,9 @@ window.TepCMS = (() => {
 
     try {
       const center = L.latLng(lat, lng);
-      const bounds = center.toBounds(12000); 
+      // Safe radius to keep pin on screen (Desktop: ~3.5km, Mobile: ~1.2km)
+      const radius = (window.innerWidth >= 1024) ? 3500 : 1200;
+      const bounds = center.toBounds(radius); 
       const mapOptions = {
         dragging: true,
         scrollWheelZoom: false,
