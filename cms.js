@@ -598,7 +598,7 @@ window.TepCMS = (() => {
       const iconContainerClass = "hidden md:flex w-14 h-14 mb-6 rounded-2xl items-center justify-center transition-colors " + 
         (isHighlighted ? "bg-white/20" : "bg-orange-50 group-hover:bg-orange-100");
       
-      const titleClass = isHighlighted ? "text-white font-serif text-xl font-bold mb-3" : "text-gray-900 font-serif text-xl font-bold mb-3";
+      const titleClass = isHighlighted ? "text-white font-serif text-xl font-bold mb-0 md:mb-3 text-center md:text-left" : "text-gray-900 font-serif text-xl font-bold mb-0 md:mb-3 text-center md:text-left";
       const descClass = isHighlighted ? "text-white/80 text-sm leading-relaxed" : "text-gray-600 text-sm leading-relaxed";
       
       const iconHtml = a.icon && a.icon.length > 5 // Check if it's a URL/Path or a simple Emoji
@@ -611,7 +611,7 @@ window.TepCMS = (() => {
           ${iconHtml}
         </div>
         <h3 class="${titleClass}">${a.title || 'Преимущество'}</h3>
-        <p class="${descClass}">${a.description || a.text || ''}</p>
+        <p class="${descClass} hidden md:block">${a.description || a.text || ''}</p>
         ${editMode ? `<button class="cms-delete-btn" onclick="TepCMS.deleteAdvantage(${i})">×</button>` : ''}
       </div>
     `}).join('');
