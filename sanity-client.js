@@ -1,4 +1,3 @@
-
 import { createClient } from '@sanity/client'
 import imageUrlBuilder from '@sanity/image-url'
 
@@ -11,21 +10,21 @@ export const client = createClient({
 
 const urlBuilder = imageUrlBuilder(client)
 
-/**
- * Helper to get direct Sanity image URLs.
- * NOTE: This returns the URL string immediately.
- */
 export const builder = {
   image: (source) => {
-    if (!source) return ''
-    if (typeof source === 'string') return source
+    if (!source) return '';
+    if (typeof source === 'string') return source;
     
+    // Check if it's an asset with a direct URL (like SVGs often have)
+    if (source.asset && source.asset.url) return source.asset.url;
+
     try {
-      // Return the URL directly to simplify client-side usage
-      return urlBuilder.image(source).url()
+      const b = urlBuilder.image(source);
+      // Only call .url() if the builder object exists and has it
+      return b && typeof b.url === 'function' ? b.url() : '';
     } catch (e) {
-      console.warn('Sanity Image Builder error:', e)
-      return ''
+      console.warn('Sanity Image Builder error:', e);
+      return '';
     }
   }
 }
