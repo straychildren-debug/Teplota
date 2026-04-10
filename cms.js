@@ -648,9 +648,14 @@ window.TepCMS = (() => {
       const imgId = isBig ? 'id="service-main-img"' : '';
       const titleId = isBig ? 'id="service-main-title"' : '';
       
+      // Main image has hover filters, small ones don't
+      const imgClasses = isBig 
+        ? "absolute inset-0 w-full h-full object-cover transition-all duration-700 brightness-[1.25] grayscale-[0.8] group-hover:brightness-100 group-hover:grayscale-0 group-hover:scale-105"
+        : "absolute inset-0 w-full h-full object-cover transition-all duration-700 brightness-[1.25] grayscale-[0.8]";
+
       return `
         <div class="group relative ${gridClasses} rounded-2xl overflow-hidden block cursor-pointer reveal-item" style="position:relative;" data-service-id="${s.id}" data-service-index="${i}">
-          <img ${imgId} src="${s.image}" alt="${s.title}" class="absolute inset-0 w-full h-full object-cover transition-all duration-700 brightness-[1.25] grayscale-[0.8] group-hover:brightness-100 group-hover:grayscale-0 group-hover:scale-105">
+          <img ${imgId} src="${s.image}" alt="${s.title}" class="${imgClasses}">
           <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent"></div>
           <div class="absolute bottom-0 left-0 p-6 text-white w-full">
             <h3 ${titleId} class="font-bold ${titleSize} mb-1">${s.title}</h3>
@@ -674,10 +679,10 @@ window.TepCMS = (() => {
         const s = data.services[idx];
 
         card.addEventListener('mouseenter', () => {
-          if (idx == 0) return; // Don't trigger for the main card itself
+          if (idx == 0) return; // Don't trigger for the main card itself (it has hover CSS)
           
-          // Smooth fade transition
-          mainImg.style.transition = 'opacity 0.4s ease-in-out';
+          // Smooth fade transition + Restore color
+          mainImg.style.transition = 'opacity 0.4s ease-in-out, filter 0.4s ease-in-out';
           mainTitle.style.transition = 'opacity 0.4s ease-in-out, transform 0.4s ease-in-out';
           
           mainImg.style.opacity = '0';
@@ -690,6 +695,8 @@ window.TepCMS = (() => {
             mainImg.style.opacity = '1';
             mainTitle.style.opacity = '1';
             mainTitle.style.transform = 'translateY(0)';
+            // Force full color on main card when ANY small card is hovered
+            mainImg.style.filter = 'grayscale(0) brightness(1)';
           }, 400);
         });
 
@@ -706,6 +713,8 @@ window.TepCMS = (() => {
             mainImg.style.opacity = '1';
             mainTitle.style.opacity = '1';
             mainTitle.style.transform = 'translateY(0)';
+            // Return to default state filters
+            mainImg.style.filter = '';
           }, 400);
         });
       });
