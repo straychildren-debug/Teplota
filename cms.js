@@ -160,6 +160,14 @@ window.TepCMS = (() => {
   const SESSION_KEY = 'tep_admin_session';
   const isAdmin = () => sessionStorage.getItem(SESSION_KEY) === 'true';
 
+  // Helper to fix icon paths (Sanity sometimes returns just the filename)
+  function fixPath(path, type = 'icon') {
+    if (!path || path.startsWith('http') || path.startsWith('data:') || path.startsWith('assets/')) return path;
+    if (type === 'icon') return `assets/icons/${path}`;
+    if (type === 'partner') return `assets/partner logo/${path}`;
+    return `assets/${path}`;
+  }
+
   // ─── Persistence ─────────────────────────────────────────────────────────────
   async function load() {
     try {
@@ -506,6 +514,16 @@ window.TepCMS = (() => {
     if (favEl && d.favicon) {
         favEl.href = d.favicon;
     }
+    
+    // Header Socials (used in mobile menu)
+    const socialEl = document.getElementById('mobile-socials');
+    if (socialEl && d.socials) {
+       socialEl.innerHTML = d.socials.map(s => `
+         <a href="${s.url}" target="_blank" class="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center">
+            <img src="${fixPath(s.icon)}" alt="${s.name}" class="w-5 h-5 object-contain">
+         </a>
+       `).join('');
+    }
   }
 
   // ─── Render: Hero ────────────────────────────────────────────────────────────
@@ -760,19 +778,19 @@ window.TepCMS = (() => {
     if (galleryInterval) clearInterval(galleryInterval);
 
     grid.innerHTML = (data.gallery || []).map((g, i) => `
-      <div class="flex-shrink-0 w-80 md:w-[450px] snap-start rounded-3xl overflow-hidden relative group cursor-pointer shadow-lg hover:shadow-2xl transition-all duration-500 reveal-item" onclick="TepCMS.openGallery('${g.id}')">
-        <div class="h-80 relative overflow-hidden">
-          <img src="${g.cover}" alt="${g.title}" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
-          <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
+      <div class="flex-shrink-0 w-80 md:w-[500px] snap-start rounded-[2.5rem] overflow-hidden relative group cursor-pointer shadow-xl hover:shadow-[0_30px_60px_-15px_rgba(0,0,0,0.3)] transition-all duration-700 reveal-item active:scale-95" onclick="TepCMS.openGallery('${g.id}')">
+        <div class="h-[450px] md:h-[550px] relative overflow-hidden">
+          <img src="${g.cover}" alt="${g.title}" class="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110">
+          <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent transition-opacity duration-500 group-hover:from-black/100"></div>
         </div>
-        <div class="absolute bottom-0 left-0 p-8 text-white w-full">
-          <span class="text-xs font-bold text-brand uppercase tracking-widest mb-2 block">Проект</span>
-          <h3 class="font-serif text-2xl font-bold leading-tight">${g.title}</h3>
+        <div class="absolute bottom-0 left-0 p-10 text-white w-full transform transition-transform duration-500 group-hover:-translate-y-2">
+          <span class="text-xs font-bold text-brand uppercase tracking-[0.2em] mb-3 block opacity-80 group-hover:opacity-100">Реализованный объект</span>
+          <h3 class="font-serif text-3xl font-bold leading-tight group-hover:text-brand-light transition-colors">${g.title}</h3>
         </div>
         ${editMode ? `
-          <div class="absolute top-4 right-4 flex gap-2">
-            <button class="w-10 h-10 bg-white shadow-lg rounded-full flex items-center justify-center text-gray-900" onclick="event.stopPropagation(); TepCMS.editGallery('${g.id}')">✏️</button>
-            <button class="w-10 h-10 bg-white shadow-lg rounded-full flex items-center justify-center text-red-500" onclick="event.stopPropagation(); TepCMS.deleteGallery('${g.id}')">×</button>
+          <div class="absolute top-6 right-6 flex gap-3 opacity-0 group-hover:opacity-100 transition-opacity">
+            <button class="w-12 h-12 bg-white/90 backdrop-blur shadow-lg rounded-full flex items-center justify-center text-gray-900 border border-gray-200" onclick="event.stopPropagation(); TepCMS.editGallery('${g.id}')">✏️</button>
+            <button class="w-12 h-12 bg-white/90 backdrop-blur shadow-lg rounded-full flex items-center justify-center text-red-500 border border-gray-200" onclick="event.stopPropagation(); TepCMS.deleteGallery('${g.id}')">×</button>
           </div>
         ` : ''}
       </div>
@@ -780,21 +798,24 @@ window.TepCMS = (() => {
 
     if (editMode) {
       grid.insertAdjacentHTML('beforeend', `
-        <div class="flex-shrink-0 w-80 md:w-[450px] snap-start rounded-3xl border-2 border-dashed border-gray-300 flex items-center justify-center group cursor-pointer hover:border-brand transition-colors" onclick="TepCMS.addGallery()">
-          <span class="text-4xl text-gray-300 group-hover:text-brand transition-colors">+</span>
+        <div class="flex-shrink-0 w-80 md:w-[500px] snap-start rounded-[2.5rem] border-4 border-dashed border-gray-200 flex items-center justify-center group cursor-pointer hover:border-brand transition-all bg-gray-50/50" onclick="TepCMS.addGallery()">
+          <div class="text-center">
+            <span class="text-6xl text-gray-200 group-hover:text-brand transition-colors block mb-4">+</span>
+            <span class="text-gray-400 font-bold uppercase tracking-widest text-xs">Добавить проект</span>
+          </div>
         </div>
       `);
     }
 
-    // Auto-scroll logic
+    // Auto-scroll logic - more subtle
     let scrollDir = 1;
     galleryInterval = setInterval(() => {
         if (!grid) return;
         const maxScroll = grid.scrollWidth - grid.clientWidth;
-        if (grid.scrollLeft >= maxScroll - 10) scrollDir = -1;
-        if (grid.scrollLeft <= 10) scrollDir = 1;
-        grid.scrollBy({ left: 400 * scrollDir, behavior: 'smooth' });
-    }, 5000);
+        if (grid.scrollLeft >= maxScroll - 50) scrollDir = -1;
+        if (grid.scrollLeft <= 50) scrollDir = 1;
+        grid.scrollBy({ left: 510 * scrollDir, behavior: 'smooth' });
+    }, 6000);
     
     reObserve();
   }
@@ -836,7 +857,7 @@ window.TepCMS = (() => {
     if (socialsEl) {
       socialsEl.innerHTML = (d.socials || []).map((s, i) => `
         <a href="${s.url}" target="_blank" class="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center text-gray-600 hover:bg-brand hover:text-white transition-colors" style="position:relative;">
-          <img src="${s.icon}" alt="${s.name}" class="w-5 h-5 object-contain">
+          <img src="${fixPath(s.icon)}" alt="${s.name}" class="w-5 h-5 object-contain">
           ${editMode ? `<button class="cms-delete-btn" onclick="TepCMS.deleteFooterSocial(${i})" style="top:-4px;right:-4px;">×</button>` : ''}
         </a>
       `).join('');

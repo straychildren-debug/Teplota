@@ -5,56 +5,11 @@
     <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
     <title>Teplota - Инженерные системы под ключ</title>
     <link id="site-favicon" rel="icon" type="image/x-icon" href="favicon.ico">
-    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
     <link href="https://fonts.googleapis.com" rel="preconnect"/>
     <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Playfair+Display:wght@700&display=swap" rel="stylesheet"/>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-    <script>
-      tailwind.config = {
-        theme: {
-          extend: {
-            fontFamily: {
-              sans: ['Montserrat', 'sans-serif'],
-              serif: ['Playfair Display', 'serif'],
-            },
-            colors: {
-              brand: {
-                DEFAULT: '#E65100', // Orange primary
-                dark: '#BF360C',
-                light: '#FFCC80',
-                bg: '#F5F5F5',
-                text: '#333333',
-                gray: '#757575',
-                border: '#E0E0E0'
-              }
-            },
-            backgroundImage: {
-              'hero-pattern': "url('assets/hero_bg_1775505447491.png')",
-              'pipes-pattern': "url('https://placehold.co/800x600/f5f5f5/e0e0e0?text=Pipes+Graphic')",
-              'map-bg': "url('https://placehold.co/1920x600/e0e0e0/ffffff?text=Map+Background')"
-            }
-          }
-        }
-      }
-    </script>
     <style data-purpose="custom-styles">
-        .glass-effect {
-          background: rgba(255, 255, 255, 0.75);
-          backdrop-filter: blur(16px);
-          -webkit-backdrop-filter: blur(16px);
-          border: 1px solid rgba(255, 255, 255, 0.3);
-        }
-        .glass-effect-orange {
-           background: rgba(230, 81, 0, 0.85);
-           backdrop-filter: blur(8px);
-           color: white;
-        }
-        .glass-effect-dark {
-           background: rgba(0, 0, 0, 0.6);
-           backdrop-filter: blur(8px);
-           color: white;
-        }
         .hide-scrollbar::-webkit-scrollbar { display: none; }
         .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
         
@@ -100,14 +55,46 @@
         <a class="hover:text-brand transition-colors" href="#gallery">Наши работы</a>
         <a class="hover:text-brand transition-colors" href="#contacts">Контакты</a>
       </nav>
-      <div class="flex items-center gap-6">
+      <div class="flex items-center gap-4 md:gap-6">
         <a class="hidden lg:block font-semibold text-gray-800 hover:text-brand transition-colors" href="tel:+79274326336" id="header-phone-val">+7 (927) 432-63-36</a>
-        <button class="bg-brand hover:bg-brand-dark text-white px-6 py-2.5 rounded-full font-medium text-sm transition-colors shadow-md">
+        <button class="hidden sm:block bg-brand hover:bg-brand-dark text-white px-6 py-2.5 rounded-full font-medium text-sm transition-colors shadow-md">
           Заказать звонок
+        </button>
+        <!-- Mobile Menu Toggle -->
+        <button id="mobile-menu-btn" class="md:hidden flex flex-col gap-1.5 p-2 focus:outline-none" aria-label="Menu">
+          <span class="w-6 h-0.5 bg-gray-800 transition-all duration-300"></span>
+          <span class="w-6 h-0.5 bg-gray-800 transition-all duration-300"></span>
+          <span class="w-6 h-0.5 bg-gray-800 transition-all duration-300"></span>
         </button>
       </div>
     </div>
   </header>
+
+  <!-- MOBILE MENU DRAWER -->
+  <div id="mobile-menu" class="fixed inset-0 z-[100] pointer-events-none overflow-hidden">
+    <div id="mobile-menu-overlay" class="absolute inset-0 bg-black/40 opacity-0 transition-opacity duration-300"></div>
+    <div id="mobile-menu-drawer" class="absolute top-0 right-0 w-80 h-full bg-white shadow-2xl translate-x-full transition-transform duration-300 pointer-events-auto flex flex-col">
+       <div class="p-6 border-b flex items-center justify-between">
+         <img src="assets/logo.svg" alt="Teplota" class="h-8">
+         <button id="mobile-menu-close" class="text-gray-500 hover:text-brand p-2">
+           <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+         </button>
+       </div>
+       <nav class="p-8 flex flex-col gap-6 text-xl font-bold text-gray-800">
+         <a href="#about" class="hover:text-brand transition-colors">О нас</a>
+         <a href="#services" class="hover:text-brand transition-colors">Услуги</a>
+         <a href="#products" class="hover:text-brand transition-colors">Товары</a>
+         <a href="#gallery" class="hover:text-brand transition-colors">Наши работы</a>
+         <a href="#contacts" class="hover:text-brand transition-colors">Контакты</a>
+       </nav>
+       <div class="mt-auto p-8 bg-gray-50">
+         <div id="mobile-phone-val" class="text-2xl font-black text-gray-900 mb-6">+7 (927) 432-63-36</div>
+         <div id="mobile-socials" class="flex gap-4">
+           <!-- Rendered by CMS -->
+         </div>
+       </div>
+    </div>
+  </div>
 
   <main>
     <!-- HERO SECTION -->
@@ -218,7 +205,7 @@
     </section>
 
     <!-- GALLERY / PORTFOLIO -->
-    <section id="gallery" class="py-24 bg-brand-bg relative overflow-hidden">
+    <section id="gallery" class="py-24 bg-slate-50 relative overflow-hidden border-y border-gray-100">
       <div class="container mx-auto px-4 md:px-8">
         <div class="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-6 reveal-item">
           <div>

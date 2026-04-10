@@ -2,6 +2,7 @@
  * TEPLOTA — main.js
  * Scroll + animation logic. CMS is initialized after DOM ready.
  */
+import './index.css';
 
 // ─── Reveal Observer ─────────────────────────────────────────────────────────
 const revealOptions = { threshold: 0.12, rootMargin: '0px 0px -40px 0px' };
@@ -34,13 +35,14 @@ function initMagnetic() {
 
 // ─── Smooth Scroll ────────────────────────────────────────────────────────────
 document.addEventListener('click', e => {
-  const a = e.target.closest('nav a');
+  const a = e.target.closest('nav a, #mobile-menu-drawer nav a');
   if (!a) return;
   const href = a.getAttribute('href');
   if (!href || !href.startsWith('#')) return;
   const target = document.querySelector(href);
   if (target) {
     e.preventDefault();
+    closeMobileMenu();
     window.scrollTo({ top: target.offsetTop - 90, behavior: 'smooth' });
   }
 });
@@ -80,3 +82,28 @@ document.addEventListener('DOMContentLoaded', () => {
   const observer = new MutationObserver(() => initMagnetic());
   observer.observe(document.body, { childList: true, subtree: true });
 });
+
+// ─── Mobile Menu ──────────────────────────────────────────────────────────────
+const mobileMenu = document.getElementById('mobile-menu');
+const mobileDrawer = document.getElementById('mobile-menu-drawer');
+const mobileOverlay = document.getElementById('mobile-menu-overlay');
+
+function openMobileMenu() {
+  if (!mobileMenu) return;
+  mobileMenu.style.pointerEvents = 'auto';
+  mobileOverlay.classList.remove('opacity-0');
+  mobileOverlay.classList.add('opacity-100');
+  mobileDrawer.classList.remove('translate-x-full');
+}
+
+function closeMobileMenu() {
+  if (!mobileMenu) return;
+  mobileMenu.style.pointerEvents = 'none';
+  mobileOverlay.classList.remove('opacity-100');
+  mobileOverlay.classList.add('opacity-0');
+  mobileDrawer.classList.add('translate-x-full');
+}
+
+document.getElementById('mobile-menu-btn')?.addEventListener('click', openMobileMenu);
+document.getElementById('mobile-menu-close')?.addEventListener('click', closeMobileMenu);
+mobileOverlay?.addEventListener('click', closeMobileMenu);
