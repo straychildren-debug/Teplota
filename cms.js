@@ -1080,10 +1080,9 @@ window.TepCMS = (() => {
     if (map) { map.remove(); map = null; }
 
     try {
-      const center = L.latLng(lat, lng);
-      // Safe radius to keep pin on screen (Desktop: ~3.5km, Mobile: ~1.2km)
-      const radius = (window.innerWidth >= 1024) ? 3500 : 1200;
-      const bounds = center.toBounds(radius); 
+      const viewLng = lng - offset;
+      // Center the bounding box on our intended view center, not the pin itself
+      const bounds = L.latLng(lat, viewLng).toBounds(8000); 
       const mapOptions = {
         dragging: true,
         scrollWheelZoom: false,
