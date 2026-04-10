@@ -2,15 +2,56 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Custom utility for glass effect used in the project */
+@layer base {
+  html {
+    font-family: 'Inter', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* Smooth dark mode transitions */
+  *, *::before, *::after {
+    transition-property: background-color, border-color, color;
+    transition-duration: 200ms;
+    transition-timing-function: ease-out;
+  }
+
+  /* Link defaults */
+  a { text-decoration: none; }
+}
+
 @layer components {
+  /* Buttons */
+  .btn {
+    @apply inline-flex items-center justify-center px-8 py-3.5 rounded-full font-semibold transition-all duration-200 cursor-pointer;
+  }
+  .btn-primary {
+    @apply bg-brand hover:bg-brand-dark text-white shadow-lg shadow-brand/20 hover:-translate-y-0.5;
+  }
+  .btn-secondary {
+    @apply bg-white hover:bg-gray-50 text-gray-800 border border-gray-200 shadow-sm;
+  }
+
+  /* Section container */
+  .section-container {
+    @apply container mx-auto px-4 md:px-8;
+  }
+
+  /* Section heading labels */
+  .section-label {
+    @apply inline-block text-xs font-bold tracking-widest text-brand uppercase mb-4;
+  }
+
+  /* Glass pane */
   .glass-effect {
-    @apply bg-white/75 backdrop-blur-md border border-white/30;
+    background: rgba(255, 255, 255, 0.88);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
   }
-  .glass-effect-orange {
-    @apply bg-brand/85 backdrop-blur-sm text-white;
-  }
-  .glass-effect-dark {
-     @apply bg-black/60 backdrop-blur-sm text-white;
-  }
+}
+
+@layer utilities {
+  /* Scrollbar hiding */
+  .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+  .hide-scrollbar::-webkit-scrollbar { display: none; }
 }

@@ -1,0 +1,145 @@
+/* =====================================================
+   TEPLOTA — site.css
+   Public-facing styles only. No admin/editor styles.
+   ===================================================== */
+
+/* ─── Scrollbar ──────────────────────────────────────── */
+.hide-scrollbar::-webkit-scrollbar { display: none; }
+.hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+/* ─── Reveal Animation ───────────────────────────────── */
+.reveal-item { opacity: 0; transform: translateY(24px); transition: opacity 0.7s ease-out, transform 0.7s ease-out; }
+.reveal-item.active { opacity: 1; transform: translateY(0); }
+
+/* ─── Modal Overlay ──────────────────────────────────── */
+.modal-overlay { display: none; }
+.modal-overlay.open {
+  display: flex !important;
+  animation: fadeIn 0.25s ease-out;
+}
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* ─── Glass Effect ───────────────────────────────────── */
+.glass-effect {
+  background: rgba(255, 255, 255, 0.88);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+
+/* ─── Header Scrolled State ──────────────────────────── */
+#main-header.scrolled {
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
+}
+
+/* ─── Gallery Overlay Text ───────────────────────────── */
+.gallery-item { cursor: pointer; }
+.gallery-overlay {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  padding: 20px 16px 14px;
+  background: linear-gradient(to top, rgba(0,0,0,0.75), transparent);
+  color: #fff;
+  font-size: 15px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  border-radius: 0 0 12px 12px;
+  pointer-events: none;
+}
+.gallery-item:hover .gallery-overlay { opacity: 1; }
+
+/* ─── Map ────────────────────────────────────────────── */
+#leaflet-map {
+  width: 100%;
+  height: 100%;
+  min-height: 400px;
+}
+
+/* ─── Map Pin & Tooltip ──────────────────────────────── */
+.leaflet-div-icon { background: transparent !important; border: none !important; }
+
+.custom-map-tooltip {
+  background: white !important;
+  border: none !important;
+  border-radius: 100px !important;
+  padding: 6px 16px !important;
+  font-family: 'Inter', sans-serif !important;
+  font-weight: 800 !important;
+  color: #E65100 !important;
+  box-shadow: 0 10px 25px rgba(230, 81, 0, 0.25) !important;
+  font-size: 13px !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.05em !important;
+}
+.custom-map-tooltip::before {
+  border-top-color: white !important;
+  bottom: -6px !important;
+  margin-left: -6px !important;
+  border-width: 6px !important;
+}
+
+/* ─── Toast ──────────────────────────────────────────── */
+#cms-toast {
+  position: fixed;
+  bottom: 32px;
+  right: 32px;
+  background: #1A1A1A;
+  color: #fff;
+  padding: 14px 22px;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  font-family: 'Inter', sans-serif;
+  z-index: 10003;
+  transform: translateY(20px);
+  opacity: 0;
+  transition: all 0.3s ease;
+  pointer-events: none;
+}
+#cms-toast.show { transform: translateY(0); opacity: 1; }
+#cms-toast.success { background: #2e7d32; }
+#cms-toast.error { background: #c62828; }
+
+/* ─── Image Viewer ───────────────────────────────────── */
+#img-viewer-overlay img {
+  max-width: 95vw;
+  max-height: 95vh;
+  object-fit: contain;
+  border-radius: 4px;
+}
+
+/* ─── Gallery Modal Caption ──────────────────────────── */
+#gallery-image-caption.show { opacity: 1; }
+
+/* ─── Rich Text Content ──────────────────────────────── */
+.rich-text p { margin-bottom: 0.75em; }
+.rich-text ul { padding-left: 1.25em; list-style: disc; }
+.rich-text li { margin-bottom: 0.25em; }
+
+/* ─── Service Modal Photos ───────────────────────────── */
+#service-modal-photos img {
+  width: 100%;
+  aspect-ratio: 1;
+  object-fit: cover;
+  border-radius: 12px;
+  transition: transform 0.2s, opacity 0.2s;
+}
+#service-modal-photos img:hover { transform: scale(1.02); opacity: 0.9; }
+
+/* ─── Dark Mode: Map tiles invert ────────────────────── */
+.dark #leaflet-map .leaflet-tile {
+  filter: invert(1) hue-rotate(180deg) brightness(0.85) contrast(0.9);
+}
+.dark .custom-map-tooltip {
+  background: #1C1C1E !important;
+  color: #FF6D2E !important;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.4) !important;
+}
+.dark .custom-map-tooltip::before {
+  border-top-color: #1C1C1E !important;
+}

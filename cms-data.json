@@ -47,7 +47,7 @@
         "name": "Social 3"
       }
     ],
-    "favicon": "https://cdn.sanity.io/images/77e5oip8/production/67c506c87ff143805718bf41d3146cc906c0570e-1920x1080.svg"
+    "favicon": "https://cdn.sanity.io/images/77e5oip8/production/3bde9aa8a944ae1fa20a3a08525d215a1e1e808a-83x83.png"
   },
   "hero": {
     "background": {
@@ -66,9 +66,16 @@
   "about": {
     "_createdAt": "2026-04-08T20:53:10Z",
     "_id": "5a858a07-0ebb-4c19-8f27-b44ba65d6ca7",
-    "_rev": "tja5enX37k09cXkbUz7NzC",
+    "_rev": "mG7POBA9Vgije5gJm50wNW",
+    "_system": {
+      "base": {
+        "id": "5a858a07-0ebb-4c19-8f27-b44ba65d6ca7",
+        "rev": "tja5enX37k09cXkbUz7NzC"
+      }
+    },
     "_type": "about",
-    "_updatedAt": "2026-04-08T20:55:56Z",
+    "_updatedAt": "2026-04-10T13:40:39Z",
+    "label": "О Компании",
     "partners": [
       {
         "_key": "00be46814a3e",
@@ -305,14 +312,20 @@
       "id": "4391bdd1-24e6-4548-901d-6228835e099a",
       "title": "ещё объект",
       "cover": "https://cdn.sanity.io/images/77e5oip8/production/26431668d4d90040762a06da8d6f98c232ed5e8f-1280x720.jpg",
-      "photos": []
+      "photos": [
+        ""
+      ]
     },
     {
       "id": "5a6bd273-3f8a-41e2-a9f3-d9c0ed02feac",
       "title": "Ешё проект",
       "description": "счсмсмч",
       "cover": "https://cdn.sanity.io/images/77e5oip8/production/4bed699764978b6ab303a0152caff37b8b40d827-1280x960.jpg",
-      "photos": []
+      "photos": [
+        "https://cdn.sanity.io/images/77e5oip8/production/cf944554f7e3a5ccaf129c76af485a5f816719dd-960x1280.jpg",
+        "https://cdn.sanity.io/images/77e5oip8/production/4e32a7c186fa296bf16369bcb8e117768ecd6017-1280x960.jpg",
+        "https://cdn.sanity.io/images/77e5oip8/production/d80d4c7f573e9f6fc3d2454061adcfd91908ef90-1280x960.jpg"
+      ]
     },
     {
       "id": "7221c6d4-2939-4598-8d09-73bab1c81f3c",

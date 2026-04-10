@@ -3,378 +3,380 @@
 <head>
     <meta charset="utf-8"/>
     <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-    <title>Teplota - Инженерные системы под ключ</title>
+    <title>Teplota — Инженерные системы под ключ</title>
+    <meta name="description" content="Профессиональный монтаж систем отопления, водоснабжения и канализации в Казани. Работаем более 10 лет. Гарантия на работы до 3 лет."/>
+
     <link id="site-favicon" rel="icon" href="favicon.ico">
+
+    <!-- Google Fonts: Inter + Playfair Display -->
     <link href="https://fonts.googleapis.com" rel="preconnect"/>
     <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Playfair+Display:wght@700&display=swap" rel="stylesheet"/>
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-    <style data-purpose="custom-styles">
-        .hide-scrollbar::-webkit-scrollbar { display: none; }
-        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-        
-        /* Reveal animation */
-        .reveal-item { opacity: 0; transform: translateY(30px); transition: all 0.8s ease-out; }
-        .reveal-item.active { opacity: 1; transform: translateY(0); }
-        
-        /* Modal Visibility */
-        .modal-overlay {
-          display: none;
-        }
-        .modal-overlay.open {
-          display: flex !important;
-          animation: fadeIn 0.3s ease-out;
-        }
-        @keyframes fadeIn {
-          from { opacity: 0; }
-          to { opacity: 1; }
-        }
-    </style>
-    <link rel="stylesheet" href="admin.css"> <!-- Fallback for editor styles -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet"/>
+
+    <!-- Leaflet Map -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+
+    <!-- Site Styles -->
+    <link rel="stylesheet" href="site.css">
 </head>
-<body class="font-sans text-brand-text bg-brand-bg antialiased selection:bg-brand selection:text-white">
+<body class="font-sans text-brand-text bg-brand-bg dark:bg-dark-bg dark:text-dark-text antialiased selection:bg-brand selection:text-white transition-colors duration-300">
 
-  <!-- CMS EDITOR UI - TOPBAR -->
-  <div id="cms-topbar" class="fixed top-0 left-0 w-full z-[100] bg-gray-900 text-white flex items-center justify-between px-6 py-2 text-xs font-semibold" style="display:none;">
-    <div class="cms-topbar-title"><span>✏️</span> Режим редактора</div>
-    <div id="cms-topbar-actions" class="flex gap-2">
-      <button class="cms-topbar-btn" id="cms-preview-btn">Предпросмотр</button>
-      <button class="cms-topbar-btn save" onclick="TepCMS.save()">Сохранить</button>
-    </div>
-  </div>
-
-  <header class="fixed top-0 left-0 w-full z-50 bg-white/90 backdrop-blur-md shadow-sm" id="main-header">
+  <!-- ═══ HEADER ══════════════════════════════════════════════════════════════ -->
+  <header class="fixed top-0 left-0 w-full z-50 bg-white/90 dark:bg-dark-bg/90 backdrop-blur-md shadow-sm dark:shadow-dark-border/20 transition-colors duration-300" id="main-header">
     <div class="container mx-auto px-4 md:px-8 py-4 flex items-center justify-between">
       <a class="flex items-center gap-2" href="#">
-        <img src="assets/logo.svg" alt="Teplota" class="w-auto logo h-[25px] md:h-[30px]">
+        <img src="assets/logo.svg" alt="Teplota" class="w-auto logo h-[25px] md:h-[30px] block dark:hidden">
+        <img src="assets/logo white.svg" alt="Teplota" class="w-auto logo h-[25px] md:h-[30px] hidden dark:block">
       </a>
-      <nav class="hidden md:flex items-center gap-8 font-medium text-sm text-gray-700">
-        <a class="hover:text-brand transition-colors" href="#about">О нас</a>
-        <a class="hover:text-brand transition-colors" href="#services">Услуги</a>
-        <a class="hover:text-brand transition-colors" href="#products">Товары</a>
-        <a class="hover:text-brand transition-colors" href="#gallery">Наши работы</a>
-        <a class="hover:text-brand transition-colors" href="#contacts">Контакты</a>
+      <nav class="hidden md:flex items-center gap-8 font-medium text-sm text-gray-700 dark:text-dark-muted">
+        <a class="hover:text-brand dark:hover:text-brand transition-colors" href="#about">О нас</a>
+        <a class="hover:text-brand dark:hover:text-brand transition-colors" href="#services">Услуги</a>
+        <a class="hover:text-brand dark:hover:text-brand transition-colors" href="#products">Товары</a>
+        <a class="hover:text-brand dark:hover:text-brand transition-colors" href="#gallery">Наши работы</a>
+        <a class="hover:text-brand dark:hover:text-brand transition-colors" href="#contacts">Контакты</a>
       </nav>
-      <div class="flex items-center gap-4 md:gap-6">
-        <a class="hidden lg:block font-semibold text-gray-800 hover:text-brand transition-colors" href="tel:+79274326336" id="header-phone-val">+7 (927) 432-63-36</a>
-        <button class="hidden sm:block bg-brand hover:bg-brand-dark text-white px-6 py-2.5 rounded-full font-medium text-sm transition-colors shadow-md">
+      <div class="flex items-center gap-3 md:gap-5">
+        <a class="hidden lg:block font-semibold text-gray-800 dark:text-dark-text hover:text-brand transition-colors" href="tel:+79274326336" id="header-phone-val">+7 (927) 432-63-36</a>
+
+        <!-- Dark Mode Toggle -->
+        <button id="theme-toggle" aria-label="Переключить тему"
+          class="w-9 h-9 rounded-full flex items-center justify-center text-gray-500 dark:text-dark-muted hover:bg-gray-100 dark:hover:bg-dark-surface transition-colors">
+          <svg id="icon-sun" class="hidden w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707M17.657 17.657l-.707-.707M6.343 6.343l-.707-.707M12 7a5 5 0 100 10A5 5 0 0012 7z"/>
+          </svg>
+          <svg id="icon-moon" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/>
+          </svg>
+        </button>
+
+        <button class="hidden sm:block bg-brand hover:bg-brand-dark text-white px-5 py-2.5 rounded-full font-semibold text-sm transition-colors shadow-md">
           Заказать звонок
         </button>
+
         <!-- Mobile Menu Toggle -->
-        <button id="mobile-menu-btn" class="md:hidden flex flex-col gap-1.5 p-2 focus:outline-none" aria-label="Menu">
-          <span class="w-6 h-0.5 bg-gray-800 transition-all duration-300"></span>
-          <span class="w-6 h-0.5 bg-gray-800 transition-all duration-300"></span>
-          <span class="w-6 h-0.5 bg-gray-800 transition-all duration-300"></span>
+        <button id="mobile-menu-btn" class="md:hidden flex flex-col gap-1.5 p-2 focus:outline-none" aria-label="Меню">
+          <span class="w-6 h-0.5 bg-gray-800 dark:bg-dark-text transition-all duration-300"></span>
+          <span class="w-6 h-0.5 bg-gray-800 dark:bg-dark-text transition-all duration-300"></span>
+          <span class="w-6 h-0.5 bg-gray-800 dark:bg-dark-text transition-all duration-300"></span>
         </button>
       </div>
     </div>
   </header>
 
-  <!-- MOBILE MENU DRAWER -->
+  <!-- ═══ MOBILE MENU ══════════════════════════════════════════════════════════ -->
   <div id="mobile-menu" class="fixed inset-0 z-[100] pointer-events-none overflow-hidden">
     <div id="mobile-menu-overlay" class="absolute inset-0 bg-black/40 opacity-0 transition-opacity duration-300"></div>
-    <div id="mobile-menu-drawer" class="absolute top-0 right-0 w-80 h-full bg-white shadow-2xl translate-x-full transition-transform duration-300 pointer-events-auto flex flex-col">
-       <div class="p-6 border-b flex items-center justify-between">
-         <img src="assets/logo.svg" alt="Teplota" class="h-8">
-         <button id="mobile-menu-close" class="text-gray-500 hover:text-brand p-2">
-           <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
-         </button>
-       </div>
-       <nav class="p-8 flex flex-col gap-6 text-xl font-bold text-gray-800">
-         <a href="#about" class="hover:text-brand transition-colors">О нас</a>
-         <a href="#services" class="hover:text-brand transition-colors">Услуги</a>
-         <a href="#products" class="hover:text-brand transition-colors">Товары</a>
-         <a href="#gallery" class="hover:text-brand transition-colors">Наши работы</a>
-         <a href="#contacts" class="hover:text-brand transition-colors">Контакты</a>
-       </nav>
-       <div class="mt-auto p-8 bg-gray-50">
-         <div id="mobile-phone-val" class="text-2xl font-black text-gray-900 mb-6">+7 (927) 432-63-36</div>
-         <div id="mobile-socials" class="flex gap-4">
-           <!-- Rendered by CMS -->
-         </div>
-       </div>
+    <div id="mobile-menu-drawer" class="absolute top-0 right-0 w-80 h-full bg-white dark:bg-dark-surface shadow-2xl translate-x-full transition-transform duration-300 pointer-events-auto flex flex-col">
+      <div class="p-6 border-b dark:border-dark-border flex items-center justify-between">
+        <img src="assets/logo.svg" alt="Teplota" class="h-8 block dark:hidden">
+        <img src="assets/logo white.svg" alt="Teplota" class="h-8 hidden dark:block">
+        <button id="mobile-menu-close" class="text-gray-500 hover:text-brand p-2">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+        </button>
+      </div>
+      <nav class="p-8 flex flex-col gap-6 text-xl font-bold text-gray-800 dark:text-dark-text">
+        <a href="#about" class="hover:text-brand transition-colors">О нас</a>
+        <a href="#services" class="hover:text-brand transition-colors">Услуги</a>
+        <a href="#products" class="hover:text-brand transition-colors">Товары</a>
+        <a href="#gallery" class="hover:text-brand transition-colors">Наши работы</a>
+        <a href="#contacts" class="hover:text-brand transition-colors">Контакты</a>
+      </nav>
+      <div class="mt-auto p-8 bg-gray-50 dark:bg-dark-bg">
+        <div id="mobile-phone-val" class="text-2xl font-black text-gray-900 dark:text-white mb-6">+7 (927) 432-63-36</div>
+        <div id="mobile-socials" class="flex gap-4"></div>
+      </div>
     </div>
   </div>
 
   <main>
-    <!-- HERO SECTION -->
+    <!-- ═══ HERO ═════════════════════════════════════════════════════════════════ -->
     <section class="relative h-[85vh] min-h-[600px] flex items-center overflow-hidden" id="home">
       <div class="absolute inset-0 bg-hero-pattern bg-cover bg-center transition-transform duration-1000 scale-105" id="hero-bg"></div>
+      <div class="absolute inset-0 bg-black/30 dark:bg-black/50"></div>
       <div class="container mx-auto px-4 md:px-8 relative z-10">
         <div class="glass-effect rounded-3xl p-8 md:p-12 max-w-2xl shadow-2xl reveal-item flex flex-col items-center text-center md:items-start md:text-left">
           <p class="text-xs font-bold tracking-widest text-brand uppercase mb-4" id="hero-label">Инженерные системы под ключ</p>
           <h1 class="font-serif text-3xl sm:text-4xl md:text-7xl font-bold text-gray-900 leading-[1.1] mb-6" id="hero-title">
             КОМПЛЕКСНЫЙ<br/><span class="text-brand">МОНТАЖ</span>
           </h1>
-          <div class="text-gray-700 mb-8 leading-relaxed max-w-lg" id="hero-subtitle">
-            <span style="font-size: 32px;">систем отопления, водоснабжения<br>и канализации в КАЗАНИ</span>
+          <div class="text-gray-700 mb-8 leading-relaxed max-w-lg text-lg md:text-2xl" id="hero-subtitle">
+            систем отопления, водоснабжения<br>и канализации в КАЗАНИ
           </div>
           <div class="flex flex-wrap gap-4 justify-center md:justify-start">
-            <button class="bg-brand hover:bg-brand-dark text-white px-8 py-3.5 rounded-full font-semibold transition-colors shadow-lg shadow-brand/20">
+            <a href="#contacts" id="hero-btn" class="bg-brand hover:bg-brand-dark text-white px-8 py-3.5 rounded-full font-semibold transition-colors shadow-lg shadow-brand/20">
               Связаться с нами
-            </button>
-            <button class="bg-white hover:bg-gray-50 text-gray-800 px-8 py-3.5 rounded-full font-semibold transition-colors shadow-md border border-gray-100">
+            </a>
+            <a href="#gallery" class="bg-white/80 hover:bg-white text-gray-800 px-8 py-3.5 rounded-full font-semibold transition-colors shadow-md border border-white/50">
               Наши работы
-            </button>
+            </a>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- ABOUT SECTION -->
-    <section id="about" class="py-24 bg-white relative overflow-hidden">
-      <!-- Decorative element -->
-      <div class="absolute right-0 top-0 bottom-0 w-1/3 bg-pipes-pattern bg-cover bg-left opacity-10 pointer-events-none"></div>
-      
-      <div class="container mx-auto px-4 md:px-8 relative z-10">
+    <!-- ═══ ABOUT ═════════════════════════════════════════════════════════════════ -->
+    <section id="about" class="py-24 bg-white dark:bg-dark-bg transition-colors duration-300">
+      <div class="container mx-auto px-4 md:px-8">
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
           <div class="reveal-item">
             <span class="inline-block text-xs font-bold tracking-widest text-brand uppercase mb-4" id="about-label">О компании</span>
-            <h2 class="font-serif text-4xl md:text-5xl font-bold text-gray-900 leading-tight mb-8" id="about-title">
-                Теплота — мы профессиональная<br/> инженерная компания!
+            <h2 class="font-serif text-4xl md:text-5xl font-bold text-gray-900 dark:text-white leading-tight mb-8" id="about-title">
+              Теплота — профессиональная<br/> инженерная компания!
             </h2>
             <div class="flex gap-12 mt-12" id="stats-grid">
-               <!-- Stats from CMS -->
+              <!-- Stats from CMS -->
             </div>
           </div>
           <div class="reveal-item">
-            <div class="text-xl text-gray-700 font-medium mb-8 leading-relaxed" id="about-text1">
-                Огромный опыт в сфере монтажа систем ОВК (отопления, водоснабжения и канализации)
+            <div class="text-xl text-gray-700 dark:text-dark-text font-medium mb-8 leading-relaxed" id="about-text1">
+              Огромный опыт в сфере монтажа систем ОВК
             </div>
-            <div class="text-gray-600 leading-relaxed mb-12 rich-text prose prose-orange max-w-none" id="about-text2">
-                <!-- Content from Sanity (rendered via toHTML) -->
-            </div>
-            
+            <div class="text-gray-600 dark:text-dark-muted leading-relaxed mb-12 rich-text prose prose-orange max-w-none" id="about-text2"></div>
             <div class="mt-8">
-                <p class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-6">Нам доверяют</p>
-                <div class="flex flex-wrap items-center gap-8 opacity-40 grayscale hover:grayscale-0 transition-all duration-300" id="partners-grid">
-                  <!-- Partners from CMS -->
-                </div>
+              <p class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-6">Нам доверяют</p>
+              <div class="flex flex-wrap items-center gap-8 opacity-40 grayscale hover:grayscale-0 hover:opacity-100 transition-all duration-500 dark:invert dark:opacity-20 dark:hover:opacity-60" id="partners-grid"></div>
             </div>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- ADVANTAGES -->
-    <section id="advantages" class="py-24 bg-brand-bg">
+    <!-- ═══ ADVANTAGES ═══════════════════════════════════════════════════════════ -->
+    <section id="advantages" class="py-24 bg-brand-bg dark:bg-dark-surface transition-colors duration-300">
       <div class="container mx-auto px-4 md:px-8">
         <div class="text-center mb-16 reveal-item">
-          <h2 class="font-serif text-3xl md:text-5xl font-bold text-gray-900" id="advantages-title">НАШИ <span class="text-brand">ПРЕИМУЩЕСТВА</span></h2>
+          <h2 class="font-serif text-3xl md:text-5xl font-bold text-gray-900 dark:text-white" id="advantages-title">НАШИ <span class="text-brand">ПРЕИМУЩЕСТВА</span></h2>
         </div>
-        <div class="flex md:grid overflow-x-hidden md:overflow-visible md:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-6 scroll-smooth snap-x snap-mandatory" id="advantage-grid">
+        <div class="flex md:grid overflow-x-auto md:overflow-visible md:grid-cols-2 lg:grid-cols-3 gap-5 md:gap-6 scroll-smooth snap-x snap-mandatory hide-scrollbar -mx-4 px-4 pb-4" id="advantage-grid">
           <!-- Advantages from CMS -->
         </div>
       </div>
     </section>
 
-    <!-- SERVICES -->
-    <section id="services" class="py-24 bg-white">
+    <!-- ═══ SERVICES ══════════════════════════════════════════════════════════════ -->
+    <section id="services" class="py-24 bg-white dark:bg-dark-bg transition-colors duration-300">
       <div class="container mx-auto px-4 md:px-8">
-        <div class="flex flex-col md:flex-row justify-between items-end mb-16 gap-6 reveal-item">
-          <div>
-            <h2 class="font-serif text-3xl md:text-5xl font-bold text-gray-900 mb-4" id="services-title">НАШИ <span class="text-brand">УСЛУГИ</span></h2>
-            <p class="text-gray-500 text-lg">Комплексный монтаж инженерных систем любой сложности</p>
+        <div class="mb-12 reveal-item text-center md:text-left">
+          <h2 class="font-serif text-4xl md:text-5xl font-extrabold text-gray-900 dark:text-white leading-tight">
+            НАШИ <span class="text-brand">УСЛУГИ</span>
+          </h2>
+          <p class="text-gray-500 dark:text-dark-muted mt-2">Комплексный монтаж инженерных систем любой сложности</p>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-14 items-start reveal-item">
+          <!-- Premium Preview Container (Left) - Hidden on Mobile -->
+          <div id="service-preview-container" class="hidden lg:block lg:col-span-6 relative aspect-video rounded-[2.5rem] overflow-hidden shadow-[0_32px_64px_-16px_rgba(0,0,0,0.2)] bg-gray-100 dark:bg-dark-surface border border-white/10">
+            <!-- Glass Inner Border Effect -->
+            <div class="absolute inset-0 border-[8px] border-white/5 pointer-events-none rounded-[2.5rem] z-10"></div>
+            
+            <img id="service-preview-img" src="" alt="" class="w-full h-full object-cover transition-all duration-700">
+            
+            <!-- Dynamic Content Overlay -->
+            <div class="absolute inset-x-0 bottom-0 z-20">
+              <div class="backdrop-blur-md bg-black/40 border-t border-white/10 p-10">
+                <div class="flex items-center gap-3 mb-2">
+                  <span class="w-6 h-[1px] bg-brand"></span>
+                  <span class="text-brand uppercase tracking-[0.2em] text-[10px] font-black">Инженерная система</span>
+                </div>
+                <h3 id="service-preview-title" class="text-2xl md:text-3xl lg:text-4xl font-black text-white leading-tight drop-shadow-lg"></h3>
+              </div>
+            </div>
+            
+            <!-- Corner Accent -->
+            <div class="absolute top-6 right-6 z-20 w-10 h-10 rounded-full bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center">
+              <svg class="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M12 4v16m8-8H4"/></svg>
+            </div>
           </div>
-          <div class="text-brand font-bold hover:translate-x-2 transition-transform cursor-pointer">Все услуги →</div>
+
+          <!-- Services List Grid (Right) -->
+          <div class="lg:col-span-6 flex flex-col gap-3">
+             <div class="grid grid-cols-1 sm:grid-cols-2 gap-3" id="service-list-grid">
+               <!-- Dynamically populated from cms.js -->
+             </div>
+          </div>
         </div>
-        <div class="flex overflow-x-auto md:grid md:grid-cols-2 lg:grid-cols-4 gap-6 pb-8 md:pb-0 scroll-smooth snap-x snap-mandatory hide-scrollbar" id="service-grid">
-          <!-- Services from CMS -->
+        <div class="mt-16 flex justify-center reveal-item">
+          <a href="#contacts" class="bg-brand hover:bg-brand-dark text-white font-black uppercase tracking-widest text-xs px-12 py-5 rounded-xl shadow-lg shadow-brand/20 transition-all hover:scale-105 active:scale-95 duration-300">
+            Заказать услугу
+          </a>
         </div>
-        <!-- Pagination Dots for Mobile -->
-        <div id="service-dots" class="flex md:hidden justify-center gap-2 mb-8"></div>
       </div>
     </section>
 
-    <!-- PRODUCTS -->
-    <section id="products" class="py-24 bg-brand-bg">
+    <!-- ═══ PRODUCTS ══════════════════════════════════════════════════════════════ -->
+    <section id="products" class="py-24 bg-brand-bg dark:bg-dark-surface transition-colors duration-300">
       <div class="container mx-auto px-4 md:px-8">
         <div class="flex flex-col md:flex-row justify-between items-end mb-16 gap-6 reveal-item">
           <div>
-            <h2 class="font-serif text-3xl md:text-5xl font-bold text-gray-900 mb-4" id="products-title">НАШИ <span class="text-brand">ТОВАРЫ</span></h2>
-            <p class="text-gray-500 text-lg">Сертифицированное оборудование для вашего дома</p>
+            <h2 class="font-serif text-3xl md:text-5xl font-bold text-gray-900 dark:text-white mb-4" id="products-title">НАШИ <span class="text-brand">ТОВАРЫ</span></h2>
+            <p class="text-gray-500 dark:text-dark-muted text-lg">Сертифицированное оборудование для вашего дома</p>
           </div>
-          <a href="#contacts" class="bg-white border border-gray-200 px-6 py-2 rounded-full text-sm font-bold hover:bg-gray-50 transition-colors shadow-sm">Заказать оборудование</a>
+          <a href="#contacts" class="bg-white dark:bg-dark-surface border border-gray-200 dark:border-dark-border px-6 py-2 rounded-full text-sm font-bold hover:bg-gray-50 dark:hover:bg-dark-border transition-colors shadow-sm dark:text-dark-text">Заказать оборудование</a>
         </div>
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" id="product-grid">
-          <!-- Products from CMS -->
-        </div>
+        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6" id="product-grid"></div>
       </div>
     </section>
 
-    <!-- GALLERY / PORTFOLIO -->
-    <section id="gallery" class="py-24 bg-white relative overflow-hidden">
+    <!-- ═══ GALLERY ═══════════════════════════════════════════════════════════════ -->
+    <section id="gallery" class="py-24 bg-white dark:bg-dark-bg transition-colors duration-300">
       <div class="container mx-auto px-4 md:px-8">
         <div class="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-6 reveal-item">
           <div>
             <span class="inline-block text-xs font-bold tracking-widest text-brand uppercase mb-4">Наши объекты</span>
-            <h2 class="font-serif text-3xl md:text-5xl font-bold text-gray-900">НАШИ <span class="text-brand">РАБОТЫ</span></h2>
-            <p class="text-gray-500 mt-4">Примеры реализованных нами проектов</p>
+            <h2 class="font-serif text-3xl md:text-5xl font-bold text-gray-900 dark:text-white">НАШИ <span class="text-brand">РАБОТЫ</span></h2>
+            <p class="text-gray-500 dark:text-dark-muted mt-4">Примеры реализованных нами проектов</p>
           </div>
         </div>
-        
         <div class="relative group">
-          <div id="gallery-grid" class="flex overflow-x-auto gap-6 pb-4 hide-scrollbar snap-x snap-mandatory scroll-smooth">
-            <!-- Gallery items will be injected here as horizontal cards -->
-          </div>
+          <div id="gallery-grid" class="flex overflow-x-auto gap-6 pb-4 hide-scrollbar snap-x snap-mandatory scroll-smooth"></div>
           <div id="gallery-dots" class="flex justify-center gap-2 mt-6"></div>
         </div>
       </div>
     </section>
 
-    <!-- CONTACTS -->
+    <!-- ═══ CONTACTS ══════════════════════════════════════════════════════════════ -->
     <section id="contacts" class="relative lg:min-h-[700px] flex flex-col lg:flex-row lg:items-center py-0 lg:py-24">
       <div class="relative lg:absolute lg:inset-0 z-0 h-[400px] lg:h-auto order-2 lg:order-1">
-          <div id="leaflet-map" style="height: 100%; width: 100%;"></div>
+        <div id="leaflet-map" style="height:100%;width:100%;"></div>
       </div>
       <div class="container mx-auto px-4 md:px-8 relative z-10 pointer-events-none order-1 lg:order-2 py-12 lg:py-0">
         <div class="grid grid-cols-1 lg:grid-cols-2">
-            <div class="bg-white/95 backdrop-blur-md p-8 md:p-12 rounded-3xl shadow-2xl max-w-xl pointer-events-auto reveal-item mx-auto lg:ml-0">
-                <span class="inline-block text-xs font-bold tracking-widest text-brand uppercase mb-4">Связаться с нами</span>
-                <h2 class="font-serif text-3xl md:text-4xl font-bold text-gray-900 mb-8 leading-tight">Готовы начать<br/><span class="text-brand">свой проект?</span></h2>
-                
-                <div id="contact-phones-list" class="space-y-4 mb-8">
-                    <!-- Phones from CMS -->
-                </div>
-                
-                <div class="space-y-4 mb-10">
-                    <p id="contact-email" class="text-lg font-semibold text-gray-800 flex items-center gap-3">
-                        <span class="text-brand">✉</span> teplota-kzn@mail.ru
-                    </p>
-                    <p id="contact-address" class="text-gray-600 flex items-center gap-3">
-                        <span class="text-brand">📍</span> г. Казань, ул. Техническая, д. 23
-                    </p>
-                </div>
-                
-                <form class="space-y-4">
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <input type="text" placeholder="Ваше имя" class="w-full px-5 py-3 rounded-xl border-gray-200 bg-gray-50 focus:ring-2 focus:ring-brand focus:border-brand outline-none transition-all">
-                        <input type="tel" placeholder="Номер телефона" class="w-full px-5 py-3 rounded-xl border-gray-200 bg-gray-50 focus:ring-2 focus:ring-brand focus:border-brand outline-none transition-all">
-                    </div>
-                    <div class="flex justify-center md:justify-start">
-                        <button class="w-full md:w-auto bg-brand hover:bg-brand-dark text-white font-bold py-4 px-12 rounded-xl shadow-lg shadow-brand/20 transition-all transform hover:-translate-y-1">Заказать звонок</button>
-                    </div>
-                </form>
+          <div class="bg-white/95 dark:bg-dark-surface/95 backdrop-blur-md p-8 md:p-12 rounded-3xl shadow-2xl max-w-xl pointer-events-auto reveal-item mx-auto lg:ml-0">
+            <span class="inline-block text-xs font-bold tracking-widest text-brand uppercase mb-4">Связаться с нами</span>
+            <h2 class="font-serif text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-8 leading-tight">Готовы начать<br/><span class="text-brand">свой проект?</span></h2>
+
+            <div id="contact-phones-list" class="space-y-4 mb-8"></div>
+
+            <div class="space-y-4 mb-10">
+              <p id="contact-email" class="text-lg font-semibold text-gray-800 dark:text-dark-text flex items-center gap-3">
+                <span class="text-brand">✉</span> teplota-kzn@mail.ru
+              </p>
+              <p id="contact-address" class="text-gray-600 dark:text-dark-muted flex items-center gap-3">
+                <span class="text-brand">📍</span> г. Казань, ул. Техническая, д. 23
+              </p>
             </div>
+
+            <form class="space-y-4">
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <input type="text" placeholder="Ваше имя" class="w-full px-5 py-3 rounded-xl border border-gray-200 dark:border-dark-border bg-gray-50 dark:bg-dark-bg dark:text-dark-text focus:ring-2 focus:ring-brand outline-none transition-all">
+                <input type="tel" placeholder="Номер телефона" class="w-full px-5 py-3 rounded-xl border border-gray-200 dark:border-dark-border bg-gray-50 dark:bg-dark-bg dark:text-dark-text focus:ring-2 focus:ring-brand outline-none transition-all">
+              </div>
+              <button type="submit" class="w-full bg-brand hover:bg-brand-dark text-white font-bold py-4 px-12 rounded-xl shadow-lg shadow-brand/20 transition-all hover:-translate-y-0.5">Заказать звонок</button>
+            </form>
+          </div>
         </div>
       </div>
     </section>
   </main>
 
-  <footer class="py-16 bg-white border-t border-gray-100">
+  <!-- ═══ FOOTER ════════════════════════════════════════════════════════════════ -->
+  <footer class="py-16 bg-white dark:bg-dark-surface border-t border-gray-100 dark:border-dark-border transition-colors duration-300">
     <div class="container mx-auto px-4 md:px-8">
-      <div class="flex flex-col md:flex-row justify-between items-center gap-8 border-b border-gray-100 pb-12 mb-8">
-        <div class="flex items-center gap-2">
-            <img src="assets/logo.svg" alt="Теплота" class="h-7 w-auto opacity-80">
-        </div>
-        <div id="footer-socials" class="flex gap-4">
-          <!-- Socials from CMS -->
-        </div>
+      <div class="flex flex-col md:flex-row justify-between items-center gap-8 border-b border-gray-100 dark:border-dark-border pb-12 mb-8">
+        <img src="assets/logo.svg" alt="Теплота" class="h-7 w-auto opacity-80 block dark:hidden">
+        <img src="assets/logo white.svg" alt="Теплота" class="h-7 w-auto hidden dark:block">
+        <div id="footer-socials" class="flex gap-4"></div>
       </div>
       <div class="flex flex-col md:flex-row justify-between items-center gap-6">
-        <p id="footer-copy" class="text-sm text-gray-400">© 2026 Теплота. Все права защищены.</p>
-        <div id="footer-links" class="flex gap-8 text-sm text-gray-500 font-medium">
-          <!-- Links from CMS -->
-        </div>
+        <p id="footer-copy" class="text-sm text-gray-400 dark:text-dark-muted">© 2026 Теплота. Все права защищены.</p>
+        <div id="footer-links" class="flex gap-8 text-sm text-gray-500 dark:text-dark-muted font-medium"></div>
       </div>
     </div>
   </footer>
 
-  <!-- MODALS -->
-  <div id="cms-modal-overlay" class="modal-overlay fixed inset-0 z-[10000] items-center justify-center bg-black/60 backdrop-blur-sm" onclick="if(event.target===this)this.classList.remove('open')">
-    <div id="cms-modal" class="bg-white rounded-3xl w-full max-w-2xl max-h-[90vh] overflow-hidden shadow-2xl relative">
-        <div class="p-6 border-b flex justify-between items-center">
-            <h3 id="cms-modal-title" class="text-xl font-bold">Редактировать</h3>
-            <button onclick="TepCMS.closeModal()" class="text-gray-400 hover:text-gray-600">✕</button>
-        </div>
-        <div id="cms-modal-body" class="p-6 overflow-y-auto max-h-[70vh]"></div>
-        <div id="cms-modal-footer" class="p-6 border-t flex justify-end gap-3">
-            <button onclick="TepCMS.closeModal()" class="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-lg">Отмена</button>
-            <button id="cms-modal-save" class="px-6 py-2 bg-brand text-white rounded-lg font-bold hover:bg-brand-dark transition-colors">Сохранить</button>
-        </div>
-    </div>
-  </div>
+  <!-- ═══ MODALS ════════════════════════════════════════════════════════════════ -->
 
+  <!-- Service viewer -->
   <div id="service-modal-overlay" class="modal-overlay fixed inset-0 z-[9998] items-center justify-center bg-black/60 backdrop-blur-sm" onclick="if(event.target===this)this.classList.remove('open')">
-    <div id="service-modal" class="bg-white rounded-3xl w-full max-w-4xl max-h-[90vh] overflow-y-auto shadow-2xl flex flex-col relative mx-4">
-        <button onclick="this.closest('.modal-overlay').classList.remove('open')" class="absolute top-6 right-6 z-10 w-10 h-10 bg-white shadow-md rounded-full flex items-center justify-center text-gray-500 hover:text-gray-800 transition-colors">✕</button>
-        
-        <div class="w-full h-80 md:h-[400px] relative overflow-hidden group">
-          <img id="service-modal-cover" src="" alt="" class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
-        </div>
+    <div id="service-modal" class="bg-white dark:bg-dark-surface rounded-[2.5rem] w-full max-w-4xl max-h-[90vh] overflow-y-auto shadow-2xl flex flex-col relative mx-4">
+      <button onclick="this.closest('.modal-overlay').classList.remove('open')" class="absolute top-4 right-4 md:top-6 md:right-6 z-30 w-10 h-10 bg-white/80 dark:bg-dark-bg/80 backdrop-blur-md shadow-md rounded-full flex items-center justify-center text-gray-500 hover:text-gray-800 transition-colors">✕</button>
+      
+      <!-- Modal Hero Image -->
+      <div class="w-full relative overflow-hidden bg-gray-100 dark:bg-dark-bg" style="aspect-ratio: 16/9; min-height: 220px;">
+        <img id="service-modal-cover" src="" alt="" class="absolute inset-0 w-full h-full object-cover">
+      </div>
 
-        <div class="w-full pt-4 pb-10 px-6 md:pt-5 md:pb-14 md:px-14 flex flex-col bg-white">
-          <div class="mb-auto">
-            <p class="text-xs font-bold text-brand uppercase tracking-widest mb-2">Услуги проекта</p>
-            <h2 id="service-modal-title" class="font-serif text-3xl md:text-4xl font-bold text-gray-900 mb-6 leading-tight"></h2>
-            <div id="service-modal-desc" class="prose prose-orange max-w-none text-gray-600 leading-relaxed space-y-4 mb-8"></div>
-            <div id="service-modal-photos" class="grid grid-cols-2 md:grid-cols-4 gap-4"></div>
-          </div>
-          
-          <div class="mt-12 pt-8 border-t border-gray-100 flex flex-wrap gap-4 items-center justify-between">
-            <div class="text-sm text-gray-400 font-medium italic">
-                Свяжитесь с нами для обсуждения <br/>вашего проекта.
-            </div>
-            <div class="flex gap-4">
-              <button class="bg-brand hover:bg-brand-dark text-white px-8 py-3.5 rounded-full font-bold transition-all shadow-lg shadow-brand/20 active:scale-95" onclick="document.getElementById('service-modal-overlay').classList.remove('open'); setTimeout(() => document.getElementById('contacts').scrollIntoView({behavior:'smooth'}), 300)">Заказать</button>
-              <button class="bg-gray-100 hover:bg-gray-200 text-gray-700 px-8 py-3.5 rounded-full font-bold transition-all" onclick="this.closest('.modal-overlay').classList.remove('open')">Закрыть</button>
-            </div>
+      <div class="w-full py-8 px-6 md:py-14 md:px-14 flex flex-col">
+        <div class="flex items-center gap-2 mb-4">
+          <span class="w-4 h-[1px] bg-brand"></span>
+          <p class="text-[10px] md:text-xs font-black text-brand uppercase tracking-widest">Услуги проекта</p>
+        </div>
+        <h2 id="service-modal-title" class="font-serif text-3xl md:text-5xl font-black text-gray-900 dark:text-white mb-8 leading-tight"></h2>
+        <div id="service-modal-desc" class="prose max-w-none text-gray-600 dark:text-dark-muted leading-relaxed space-y-4 mb-10"></div>
+        <div id="service-modal-photos" class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-10"></div>
+        
+        <div class="mt-8 pt-8 border-t border-gray-100 dark:border-dark-border flex flex-wrap gap-6 items-center justify-between">
+          <p class="text-sm text-gray-400 italic">Свяжитесь с нами для детального обсуждения вашего проекта.</p>
+          <div class="flex gap-4">
+            <button class="bg-brand hover:bg-brand-dark text-white font-bold py-4 px-10 rounded-xl shadow-lg shadow-brand/20 transition-all hover:-translate-y-0.5"
+              onclick="document.getElementById('service-modal-overlay').classList.remove('open'); setTimeout(()=>document.getElementById('contacts').scrollIntoView({behavior:'smooth'}),300)">Заказать</button>
+            <button onclick="this.closest('.modal-overlay').classList.remove('open')" class="bg-gray-100 dark:bg-dark-bg text-gray-600 dark:text-dark-text font-bold py-4 px-10 rounded-xl hover:bg-gray-200 transition-all">Закрыть</button>
           </div>
         </div>
+      </div>
     </div>
   </div>
 
+  <!-- Gallery viewer -->
   <div id="gallery-modal-overlay" class="modal-overlay fixed inset-0 z-[9999] items-center justify-center bg-black/90 backdrop-blur-md p-4" onclick="if(event.target===this)this.classList.remove('open')">
-    <div id="gallery-modal-container" class="max-w-4xl w-full max-h-[95vh] bg-white rounded-2xl overflow-hidden relative shadow-2xl flex flex-col">
-        <button onclick="this.closest('.modal-overlay').classList.remove('open')" class="absolute top-4 right-4 z-20 w-8 h-8 bg-black/50 text-white rounded-full flex items-center justify-center hover:bg-black transition-colors">✕</button>
-        <div class="relative w-full aspect-video md:aspect-[16/10] bg-black flex items-center justify-center">
-            <img id="gallery-modal-main-img" src="" alt="" class="max-w-full max-h-full object-contain">
-            <button onclick="TepCMS.galleryPrev()" class="absolute left-4 top-1/2 -translate-y-1/2 w-12 h-12 bg-white/20 hover:bg-white/40 backdrop-blur-md rounded-full text-white flex items-center justify-center transition-all">←</button>
-            <button onclick="TepCMS.galleryNext()" class="absolute right-4 top-1/2 -translate-y-1/2 w-12 h-12 bg-white/20 hover:bg-white/40 backdrop-blur-md rounded-full text-white flex items-center justify-center transition-all">→</button>
-            <div id="gallery-modal-counter" class="absolute bottom-4 right-4 bg-black/50 text-white px-3 py-1 rounded-full text-xs"></div>
-        </div>
-        <div class="p-6 md:p-10 overflow-y-auto">
-            <h3 id="gallery-modal-title" class="text-2xl font-bold mb-3"></h3>
-            <p id="gallery-modal-desc" class="text-gray-600"></p>
-            <div id="gallery-image-caption" class="mt-4 bg-gray-50 p-4 rounded-xl text-sm border-l-4 border-brand italic hidden"></div>
-        </div>
+    <div id="gallery-modal-container" class="max-w-4xl w-full max-h-[95vh] bg-white dark:bg-dark-surface rounded-2xl overflow-hidden relative shadow-2xl flex flex-col">
+      <button onclick="this.closest('.modal-overlay').classList.remove('open')" class="absolute top-4 right-4 z-20 w-8 h-8 bg-black/50 text-white rounded-full flex items-center justify-center hover:bg-black transition-colors">✕</button>
+      <div class="relative w-full aspect-video bg-black flex items-center justify-center">
+        <img id="gallery-modal-main-img" src="" alt="" class="max-w-full max-h-full object-contain">
+        <button onclick="TepCMS.galleryPrev()" class="absolute left-4 top-1/2 -translate-y-1/2 w-12 h-12 bg-white/20 hover:bg-white/40 backdrop-blur-md rounded-full text-white flex items-center justify-center transition-all">←</button>
+        <button onclick="TepCMS.galleryNext()" class="absolute right-4 top-1/2 -translate-y-1/2 w-12 h-12 bg-white/20 hover:bg-white/40 backdrop-blur-md rounded-full text-white flex items-center justify-center transition-all">→</button>
+        <div id="gallery-modal-counter" class="absolute bottom-4 right-4 bg-black/50 text-white px-3 py-1 rounded-full text-xs"></div>
+      </div>
+      <div class="p-6 md:p-10 overflow-y-auto">
+        <h3 id="gallery-modal-title" class="text-2xl font-bold mb-3 dark:text-white"></h3>
+        <p id="gallery-modal-desc" class="text-gray-600 dark:text-dark-muted"></p>
+        <div id="gallery-image-caption" class="mt-4 bg-gray-50 dark:bg-dark-bg p-4 rounded-xl text-sm border-l-4 border-brand italic hidden"></div>
+      </div>
     </div>
   </div>
 
+  <!-- Product viewer -->
   <div id="product-modal-overlay" class="modal-overlay fixed inset-0 z-[9998] items-center justify-center bg-black/60 backdrop-blur-sm" onclick="if(event.target===this)this.classList.remove('open')">
-    <div id="product-modal" class="bg-white rounded-3xl w-full max-w-4xl max-h-[90vh] overflow-y-auto shadow-2xl flex flex-col relative mx-4">
-        <button onclick="this.closest('.modal-overlay').classList.remove('open')" class="absolute top-6 right-6 z-10 w-10 h-10 bg-white shadow-md rounded-full flex items-center justify-center text-gray-500 hover:text-gray-800 transition-colors">✕</button>
-        
-        <div class="w-full h-80 md:h-[400px] relative bg-gray-50 flex items-center justify-center overflow-hidden border-b border-gray-100 p-8 md:p-12">
-            <img id="product-modal-cover" src="" alt="" class="max-w-full max-h-full object-contain drop-shadow-2xl transition-transform duration-500 hover:scale-105">
-        </div>
+    <div id="product-modal" class="bg-white dark:bg-dark-surface rounded-[2.5rem] w-full max-w-3xl max-h-[90vh] overflow-y-auto shadow-2xl flex flex-col relative mx-4">
+      <button onclick="this.closest('.modal-overlay').classList.remove('open')" class="absolute top-4 right-4 md:top-6 md:right-6 z-30 w-10 h-10 bg-white/80 dark:bg-dark-bg/80 backdrop-blur-md shadow-md rounded-full flex items-center justify-center text-gray-500 hover:text-gray-800 transition-colors">✕</button>
+      
+      <!-- Modal Product Image -->
+      <div class="w-full relative overflow-hidden bg-gray-50 dark:bg-dark-border flex items-center justify-center p-6" style="aspect-ratio: 16/9; min-height: 220px;">
+        <img id="product-modal-cover" src="" alt="" class="max-w-full max-h-full object-contain drop-shadow-2xl">
+      </div>
 
-        <div class="w-full pt-4 pb-10 px-6 md:pt-5 md:pb-14 md:px-14 flex flex-col bg-white">
-            <p class="text-xs font-bold text-brand uppercase tracking-widest mb-2">Товар / Оборудование</p>
-            <h2 id="product-modal-title" class="font-serif text-3xl md:text-4xl font-bold text-gray-900 mb-6 leading-tight"></h2>
-            <div id="product-modal-desc" class="prose prose-orange max-w-none text-gray-600 leading-relaxed space-y-4 mb-8"></div>
-            
-            <div class="mt-auto pt-8 border-t border-gray-100 flex flex-wrap gap-6 items-center justify-between">
-                <div class="italic text-sm text-gray-400 max-w-xs">
-                    Свяжитесь с нами для уточнения <br/>производителя, характеристик и актуальной цены.
-                </div>
-                <div class="flex flex-wrap gap-4">
-                    <button onclick="document.getElementById('product-modal-overlay').classList.remove('open'); setTimeout(()=>document.getElementById('contacts').scrollIntoView({behavior:'smooth'}), 300)" class="bg-brand text-white px-10 py-4 rounded-full font-bold hover:bg-brand-dark transition-all shadow-lg shadow-brand/20 active:scale-95">Заказать</button>
-                    <button onclick="this.closest('.modal-overlay').classList.remove('open')" class="px-10 py-4 rounded-full bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold transition-all">Закрыть</button>
-                </div>
-            </div>
+      <div class="w-full py-8 px-6 md:py-12 md:px-12 flex flex-col">
+        <div class="flex items-center gap-2 mb-4">
+          <span class="w-4 h-[1px] bg-brand"></span>
+          <p class="text-[10px] md:text-xs font-black text-brand uppercase tracking-widest">Товар / Оборудование</p>
         </div>
+        <h2 id="product-modal-title" class="font-serif text-3xl md:text-4xl font-black text-gray-900 dark:text-white mb-6 leading-tight"></h2>
+        <div id="product-modal-desc" class="prose max-w-none text-gray-600 dark:text-dark-muted leading-relaxed mb-10"></div>
+        
+        <div class="mt-8 pt-8 border-t border-gray-100 dark:border-dark-border flex flex-wrap gap-6 items-center justify-between">
+          <p class="italic text-sm text-gray-400 max-w-xs">Свяжитесь с нами для уточнения цены и заказа.</p>
+          <div class="flex gap-4">
+            <button onclick="document.getElementById('product-modal-overlay').classList.remove('open'); setTimeout(()=>document.getElementById('contacts').scrollIntoView({behavior:'smooth'}),300)"
+              class="bg-brand text-white px-10 py-4 rounded-xl font-bold hover:bg-brand-dark transition-all shadow-lg shadow-brand/20">Купить</button>
+            <button onclick="this.closest('.modal-overlay').classList.remove('open')"
+              class="px-10 py-4 rounded-xl bg-gray-100 dark:bg-dark-bg hover:bg-gray-200 text-gray-700 dark:text-dark-text font-bold transition-all">Закрыть</button>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 
+  <!-- Image full-screen viewer -->
   <div id="img-viewer-overlay" class="modal-overlay fixed inset-0 z-[10002] items-center justify-center bg-black/95 p-4" onclick="if(event.target===this)this.classList.remove('open')">
     <img src="" alt="" class="max-w-full max-h-full rounded-lg shadow-2xl">
   </div>
 
+  <!-- Toast notification -->
   <div id="cms-toast"></div>
 
+  <!-- Scripts -->
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-  <script type="module" src="cms.js?v=1.1"></script>
+  <script type="module" src="cms.js"></script>
   <script type="module" src="main.js"></script>
 </body>
 </html>
