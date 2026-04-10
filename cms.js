@@ -926,15 +926,55 @@ window.TepCMS = (() => {
       `);
     }
 
-    // Auto-scroll logic - more subtle
+    // Render dots
+    const dotsContainer = document.getElementById('gallery-dots');
+    if (dotsContainer) {
+      const itemsCount = (data.gallery || []).length + (editMode ? 1 : 0);
+      dotsContainer.innerHTML = Array.from({ length: itemsCount }).map((_, i) => `
+        <button class="gallery-dot w-2 h-2 rounded-full bg-gray-300 transition-all duration-300 hover:bg-brand/50" data-index="${i}"></button>
+      `).join('');
+
+      const dots = dotsContainer.querySelectorAll('.gallery-dot');
+      const updateGalleryDots = () => {
+        const scrollPos = grid.scrollLeft;
+        const cardWidth = grid.querySelector('.flex-shrink-0')?.offsetWidth || 320;
+        const activeIndex = Math.round(scrollPos / (cardWidth + 24)); // 24 is gap-6
+        
+        dots.forEach((dot, idx) => {
+          if (idx === activeIndex) {
+            dot.classList.add('bg-brand', 'w-8');
+            dot.classList.remove('bg-gray-300');
+          } else {
+            dot.classList.remove('bg-brand', 'w-8');
+            dot.classList.add('bg-gray-300');
+          }
+        });
+      };
+
+      grid.onscroll = updateGalleryDots;
+      updateGalleryDots(); // Initial call
+
+      dots.forEach(dot => {
+        dot.onclick = () => {
+          const idx = parseInt(dot.dataset.index);
+          const cardWidth = grid.querySelector('.flex-shrink-0')?.offsetWidth || 320;
+          grid.scrollTo({ left: idx * (cardWidth + 24), behavior: 'smooth' });
+        };
+      });
+    }
+
+    // Auto-scroll logic synced with dots
     let scrollDir = 1;
     galleryInterval = setInterval(() => {
         if (!grid) return;
         const maxScroll = grid.scrollWidth - grid.clientWidth;
         if (grid.scrollLeft >= maxScroll - 50) scrollDir = -1;
         if (grid.scrollLeft <= 50) scrollDir = 1;
-        grid.scrollBy({ left: 510 * scrollDir, behavior: 'smooth' });
-    }, 6000);
+
+        const cardWidth = grid.querySelector('.flex-shrink-0')?.offsetWidth || 320;
+        const step = cardWidth + 24;
+        grid.scrollBy({ left: step * scrollDir, behavior: 'smooth' });
+    }, 8000);
     
     reObserve();
   }
