@@ -651,7 +651,7 @@ window.TepCMS = (() => {
       // Main image has hover filters, small ones don't
       const imgClasses = isBig 
         ? "absolute inset-0 w-full h-full object-cover transition-all duration-700 brightness-[1.25] grayscale-[0.8] group-hover:brightness-100 group-hover:grayscale-0 group-hover:scale-105"
-        : "absolute inset-0 w-full h-full object-cover transition-all duration-700 brightness-[1.25] grayscale-[0.8]";
+        : "absolute inset-0 w-full h-full object-cover transition-all duration-700 brightness-[1.4] grayscale";
 
       return `
         <div class="group relative ${gridClasses} rounded-2xl overflow-hidden block cursor-pointer reveal-item" style="position:relative;" data-service-id="${s.id}" data-service-index="${i}">
