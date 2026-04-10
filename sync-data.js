@@ -40,22 +40,26 @@ const query = `{
     "advantages": *[_type == "advantage"]
 }`;
 
+// CORRECT FALLBACKS for social icons from assets/icons
 const DEFAULT_SOCIALS = [
-    { icon: 'https://cdn.sanity.io/images/77e5oip8/production/cc60a68f537a4e1dafba7b9252d294b419bdd3ab-48x48.svg', url: '#', name: 'VK' },
-    { icon: 'https://cdn.sanity.io/images/77e5oip8/production/cfa419c227f66a7aa257d9574ae85c3c9da3fe6e-48x48.svg', url: '#', name: 'Telegram' },
-    { icon: 'https://cdn.sanity.io/images/77e5oip8/production/2bb0f13c3944af0e76811c117c904a8e19180714-48x48.svg', url: '#', name: 'WhatsApp' }
+    { icon: 'assets/icons/Vector.png', url: '#', name: 'Social 1' },
+    { icon: 'assets/icons/Vector-1.png', url: '#', name: 'Social 2' },
+    { icon: 'assets/icons/Vector-2.png', url: '#', name: 'Social 3' }
 ];
 
 async function sync() {
   try {
-    console.log('Syncing data with proper fallbacks...');
+    console.log('Syncing data with CORRECT SOCIAL ICONS...');
     const s = await client.fetch(query);
     
-    // Fallback socials derived from header if footer socials are empty
-    const socials = (s.siteSettings?.footer?.socials || s.siteSettings?.header?.socials || []).map(soc => ({
+    let socials = (s.siteSettings?.footer?.socials || s.siteSettings?.header?.socials || []).map(soc => ({
         ...soc,
         icon: urlFor(soc.icon)
-    }));
+    })).filter(soc => soc.icon);
+
+    if (socials.length === 0) {
+        socials = DEFAULT_SOCIALS;
+    }
 
     const data = {
       header: {
@@ -63,7 +67,7 @@ async function sync() {
         btnText: s.siteSettings?.header?.btnText || 'Заказать звонок',
         btnUrl: s.siteSettings?.header?.btnUrl || '#contacts',
         navLinks: s.siteSettings?.header?.navLinks || [],
-        socials: socials.length ? socials : DEFAULT_SOCIALS,
+        socials: socials,
         favicon: urlFor(s.siteSettings?.header?.favicon)
       },
       hero: {
@@ -115,12 +119,12 @@ async function sync() {
             { label: 'Политика конфиденциальности', url: '#' },
             { label: 'Оферта', url: '#' }
         ],
-        socials: socials.length ? socials : DEFAULT_SOCIALS
+        socials: socials
       }
     };
 
     fs.writeFileSync('cms-data.json', JSON.stringify(data, null, 2));
-    console.log('SUCCESS: Data synced with fallbacks ensured.');
+    console.log('SUCCESS: Social icons fixed to local assets fallback.');
   } catch (err) {
     console.error('FAILED to sync:', err.message);
   }
