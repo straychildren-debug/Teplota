@@ -641,8 +641,8 @@ window.TepCMS = (() => {
     grid.innerHTML = data.services.map((s, i) => {
       const isBig = i === 0;
       const gridClasses = isBig 
-        ? 'md:col-span-2 md:row-span-2 h-[400px] md:min-h-[400px] flex-shrink-0 w-[85%] md:w-auto snap-start' 
-        : 'h-[400px] md:h-full flex-shrink-0 w-[85%] md:w-auto snap-start';
+        ? 'md:col-span-2 md:row-span-2 h-[400px] md:min-h-[400px] flex-shrink-0 w-[85%] md:w-auto snap-center ml-[7.5%] first:ml-[7.5%] last:mr-[7.5%] md:ml-0 md:mr-0' 
+        : 'h-[400px] md:h-full flex-shrink-0 w-[85%] md:w-auto snap-center ml-[7.5%] md:ml-0 md:mr-0';
       
       const titleSize = isBig ? 'text-xl md:text-3xl' : 'text-xl';
       
@@ -660,6 +660,31 @@ window.TepCMS = (() => {
         </div>
       `;
     }).join('');
+
+    // Pagination lines for mobile
+    const dotsContainer = document.getElementById('service-dots');
+    if (dotsContainer) {
+      dotsContainer.innerHTML = data.services.map((_, i) => `
+        <div class="h-1 w-8 rounded-full bg-gray-200 transition-all duration-300" data-dot="${i}"></div>
+      `).join('');
+      
+      const updateDots = () => {
+        const scrollLeft = grid.scrollLeft;
+        const width = grid.clientWidth;
+        const activeIdx = Math.round(scrollLeft / (width * 0.85)); // 0.85 is our card width
+        dotsContainer.querySelectorAll('[data-dot]').forEach((dot, i) => {
+          if (i === activeIdx) {
+            dot.classList.remove('bg-gray-200');
+            dot.classList.add('bg-brand', 'w-12');
+          } else {
+            dot.classList.add('bg-gray-200');
+            dot.classList.remove('bg-brand', 'w-12');
+          }
+        });
+      };
+      grid.onscroll = updateDots;
+      updateDots(); // Initial state
+    }
 
     // Attach listeners
     grid.querySelectorAll('[data-service-id]').forEach(card => {
