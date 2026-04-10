@@ -32,7 +32,7 @@ module.exports = {
         }
       },
       backgroundImage: {
-        'hero-pattern': "url('assets/hero_bg_1775505447491.png')",
+        'hero-pattern': "url('assets/premium_warm_floor.png')",
       }
     },
   },
