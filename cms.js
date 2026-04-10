@@ -191,7 +191,18 @@ window.TepCMS = (() => {
             btnText: s.siteSettings?.header?.btnText || DEFAULT.header.btnText,
             btnUrl: s.siteSettings?.header?.btnUrl || DEFAULT.header.btnUrl,
             navLinks: s.siteSettings?.header?.navLinks || DEFAULT.header.navLinks,
-            favicon: s.siteSettings?.header?.favicon ? builder.image(s.siteSettings.header.favicon).url() : '',
+            favicon: (() => {
+               const fav = s.siteSettings?.header?.favicon || s.siteSettings?.favicon;
+               if (!fav) return '';
+               try {
+                 const url = builder.image(fav).url();
+                 console.log('CMS: Favicon URL detected:', url);
+                 return url;
+               } catch (e) {
+                 console.error('CMS: Favicon build error:', e);
+                 return '';
+               }
+            })(),
             socials: s.siteSettings?.header?.socials?.map(soc => ({
               name: soc.name,
               url: soc.url,
