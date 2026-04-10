@@ -1088,15 +1088,18 @@ window.TepCMS = (() => {
       };
       map = L.map('leaflet-map', mapOptions).setView([lat, lng], 14);
       
-      // Shift center on desktop so pin is visible between form and right edge
-      if (window.innerWidth >= 1024 && !editMode) {
-        map.panBy([-280, 0], { animate: false });
-      }
-
       L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '© OpenStreetMap'
       }).addTo(map);
       marker = L.marker([lat, lng], { draggable: editMode }).addTo(map);
+
+      // Offset map center so pin is clearly in the right-hand free space
+      if (window.innerWidth >= 1024 && !editMode) {
+        setTimeout(() => {
+          if (map) map.panBy([-400, 0], { animate: true });
+        }, 100);
+      }
+
       if (editMode) {
         marker.on('dragend', e => {
           const pos = marker.getLatLng();
