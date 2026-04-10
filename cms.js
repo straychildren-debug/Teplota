@@ -648,7 +648,7 @@ window.TepCMS = (() => {
       
       return `
         <div class="group relative ${gridClasses} rounded-2xl overflow-hidden block cursor-pointer reveal-item" style="position:relative;" data-service-id="${s.id}">
-          <img src="${s.image}" alt="${s.title}" class="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
+          <img src="${s.image}" alt="${s.title}" class="absolute inset-0 w-full h-full object-cover transition-all duration-700 brightness-110 grayscale-[0.6] group-hover:brightness-100 group-hover:grayscale-0 group-hover:scale-105">
           <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent"></div>
           <div class="absolute bottom-0 left-0 p-6 text-white w-full">
             <h3 class="font-bold ${titleSize} mb-1">${s.title}</h3>
