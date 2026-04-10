@@ -625,15 +625,17 @@ window.TepCMS = (() => {
     grid.innerHTML = data.services.map((s, i) => {
       const isBig = i === 0;
       const gridClasses = isBig 
-        ? 'md:col-span-2 md:row-span-2 h-full min-h-[400px]' 
-        : 'h-80 md:h-full';
+        ? 'md:col-span-2 md:row-span-2 h-[400px] md:min-h-[400px] flex-shrink-0 w-[85%] md:w-auto snap-start' 
+        : 'h-[400px] md:h-full flex-shrink-0 w-[85%] md:w-auto snap-start';
+      
+      const titleSize = isBig ? 'text-xl md:text-3xl' : 'text-xl';
       
       return `
         <div class="group relative ${gridClasses} rounded-2xl overflow-hidden block cursor-pointer reveal-item" style="position:relative;" data-service-id="${s.id}">
           <img src="${s.image}" alt="${s.title}" class="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
           <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent"></div>
           <div class="absolute bottom-0 left-0 p-6 text-white w-full">
-            <h3 class="font-bold ${isBig ? 'text-3xl' : 'text-xl'} mb-1">${s.title}</h3>
+            <h3 class="font-bold ${titleSize} mb-1">${s.title}</h3>
           </div>
           ${editMode ? `
             <button class="cms-section-btn" data-edit-btn="${s.id}">✏️ Редактировать</button>
