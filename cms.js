@@ -642,24 +642,34 @@ window.TepCMS = (() => {
       const isBig = i === 0;
       const gridClasses = isBig 
         ? 'md:col-span-2 md:row-span-2 h-[400px] md:min-h-[400px] flex-shrink-0 w-[85%] md:w-auto snap-center ml-[7.5%] first:ml-[7.5%] md:first:ml-0 last:mr-[7.5%] md:last:mr-0 md:ml-0 md:mr-0' 
-        : 'h-[400px] md:h-full flex-shrink-0 w-[85%] md:w-auto snap-center ml-[7.5%] md:ml-0 md:mr-0';
+        : 'h-[400px] md:h-full flex-shrink-0 w-[85%] md:w-auto snap-center ml-[7.5%] md:ml-0 md:mr-0 min-h-[120px]';
       
-      const titleSize = isBig ? 'text-xl md:text-3xl' : 'text-xl';
+      const titleSize = isBig ? 'text-xl md:text-3xl' : 'text-lg md:text-xl';
       const imgId = isBig ? 'id="service-main-img"' : '';
       const titleId = isBig ? 'id="service-main-title"' : '';
       
-      // Main image is full-color by default, small ones are lightened/grayscale
-      const imgClasses = isBig 
-        ? "absolute inset-0 w-full h-full object-cover transition-all duration-700 brightness-100 grayscale-0 group-hover:scale-105"
-        : "absolute inset-0 w-full h-full object-cover transition-all duration-700 brightness-[1.4] grayscale opacity-50";
-
-      return `
-        <div class="group relative ${gridClasses} rounded-2xl overflow-hidden block cursor-pointer reveal-item" style="position:relative;" data-service-id="${s.id}" data-service-index="${i}">
-          <img ${imgId} src="${s.image}" alt="${s.title}" class="${imgClasses}">
+      // Main card has the image, small cards are text-only on desktop
+      const cardContent = isBig 
+        ? `
+          <img ${imgId} src="${s.image}" alt="${s.title}" class="absolute inset-0 w-full h-full object-cover transition-all duration-700 brightness-100 grayscale-0 group-hover:scale-105">
           <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent"></div>
           <div class="absolute bottom-0 left-0 p-6 text-white w-full">
             <h3 ${titleId} class="font-bold ${titleSize} mb-1">${s.title}</h3>
           </div>
+        `
+        : `
+          <div class="md:hidden absolute inset-0">
+            <img src="${s.image}" alt="${s.title}" class="w-full h-full object-cover brightness-[1.4] grayscale opacity-50">
+            <div class="absolute inset-0 bg-black/40"></div>
+          </div>
+          <div class="relative h-full flex items-center justify-center p-6 text-center bg-white md:bg-gray-50 group-hover:bg-white transition-colors border border-transparent md:border-gray-100 group-hover:border-brand-light">
+            <h3 class="font-bold ${titleSize} text-white md:text-gray-700 group-hover:text-brand transition-colors">${s.title}</h3>
+          </div>
+        `;
+
+      return `
+        <div class="group relative ${gridClasses} rounded-2xl overflow-hidden block cursor-pointer reveal-item" style="position:relative;" data-service-id="${s.id}" data-service-index="${i}">
+          ${cardContent}
           ${editMode ? `
             <button class="cms-section-btn" data-edit-btn="${s.id}">✏️ Редактировать</button>
             <button class="cms-delete-btn" data-del-btn="${s.id}">×</button>
