@@ -592,10 +592,10 @@ window.TepCMS = (() => {
     grid.innerHTML = (data.advantages || []).map((a, i) => {
       const isHighlighted = i === 2; // Make the 3rd card highlighted for visual variety
       const cardClass = isHighlighted 
-        ? "glass-effect-orange p-8 rounded-2xl shadow-lg transform md:-translate-y-2 reveal-item group transition-all duration-300 hover:scale-[1.02]" 
-        : "bg-white p-8 rounded-2xl shadow-sm border border-brand-border hover:shadow-md transition-all duration-300 hover:scale-[1.02] reveal-item group";
+        ? "glass-effect-orange p-6 md:p-8 rounded-2xl shadow-lg transform md:-translate-y-2 reveal-item group transition-all duration-300 hover:scale-[1.02]" 
+        : "bg-white p-6 md:p-8 rounded-2xl shadow-sm border border-brand-border hover:shadow-md transition-all duration-300 hover:scale-[1.02] reveal-item group";
       
-      const iconContainerClass = "w-14 h-14 mb-6 rounded-2xl flex items-center justify-center transition-colors " + 
+      const iconContainerClass = "hidden md:flex w-14 h-14 mb-6 rounded-2xl items-center justify-center transition-colors " + 
         (isHighlighted ? "bg-white/20" : "bg-orange-50 group-hover:bg-orange-100");
       
       const titleClass = isHighlighted ? "text-white font-serif text-xl font-bold mb-3" : "text-gray-900 font-serif text-xl font-bold mb-3";
