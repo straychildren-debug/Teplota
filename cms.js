@@ -645,13 +645,15 @@ window.TepCMS = (() => {
         : 'h-[400px] md:h-full flex-shrink-0 w-[85%] md:w-auto snap-center ml-[7.5%] md:ml-0 md:mr-0';
       
       const titleSize = isBig ? 'text-xl md:text-3xl' : 'text-xl';
+      const imgId = isBig ? 'id="service-main-img"' : '';
+      const titleId = isBig ? 'id="service-main-title"' : '';
       
       return `
-        <div class="group relative ${gridClasses} rounded-2xl overflow-hidden block cursor-pointer reveal-item" style="position:relative;" data-service-id="${s.id}">
-          <img src="${s.image}" alt="${s.title}" class="absolute inset-0 w-full h-full object-cover transition-all duration-700 brightness-[1.25] grayscale-[0.8] group-hover:brightness-100 group-hover:grayscale-0 group-hover:scale-105">
+        <div class="group relative ${gridClasses} rounded-2xl overflow-hidden block cursor-pointer reveal-item" style="position:relative;" data-service-id="${s.id}" data-service-index="${i}">
+          <img ${imgId} src="${s.image}" alt="${s.title}" class="absolute inset-0 w-full h-full object-cover transition-all duration-700 brightness-[1.25] grayscale-[0.8] group-hover:brightness-100 group-hover:grayscale-0 group-hover:scale-105">
           <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent"></div>
           <div class="absolute bottom-0 left-0 p-6 text-white w-full">
-            <h3 class="font-bold ${titleSize} mb-1">${s.title}</h3>
+            <h3 ${titleId} class="font-bold ${titleSize} mb-1">${s.title}</h3>
           </div>
           ${editMode ? `
             <button class="cms-section-btn" data-edit-btn="${s.id}">✏️ Редактировать</button>
@@ -660,6 +662,41 @@ window.TepCMS = (() => {
         </div>
       `;
     }).join('');
+
+    // Dynamic Preview Logic (Desktop Only)
+    const mainImg = document.getElementById('service-main-img');
+    const mainTitle = document.getElementById('service-main-title');
+    const defaultService = data.services[0];
+
+    if (mainImg && mainTitle && window.innerWidth >= 768) {
+      grid.querySelectorAll('[data-service-index]').forEach(card => {
+        const idx = card.dataset.serviceIndex;
+        const s = data.services[idx];
+
+        card.addEventListener('mouseenter', () => {
+          if (idx == 0) return; // Don't trigger for the main card itself
+          
+          // Smooth fade transition
+          mainImg.style.opacity = '0.5';
+          setTimeout(() => {
+            mainImg.src = s.image;
+            mainTitle.innerText = s.title;
+            mainImg.style.opacity = '1';
+          }, 150);
+        });
+
+        card.addEventListener('mouseleave', () => {
+          if (idx == 0) return;
+          
+          mainImg.style.opacity = '0.5';
+          setTimeout(() => {
+            mainImg.src = defaultService.image;
+            mainTitle.innerText = defaultService.title;
+            mainImg.style.opacity = '1';
+          }, 150);
+        });
+      });
+    }
 
     // Pagination lines for mobile
     const dotsContainer = document.getElementById('service-dots');
