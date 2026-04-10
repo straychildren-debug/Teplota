@@ -512,7 +512,14 @@ window.TepCMS = (() => {
         phoneEl.textContent = d.phone; 
     }
     if (favEl && d.favicon) {
-        favEl.href = d.favicon + '?v=' + Date.now();
+        // Force refresh with timestamp
+        favEl.href = d.favicon + (d.favicon.includes('?') ? '&' : '?') + 'v=' + Date.now();
+        // Explicitly set type for SVG support if detected
+        if (d.favicon.toLowerCase().includes('svg')) {
+            favEl.type = 'image/svg+xml';
+        } else {
+            favEl.removeAttribute('type');
+        }
     }
     
     // Header Socials (used in mobile menu)
