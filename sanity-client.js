@@ -11,13 +11,17 @@ export const client = createClient({
 
 const urlBuilder = imageUrlBuilder(client)
 
+/**
+ * Helper to get direct Sanity image URLs.
+ * NOTE: This returns the URL string immediately.
+ */
 export const builder = {
   image: (source) => {
     if (!source) return ''
-    // Если это уже строка (например, fallback URL), возвращаем как есть
     if (typeof source === 'string') return source
     
     try {
+      // Return the URL directly to simplify client-side usage
       return urlBuilder.image(source).url()
     } catch (e) {
       console.warn('Sanity Image Builder error:', e)

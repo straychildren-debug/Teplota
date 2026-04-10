@@ -195,7 +195,7 @@ window.TepCMS = (() => {
                const fav = s.siteSettings?.header?.favicon || s.siteSettings?.favicon;
                if (!fav) return '';
                try {
-                 const url = builder.image(fav).url();
+                 const url = builder.image(fav); // .url() is already called inside builder.image
                  console.log('CMS: Favicon URL detected:', url);
                  return url;
                } catch (e) {
@@ -206,7 +206,7 @@ window.TepCMS = (() => {
             socials: s.siteSettings?.header?.socials?.map(soc => ({
               name: soc.name,
               url: soc.url,
-              icon: soc.icon ? builder.image(soc.icon) : ''
+              icon: soc.icon ? builder.image(soc.icon) : '' // Removed .url()
             })) || DEFAULT.header.socials
           },
           hero: s.siteSettings?.hero ? {
