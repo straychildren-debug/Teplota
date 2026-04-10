@@ -1073,13 +1073,18 @@ window.TepCMS = (() => {
     const lng = d.mapLng || (d.coords && d.coords[1]) || 49.1061;
     
     if (map) { map.remove(); map = null; }
+
     try {
+      const center = L.latLng(lat, lng);
+      const bounds = center.toBounds(10000); // 10km boundary to allow some exploration but not losing the pin
       const mapOptions = {
-        dragging: editMode,
+        dragging: true,
         scrollWheelZoom: false,
-        doubleClickZoom: editMode,
-        touchZoom: editMode,
-        zoomControl: editMode
+        doubleClickZoom: true,
+        touchZoom: true,
+        zoomControl: true,
+        maxBounds: editMode ? null : bounds,
+        maxBoundsViscosity: 1.0
       };
       map = L.map('leaflet-map', mapOptions).setView([lat, lng], 14);
       L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
