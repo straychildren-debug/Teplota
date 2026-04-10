@@ -1094,11 +1094,14 @@ window.TepCMS = (() => {
       marker = L.marker([lat, lng], { draggable: editMode }).addTo(map);
 
       // Offset map center so pin is clearly in the right-hand free space
-      if (window.innerWidth >= 1024 && !editMode) {
-        setTimeout(() => {
-          if (map) map.panBy([-400, 0], { animate: true });
-        }, 100);
-      }
+      setTimeout(() => {
+        if (map) {
+          map.invalidateSize();
+          const targetPoint = map.project([lat, lng], map.getZoom()).subtract([500, 0]);
+          const targetLatLng = map.unproject(targetPoint, map.getZoom());
+          map.setView(targetLatLng, map.getZoom(), { animate: true });
+        }
+      }, 300);
 
       if (editMode) {
         marker.on('dragend', e => {
