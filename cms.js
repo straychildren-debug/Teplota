@@ -522,15 +522,18 @@ window.TepCMS = (() => {
         phoneEl.href = `tel:${d.phone.replace(/[^+\d]/g, '')}`; 
         phoneEl.textContent = d.phone; 
     }
-    if (favEl && d.favicon) {
-        // Force refresh with timestamp
-        favEl.href = d.favicon + (d.favicon.includes('?') ? '&' : '?') + 'v=' + Date.now();
-        // Explicitly set type for SVG support if detected
+    if (d.favicon) {
+        // Remove ALL existing favicon tags
+        document.querySelectorAll('link[rel*="icon"]').forEach(el => el.remove());
+        // Create a fresh link element — browsers always pick up new elements
+        const newFav = document.createElement('link');
+        newFav.id = 'site-favicon';
+        newFav.rel = 'icon';
         if (d.favicon.toLowerCase().includes('svg')) {
-            favEl.type = 'image/svg+xml';
-        } else {
-            favEl.removeAttribute('type');
+            newFav.type = 'image/svg+xml';
         }
+        newFav.href = d.favicon + '?v=' + Date.now();
+        document.head.appendChild(newFav);
     }
     
     // Header Socials (used in mobile menu)
