@@ -174,7 +174,13 @@ window.TepCMS = (() => {
       console.log('CMS: Loading from Sanity (Project ID: 77e5oip8)...');
       // GROQ Query to get everything in one request
       const query = `{
-          "siteSettings": *[_type == "siteSettings"][0],
+          "siteSettings": *[_type == "siteSettings"][0]{
+            ...,
+            header{
+              ...,
+              favicon{ asset->{url} }
+            }
+          },
           "about": *[_type == "about"][0],
           "services": *[_type == "service"],
           "products": *[_type == "product"],
@@ -192,11 +198,18 @@ window.TepCMS = (() => {
             btnUrl: s.siteSettings?.header?.btnUrl || DEFAULT.header.btnUrl,
             navLinks: s.siteSettings?.header?.navLinks || DEFAULT.header.navLinks,
             favicon: (() => {
+               // Get direct URL from dereferenced asset (works for ALL formats: ico, svg, png, etc.)
+               const directUrl = s.siteSettings?.header?.favicon?.asset?.url;
+               if (directUrl) {
+                 console.log('CMS: Favicon URL detected:', directUrl);
+                 return directUrl;
+               }
+               // Fallback: try image builder
                const fav = s.siteSettings?.header?.favicon || s.siteSettings?.favicon;
                if (!fav) return '';
                try {
-                 const url = builder.image(fav); // .url() is already called inside builder.image
-                 console.log('CMS: Favicon URL detected:', url);
+                 const url = builder.image(fav);
+                 console.log('CMS: Favicon URL (builder):', url);
                  return url;
                } catch (e) {
                  console.error('CMS: Favicon build error:', e);
