@@ -8,6 +8,37 @@
 .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
 /* ─── Reveal Animation ───────────────────────────────── */
+/* ─── Custom Animations ───────────────────────────────── */
+@keyframes float {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33% { transform: translate(30px, -50px) scale(1.05); }
+  66% { transform: translate(-20px, 20px) scale(0.95); }
+}
+@keyframes float-delayed {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(-40px, 30px) scale(1.08); }
+}
+@keyframes pulse-slow {
+  0%, 100% { opacity: 0.3; transform: scale(1); }
+  50% { opacity: 0.7; transform: scale(1.1); }
+}
+@keyframes flow-dash {
+  0% { stroke-dashoffset: 100; }
+  100% { stroke-dashoffset: 0; }
+}
+
+.animate-float { animation: float 15s ease-in-out infinite; }
+.animate-float-delayed { animation: float-delayed 18s ease-in-out infinite; animation-delay: -5s; }
+.animate-pulse-slow { animation: pulse-slow 12s ease-in-out infinite; }
+.animate-flow-dash {
+  stroke-dasharray: 4 6;
+  animation: flow-dash 10s linear infinite;
+}
+.animate-flow-dash-reverse {
+  stroke-dasharray: 6 4;
+  animation: flow-dash 8s linear infinite reverse;
+}
+
 .reveal-item { opacity: 0; transform: translateY(24px); transition: opacity 0.7s ease-out, transform 0.7s ease-out; }
 .reveal-item.active { opacity: 1; transform: translateY(0); }
 
@@ -22,35 +53,24 @@
   to { opacity: 1; }
 }
 
-/* ─── Custom Animations ───────────────────────────────── */
-@keyframes float {
-  0%, 100% { transform: translate(0, 0) scale(1); }
-  33% { transform: translate(30px, -50px) scale(1.05); }
-  66% { transform: translate(-20px, 20px) scale(0.95); }
-}
-@keyframes pulse-slow {
-  0%, 100% { opacity: 0.3; transform: scale(1); }
-  50% { opacity: 0.7; transform: scale(1.1); }
-}
-.animate-float { animation: float 15s ease-in-out infinite; }
-.animate-pulse-slow { animation: pulse-slow 12s ease-in-out infinite; }
-
 /* ─── Premium Glass ───────────────────────────────────── */
 .glass-effect {
-  background: rgba(255, 255, 255, 0.72);
-  backdrop-filter: blur(30px) saturate(180%);
-  -webkit-backdrop-filter: blur(30px) saturate(180%);
-  border: 1px solid rgba(255, 255, 255, 0.4);
+  background: rgba(255, 255, 255, 0.65);
+  backdrop-filter: blur(40px) saturate(200%);
+  -webkit-backdrop-filter: blur(40px) saturate(200%);
+  border: 1px solid rgba(255, 255, 255, 0.5);
   box-shadow: 
-    0 4px 6px -1px rgba(0, 0, 0, 0.05),
-    0 20px 50px -10px rgba(0, 0, 0, 0.1);
+    0 20px 40px -10px rgba(0, 0, 0, 0.1),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.2);
 }
 .dark .glass-effect {
-  background: rgba(20, 20, 22, 0.45);
-  border: 1px solid rgba(255, 255, 255, 0.05);
+  background: rgba(15, 15, 18, 0.5);
+  backdrop-filter: blur(40px) saturate(150%);
+  -webkit-backdrop-filter: blur(40px) saturate(150%);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   box-shadow: 
-    0 4px 6px -1px rgba(0, 0, 0, 0.2),
-    0 20px 50px -10px rgba(0, 0, 0, 0.5);
+    0 30px 60px -12px rgba(0, 0, 0, 0.4),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.05);
 }
 
 /* ─── Header Scrolled State ──────────────────────────── */
