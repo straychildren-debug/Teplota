@@ -788,13 +788,10 @@ window.TepCMS = (() => {
           <img src="${p.image}" alt="${p.name || p.title}" id="prod-img-${p.id}" class="max-h-full max-w-full object-contain transform transition-transform hover:scale-110">
           ${editMode ? `<div class="cms-upload-overlay" data-upload-product="${p.id}"><span>📷</span> Фото</div>` : ''}
         </div>
-        <div class="text-center">
+        <div class="text-center mb-2">
           <h4 class="font-bold text-lg mb-1">${p.name || p.title}</h4>
-          <p class="text-brand font-semibold mb-4">${p.price || ''}</p>
+          <p class="text-brand font-semibold">${p.price || ''}</p>
         </div>
-        <button class="w-full py-2 border border-brand text-brand hover:bg-brand hover:text-white rounded-full transition-colors text-sm font-medium mt-auto" onclick="event.stopPropagation(); TepCMS.openProduct(${p.id})">
-          Подробнее
-        </button>
         ${editMode ? `
           <button class="cms-section-btn" data-edit-product="${p.id}">✏️ Изменить</button>
           <button class="cms-delete-btn" data-del-product="${p.id}">×</button>
