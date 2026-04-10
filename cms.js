@@ -1095,7 +1095,7 @@ window.TepCMS = (() => {
       map = L.map('leaflet-map', mapOptions).setView([lat, viewLng], 14);
       
       L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '© OpenStreetMap | Teplota Offset Ver'
+        attribution: '© OpenStreetMap'
       }).addTo(map);
       
       marker = L.marker([lat, lng], { draggable: editMode }).addTo(map);
