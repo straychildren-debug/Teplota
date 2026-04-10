@@ -1072,11 +1072,15 @@ window.TepCMS = (() => {
     const lat = d.mapLat || (d.coords && d.coords[0]) || 55.7961;
     const lng = d.mapLng || (d.coords && d.coords[1]) || 49.1061;
     
+    // Geographical offset: start view slightly to the left (West) of the pin
+    const offset = (window.innerWidth >= 1024 && !editMode) ? 0.022 : 0;
+    const viewLng = lng - offset;
+
     if (map) { map.remove(); map = null; }
 
     try {
       const center = L.latLng(lat, lng);
-      const bounds = center.toBounds(10000); // 10km boundary to allow some exploration but not losing the pin
+      const bounds = center.toBounds(10000); 
       const mapOptions = {
         dragging: true,
         scrollWheelZoom: false,
@@ -1086,22 +1090,14 @@ window.TepCMS = (() => {
         maxBounds: editMode ? null : bounds,
         maxBoundsViscosity: 1.0
       };
-      map = L.map('leaflet-map', mapOptions).setView([lat, lng], 14);
+      
+      map = L.map('leaflet-map', mapOptions).setView([lat, viewLng], 14);
       
       L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '© OpenStreetMap'
       }).addTo(map);
+      
       marker = L.marker([lat, lng], { draggable: editMode }).addTo(map);
-
-      // Offset map center so pin is clearly in the right-hand free space
-      setTimeout(() => {
-        if (map) {
-          map.invalidateSize();
-          const targetPoint = map.project([lat, lng], map.getZoom()).subtract([500, 0]);
-          const targetLatLng = map.unproject(targetPoint, map.getZoom());
-          map.setView(targetLatLng, map.getZoom(), { animate: true });
-        }
-      }, 300);
 
       if (editMode) {
         marker.on('dragend', e => {
