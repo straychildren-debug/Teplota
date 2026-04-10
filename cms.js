@@ -672,8 +672,8 @@ window.TepCMS = (() => {
     if (!grid) return;
     grid.innerHTML = (data.products || []).map(p => `
       <div class="bg-white rounded-2xl p-6 shadow-sm border border-brand-border flex flex-col items-center cursor-pointer reveal-item" style="position:relative;" data-product-id="${p.id}">
-        <div class="h-48 w-full flex items-center justify-center mb-6 relative">
-          <img src="${p.image}" alt="${p.name || p.title}" id="prod-img-${p.id}" class="max-h-full object-contain">
+        <div class="h-36 w-full flex items-center justify-center mb-4 relative p-4">
+          <img src="${p.image}" alt="${p.name || p.title}" id="prod-img-${p.id}" class="max-h-full max-w-full object-contain transform transition-transform hover:scale-110">
           ${editMode ? `<div class="cms-upload-overlay" data-upload-product="${p.id}"><span>📷</span> Фото</div>` : ''}
         </div>
         <div class="text-center">
