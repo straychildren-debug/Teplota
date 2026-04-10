@@ -90,34 +90,45 @@
 
   <main>
     <!-- ═══ HERO ═════════════════════════════════════════════════════════════════ -->
-    <section class="relative h-[90vh] min-h-[700px] flex items-center overflow-hidden bg-black" id="home">
-      <!-- Base Background Image with Cinematic Filter -->
-      <div class="absolute inset-0 bg-hero-pattern bg-cover bg-center opacity-80 mix-blend-luminosity grayscale-[30%] transition-transform duration-1000 scale-105" id="hero-bg"></div>
+    <section class="relative h-[95vh] min-h-[750px] flex items-center overflow-hidden bg-[#0A0A0A]" id="home">
+      <!-- Base Background Image - Restored Vibrancy -->
+      <div class="absolute inset-0 bg-hero-pattern bg-cover bg-center transition-transform duration-1000 scale-105" id="hero-bg"></div>
       
-      <!-- Premium Creative Decor Layers -->
+      <!-- UI Designer Decor Layers -->
       <div class="absolute inset-0 pointer-events-none">
-        <!-- VIBRANT HEAT SPOTLIGHT (Behind Card) -->
-        <div class="absolute top-1/2 left-[10%] -translate-y-1/2 w-[800px] h-[800px] bg-brand/40 blur-[180px] rounded-full mix-blend-screen opacity-80 animate-pulse-slow"></div>
+        <!-- GLOBAL COLOR WASH (Overlay) - Makes the pipes pop with orange/heat -->
+        <div class="absolute inset-0 bg-gradient-to-tr from-brand/40 via-transparent to-blue-600/20 mix-blend-overlay opacity-80"></div>
+
+        <!-- TECHNICAL DOT PATTERN OVERLAY -->
+        <div class="absolute inset-0 opacity-[0.25]" style="background-image: radial-gradient(rgba(255, 104, 31, 0.5) 1px, transparent 1px); background-size: 32px 32px;"></div>
+
+        <!-- ACCENT GLOWS (Heat Energy Flare) -->
+        <div class="absolute top-[20%] -left-[10%] w-[600px] h-[600px] bg-brand/40 blur-[150px] rounded-full mix-blend-plus-lighter animate-pulse-slow"></div>
+        <div class="absolute bottom-[10%] right-[5%] w-[400px] h-[400px] bg-blue-500/15 blur-[120px] rounded-full mix-blend-screen animate-float"></div>
         
-        <!-- VIBRANT WATER GLOW (Top Right) -->
-        <div class="absolute -top-[20%] -right-[10%] w-[700px] h-[700px] bg-blue-500/30 blur-[150px] rounded-full mix-blend-color-dodge opacity-60 animate-float"></div>
-        
-        <!-- Flowing SVG Lines -->
-        <svg class="absolute inset-0 w-full h-full opacity-40" preserveAspectRatio="none" viewBox="0 0 100 100">
-          <path d="M-10 30 Q 50 10, 110 30" stroke="#FF681F" stroke-width="0.3" fill="none" class="animate-flow-dash" />
-          <path d="M-10 70 Q 50 90, 110 70" stroke="#3B82F6" stroke-width="0.4" fill="none" class="animate-flow-dash-reverse" opacity="0.5" />
+        <!-- GLOWING PIPELINE LINES (High Intensity SVG) -->
+        <svg class="absolute inset-0 w-full h-full" preserveAspectRatio="none" viewBox="0 0 100 100">
+          <path d="M-5 40 C 20 35, 40 45, 105 40" stroke="url(#heat-grad)" stroke-width="0.5" fill="none" class="animate-flow-dash" />
+          <defs>
+            <linearGradient id="heat-grad" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" style="stop-color:#FF681F;stop-opacity:0" />
+              <stop offset="50%" style="stop-color:#FF681F;stop-opacity:1" />
+              <stop offset="100%" style="stop-color:#FF681F;stop-opacity:0" />
+            </linearGradient>
+          </defs>
         </svg>
 
-        <!-- Creative Diagonal Split Gradient -->
-        <div class="absolute inset-0 bg-gradient-to-br from-brand/10 via-transparent to-blue-900/10 pointer-events-none opacity-50"></div>
+        <!-- LUXURY VIGNETTE -->
+        <div class="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,rgba(0,0,0,0.5)_110%)]"></div>
       </div>
 
-      <!-- Cinematic Overlays for Depth -->
-      <div class="absolute inset-0 bg-gradient-to-r from-black/80 via-black/20 to-transparent dark:from-black/90 dark:via-black/50"></div>
-      <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/20"></div>
+      <!-- Sophisticated Dark Overlays for Text Readability -->
+      <div class="absolute inset-0 bg-gradient-to-r from-black/80 via-black/40 to-transparent dark:from-black/90 dark:via-black/60"></div>
+      <div class="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent"></div>
       
-      <!-- Lens Flare / Sparkle Element -->
-      <div class="absolute top-[20%] left-[40%] w-1 h-1 bg-white blur-md animate-pulse shadow-[0_0_50px_10px_rgba(255,255,255,0.8)] opacity-60"></div>
+      <!-- Subtle Lens Sparkles -->
+      <div class="absolute top-[25%] left-[45%] w-1 h-1 bg-white blur-[2px] animate-pulse shadow-[0_0_40px_10px_rgba(255,255,255,0.6)] opacity-40"></div>
+
 
 
 
