@@ -380,7 +380,17 @@ window.TepCMS = (() => {
     if (!d) return;
 
     const heroBg = document.getElementById('hero-bg');
-    if (heroBg && d.bg) heroBg.style.backgroundImage = `url('${d.bg}')`;
+    if (heroBg) {
+      if (d.bg) {
+        console.log('CMS: Applying hero background:', d.bg);
+        heroBg.style.backgroundImage = `url('${d.bg}')`;
+        heroBg.classList.remove('bg-hero-pattern');
+      } else {
+        console.log('CMS: No hero background in data — restoring default pattern');
+        heroBg.style.backgroundImage = '';
+        heroBg.classList.add('bg-hero-pattern');
+      }
+    }
 
     const titleEl = document.getElementById('hero-title');
     if (titleEl && d.title) {

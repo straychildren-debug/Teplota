@@ -540,20 +540,26 @@ body.cms-active .gallery-item { position: relative; overflow: visible; }
 }
 .slider-arrow {
   position: absolute;
-  top: 50%; transform: translateY(-50%);
-  background: rgba(0,0,0,0.05);
-  color: #333;
+  top: 50%;
+  transform: translateY(-50%);
+  background: transparent;
+  color: #fff;
   border: none;
-  width: 50px; height: 100%;
-  font-size: 32px;
+  width: 56px;
+  height: 56px;
+  font-size: 24px;
   cursor: pointer;
-  transition: all 0.2s;
+  transition: background 0.15s, color 0.15s;
   z-index: 50;
-  display: flex; align-items: center; justify-content: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  padding: 0;
 }
-.slider-arrow:hover { background: rgba(0,0,0,0.1); color: #FF5722; }
-.slider-arrow.prev { left: 0; }
-.slider-arrow.next { right: 0; }
+.slider-arrow:hover { background: rgba(255,255,255,0.08); color: #FF5722; }
+.slider-arrow.prev { left: 12px; }
+.slider-arrow.next { right: 12px; }
 #gallery-modal-counter { position: absolute; bottom: 15px; left: 50%; transform: translateX(-50%); background: rgba(0,0,0,0.5); color: #fff; padding: 3px 12px; border-radius: 20px; font-size: 11px; pointer-events: none; }
 #gallery-modal-info { padding: 20px 30px; background: #fff; border-top: 1px solid #f0f0f0; }
 #gallery-modal-title { font-family: 'Outfit'; font-weight: 900; font-size: 20px; margin-bottom: 5px; }
@@ -568,6 +574,12 @@ body.cms-active .gallery-item { position: relative; overflow: visible; }
 #gallery-modal-main-img-wrap { position: relative; }
 #gallery-image-caption { position: absolute; bottom: 0; left: 0; right: 0; background: rgba(0,0,0,0.6); color: #fff; padding: 12px 20px; font-size: 14px; text-align: center; opacity: 0; transition: opacity 0.3s; pointer-events: none; }
 #gallery-image-caption.show { opacity: 1; }
+
+/* Ensure gallery slider doesn't create full-height side bars and keep description static */
+#gallery-modal-container { overflow: hidden; }
+#gallery-modal-slider { overflow: hidden; max-height: calc(95vh - 140px); display: flex; align-items: center; justify-content: center; }
+#gallery-modal-main-img { max-height: calc(75vh); }
+#gallery-modal-info { overflow: visible; }
 
 /* ---- Custom Map Pin ---- */
 .custom-teplota-pin { pointer-events: none; }
