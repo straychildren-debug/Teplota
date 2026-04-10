@@ -594,19 +594,15 @@ window.TepCMS = (() => {
     if (window.advInterval) clearInterval(window.advInterval);
     
     grid.innerHTML = (data.advantages || []).map((a, i) => {
-      const isHighlighted = i === 2; // Make the 3rd card highlighted for visual variety
-      const cardClass = isHighlighted 
-        ? "glass-effect-orange p-8 rounded-2xl shadow-lg transform md:-translate-y-2 reveal-item group transition-all duration-300 hover:scale-[1.02] flex-shrink-0 w-[80%] md:w-auto snap-center ml-[10%] md:ml-0" 
-        : "bg-white p-8 rounded-2xl shadow-sm border border-brand-border hover:shadow-md transition-all duration-300 hover:scale-[1.02] reveal-item group flex-shrink-0 w-[80%] md:w-auto snap-center ml-[10%] md:ml-0";
+      const cardClass = "bg-white p-8 rounded-2xl shadow-sm border border-brand-border hover:shadow-xl hover:bg-brand transition-all duration-300 hover:scale-[1.02] reveal-item group flex-shrink-0 w-[80%] md:w-auto snap-center ml-[10%] md:ml-0 cursor-default";
       
-      const iconContainerClass = "flex w-14 h-14 mb-4 md:mb-6 rounded-2xl items-center justify-center transition-colors mx-auto md:mx-0 " + 
-        (isHighlighted ? "bg-white/20" : "bg-orange-50 group-hover:bg-orange-100");
+      const iconContainerClass = "flex w-14 h-14 mb-4 md:mb-6 rounded-2xl items-center justify-center bg-orange-50 group-hover:bg-white/20 transition-colors mx-auto md:mx-0";
       
-      const titleClass = isHighlighted ? "text-white font-serif text-xl font-bold mb-0 md:mb-3 text-center md:text-left" : "text-gray-900 font-serif text-xl font-bold mb-0 md:mb-3 text-center md:text-left";
-      const descClass = isHighlighted ? "text-white/80 text-sm leading-relaxed" : "text-gray-600 text-sm leading-relaxed";
+      const titleClass = "text-gray-900 group-hover:text-white font-serif text-xl font-bold mb-0 md:mb-3 text-center md:text-left transition-colors duration-300";
+      const descClass = "text-gray-600 group-hover:text-white/80 text-sm leading-relaxed transition-colors duration-300";
       
-      const iconHtml = a.icon && a.icon.length > 5 // Check if it's a URL/Path or a simple Emoji
-        ? `<img src="${a.icon}" alt="icon" class="w-10 h-10 object-contain" style="${isHighlighted ? 'filter: brightness(0) invert(1);' : ''}">`
+      const iconHtml = a.icon && a.icon.length > 5 
+        ? `<img src="${a.icon}" alt="icon" class="w-10 h-10 object-contain transition-all duration-300 group-hover:brightness-0 group-hover:invert">`
         : `<span class="text-3xl">${a.icon || '✨'}</span>`;
 
       return `
