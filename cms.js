@@ -677,23 +677,36 @@ window.TepCMS = (() => {
           if (idx == 0) return; // Don't trigger for the main card itself
           
           // Smooth fade transition
-          mainImg.style.opacity = '0.5';
+          mainImg.style.transition = 'opacity 0.4s ease-in-out';
+          mainTitle.style.transition = 'opacity 0.4s ease-in-out, transform 0.4s ease-in-out';
+          
+          mainImg.style.opacity = '0';
+          mainTitle.style.opacity = '0';
+          mainTitle.style.transform = 'translateY(10px)';
+          
           setTimeout(() => {
             mainImg.src = s.image;
             mainTitle.innerText = s.title;
             mainImg.style.opacity = '1';
-          }, 150);
+            mainTitle.style.opacity = '1';
+            mainTitle.style.transform = 'translateY(0)';
+          }, 400);
         });
 
         card.addEventListener('mouseleave', () => {
           if (idx == 0) return;
           
-          mainImg.style.opacity = '0.5';
+          mainImg.style.opacity = '0';
+          mainTitle.style.opacity = '0';
+          mainTitle.style.transform = 'translateY(10px)';
+          
           setTimeout(() => {
             mainImg.src = defaultService.image;
             mainTitle.innerText = defaultService.title;
             mainImg.style.opacity = '1';
-          }, 150);
+            mainTitle.style.opacity = '1';
+            mainTitle.style.transform = 'translateY(0)';
+          }, 400);
         });
       });
     }
