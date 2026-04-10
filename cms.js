@@ -1072,14 +1072,16 @@ window.TepCMS = (() => {
     const lat = d.mapLat || (d.coords && d.coords[0]) || 55.7961;
     const lng = d.mapLng || (d.coords && d.coords[1]) || 49.1061;
     
-    // TEST OFFSET: Shift center 5km west to force pin VERY far right
-    const viewLng = lng - 0.05;
+    // Geographical offset: center camera slightly west of the office
+    const isDesktop = window.innerWidth >= 1024;
+    const offset = (isDesktop && !editMode) ? 0.025 : 0;
+    const viewLng = lng - offset;
 
     if (map) { map.remove(); map = null; }
 
     try {
       const center = L.latLng(lat, lng);
-      const bounds = center.toBounds(10000); 
+      const bounds = center.toBounds(20000); 
       const mapOptions = {
         dragging: true,
         scrollWheelZoom: false,
@@ -1093,7 +1095,7 @@ window.TepCMS = (() => {
       map = L.map('leaflet-map', mapOptions).setView([lat, viewLng], 14);
       
       L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '© OpenStreetMap'
+        attribution: '© OpenStreetMap | Teplota Offset Ver'
       }).addTo(map);
       
       marker = L.marker([lat, lng], { draggable: editMode }).addTo(map);
