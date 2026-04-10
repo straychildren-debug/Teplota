@@ -1072,9 +1072,8 @@ window.TepCMS = (() => {
     const lat = d.mapLat || (d.coords && d.coords[0]) || 55.7961;
     const lng = d.mapLng || (d.coords && d.coords[1]) || 49.1061;
     
-    // Geographical offset: start view slightly to the left (West) of the pin
-    const offset = (window.innerWidth >= 1024 && !editMode) ? 0.022 : 0;
-    const viewLng = lng - offset;
+    // TEST OFFSET: Shift center 5km west to force pin VERY far right
+    const viewLng = lng - 0.05;
 
     if (map) { map.remove(); map = null; }
 
