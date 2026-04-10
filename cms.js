@@ -139,12 +139,12 @@ window.TepCMS = (() => {
       ]
     },
     advantages: [
-      { id: 1, text: 'Скрупулезность - наше главное качество в работе', icon: '🎯' },
-      { id: 2, text: 'В работе мы используем качественные высокотехнологичные материалы и оборудование от проверенных поставщиков, что позволяет нам выполнять монтаж в короткие сроки с гарантией качества!', icon: '⚡' },
-      { id: 3, text: 'Гарантия на работы до 3х лет, гарантия на материалы до 15 лет', icon: '🛡️' },
-      { id: 4, text: 'С нами в вашем доме будет тепло, уютно и комфортно!', icon: '🏠' },
-      { id: 5, text: 'Мы индивидуально подходим к каждому заказчику и проектируем от бюджетных систем ОВК до премиальных', icon: '🤝' },
-      { id: 6, text: 'Беремся за любую сложность задач', icon: '💎' }
+      { id: 1, text: 'Скрупулезность и качество - наши главные ориентиры в работе.', icon: 'assets/icons/quality.svg' },
+      { id: 2, text: 'Используем качественные высокотехнологичные материалы от проверенных поставщиков.', icon: 'assets/icons/tech.svg' },
+      { id: 3, text: 'Гарантия на работы до 3х лет, на материалы — до 15 лет.', icon: 'assets/icons/speed.svg' },
+      { id: 4, text: 'Индивидуально проектируем системы от бюджетных до премиальных.', icon: 'assets/icons/team.svg' },
+      { id: 5, text: 'Всегда на связи и беремся за задачи любой сложности.', icon: 'assets/icons/support.svg' },
+      { id: 6, text: 'Беремся за любую сложность задач.', icon: 'assets/icons/complexity.svg' }
     ]
   };
 
@@ -622,19 +622,26 @@ window.TepCMS = (() => {
   function renderServices() {
     const grid = document.getElementById('service-grid');
     if (!grid) return;
-    grid.innerHTML = data.services.map(s => `
-      <div class="group relative h-80 rounded-2xl overflow-hidden block cursor-pointer reveal-item" style="position:relative;" data-service-id="${s.id}">
-        <img src="${s.image}" alt="${s.title}" class="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
-        <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent"></div>
-        <div class="absolute bottom-0 left-0 p-6 text-white w-full">
-          <h3 class="font-bold text-xl mb-1">${s.title}</h3>
+    grid.innerHTML = data.services.map((s, i) => {
+      const isBig = i === 0;
+      const gridClasses = isBig 
+        ? 'md:col-span-2 md:row-span-2 h-full min-h-[400px]' 
+        : 'h-80 md:h-full';
+      
+      return `
+        <div class="group relative ${gridClasses} rounded-2xl overflow-hidden block cursor-pointer reveal-item" style="position:relative;" data-service-id="${s.id}">
+          <img src="${s.image}" alt="${s.title}" class="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
+          <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent"></div>
+          <div class="absolute bottom-0 left-0 p-6 text-white w-full">
+            <h3 class="font-bold ${isBig ? 'text-3xl' : 'text-xl'} mb-1">${s.title}</h3>
+          </div>
+          ${editMode ? `
+            <button class="cms-section-btn" data-edit-btn="${s.id}">✏️ Редактировать</button>
+            <button class="cms-delete-btn" data-del-btn="${s.id}">×</button>
+          ` : ''}
         </div>
-        ${editMode ? `
-          <button class="cms-section-btn" data-edit-btn="${s.id}">✏️ Редактировать</button>
-          <button class="cms-delete-btn" data-del-btn="${s.id}">×</button>
-        ` : ''}
-      </div>
-    `).join('');
+      `;
+    }).join('');
 
     // Attach listeners
     grid.querySelectorAll('[data-service-id]').forEach(card => {
@@ -674,7 +681,7 @@ window.TepCMS = (() => {
           <p class="text-brand font-semibold mb-4">${p.price || ''}</p>
         </div>
         <button class="w-full py-2 border border-brand text-brand hover:bg-brand hover:text-white rounded-full transition-colors text-sm font-medium mt-auto" onclick="event.stopPropagation(); TepCMS.openProduct(${p.id})">
-          В каталог
+          Подробнее
         </button>
         ${editMode ? `
           <button class="cms-section-btn" data-edit-product="${p.id}">✏️ Изменить</button>
@@ -778,8 +785,8 @@ window.TepCMS = (() => {
     if (galleryInterval) clearInterval(galleryInterval);
 
     grid.innerHTML = (data.gallery || []).map((g, i) => `
-      <div class="flex-shrink-0 w-80 md:w-[500px] snap-start rounded-[2.5rem] overflow-hidden relative group cursor-pointer shadow-xl hover:shadow-[0_30px_60px_-15px_rgba(0,0,0,0.3)] transition-all duration-700 reveal-item active:scale-95" onclick="TepCMS.openGallery('${g.id}')">
-        <div class="h-[450px] md:h-[550px] relative overflow-hidden">
+      <div class="flex-shrink-0 w-80 md:w-[675px] snap-start rounded-[2.5rem] overflow-hidden relative group cursor-pointer shadow-xl hover:shadow-[0_30px_60px_-15px_rgba(0,0,0,0.3)] transition-all duration-700 reveal-item active:scale-95" onclick="TepCMS.openGallery('${g.id}')">
+        <div class="h-[480px] relative overflow-hidden">
           <img src="${g.cover}" alt="${g.title}" class="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110">
           <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent transition-opacity duration-500 group-hover:from-black/100"></div>
         </div>
@@ -798,7 +805,7 @@ window.TepCMS = (() => {
 
     if (editMode) {
       grid.insertAdjacentHTML('beforeend', `
-        <div class="flex-shrink-0 w-80 md:w-[500px] snap-start rounded-[2.5rem] border-4 border-dashed border-gray-200 flex items-center justify-center group cursor-pointer hover:border-brand transition-all bg-gray-50/50" onclick="TepCMS.addGallery()">
+        <div class="flex-shrink-0 w-80 md:w-[675px] h-[480px] snap-start rounded-[2.5rem] border-4 border-dashed border-gray-200 flex items-center justify-center group cursor-pointer hover:border-brand transition-all bg-gray-50/50" onclick="TepCMS.addGallery()">
           <div class="text-center">
             <span class="text-6xl text-gray-200 group-hover:text-brand transition-colors block mb-4">+</span>
             <span class="text-gray-400 font-bold uppercase tracking-widest text-xs">Добавить проект</span>
