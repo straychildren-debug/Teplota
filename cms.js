@@ -1099,6 +1099,12 @@ window.TepCMS = (() => {
       }).addTo(map);
       
       marker = L.marker([lat, lng], { draggable: editMode }).addTo(map);
+      marker.bindTooltip("Мы здесь", { 
+        permanent: true, 
+        direction: 'top', 
+        offset: [0, -10],
+        className: 'custom-map-tooltip'
+      }).openTooltip();
 
       if (editMode) {
         marker.on('dragend', e => {

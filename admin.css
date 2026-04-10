@@ -576,3 +576,24 @@ body.cms-active .gallery-item { position: relative; overflow: visible; }
 .pin-body i { font-style: normal; font-size: 16px; }
 .pin-tail { width: 0; height: 0; border-left: 8px solid transparent; border-right: 8px solid transparent; border-top: 10px solid #FF5722; margin: -1px auto 0; pointer-events: none; }
 .leaflet-div-icon { background: transparent !important; border: none !important; }
+
+/* Map Tooltip Stylings */
+.custom-map-tooltip {
+    background: white !important;
+    border: none !important;
+    border-radius: 100px !important;
+    padding: 6px 16px !important;
+    font-family: 'Outfit', sans-serif !important;
+    font-weight: 800 !important;
+    color: #FF5722 !important;
+    box-shadow: 0 10px 25px rgba(255, 87, 34, 0.25) !important;
+    font-size: 14px !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.05em !important;
+}
+.custom-map-tooltip::before {
+    border-top-color: white !important;
+    bottom: -6px !important;
+    margin-left: -6px !important;
+    border-width: 6px !important;
+}
