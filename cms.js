@@ -191,7 +191,7 @@ window.TepCMS = (() => {
             btnText: s.siteSettings?.header?.btnText || DEFAULT.header.btnText,
             btnUrl: s.siteSettings?.header?.btnUrl || DEFAULT.header.btnUrl,
             navLinks: s.siteSettings?.header?.navLinks || DEFAULT.header.navLinks,
-            favicon: s.siteSettings?.header?.favicon ? builder.image(s.siteSettings.header.favicon) : '',
+            favicon: s.siteSettings?.header?.favicon ? builder.image(s.siteSettings.header.favicon).url() : '',
             socials: s.siteSettings?.header?.socials?.map(soc => ({
               name: soc.name,
               url: soc.url,
