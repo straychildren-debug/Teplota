@@ -1074,7 +1074,14 @@ window.TepCMS = (() => {
     
     if (map) { map.remove(); map = null; }
     try {
-      map = L.map('leaflet-map').setView([lat, lng], 14);
+      const mapOptions = {
+        dragging: editMode,
+        scrollWheelZoom: false,
+        doubleClickZoom: editMode,
+        touchZoom: editMode,
+        zoomControl: editMode
+      };
+      map = L.map('leaflet-map', mapOptions).setView([lat, lng], 14);
       L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '© OpenStreetMap'
       }).addTo(map);
