@@ -523,28 +523,37 @@ window.TepCMS = (() => {
         phoneEl.textContent = d.phone; 
     }
     if (d.favicon) {
-        // Fetch favicon as blob to bypass browser CDN/cache restrictions
+        const applyFavicon = (href) => {
+            document.querySelectorAll('link[rel*="icon"]').forEach(el => el.remove());
+            const link = document.createElement('link');
+            link.rel = 'icon';
+            link.href = href;
+            document.head.appendChild(link);
+        };
+
         fetch(d.favicon)
           .then(r => r.blob())
           .then(blob => {
-            const blobUrl = URL.createObjectURL(blob);
-            document.querySelectorAll('link[rel*="icon"]').forEach(el => el.remove());
-            const newFav = document.createElement('link');
-            newFav.id = 'site-favicon';
-            newFav.rel = 'icon';
-            newFav.type = blob.type || 'image/svg+xml';
-            newFav.href = blobUrl;
-            document.head.appendChild(newFav);
-            console.log('CMS: Favicon applied as blob:', blob.type);
+            const url = URL.createObjectURL(blob);
+            if (blob.type === 'image/svg+xml') {
+                // Convert SVG → PNG via canvas (Chrome doesn't support SVG favicons)
+                const img = new Image();
+                img.crossOrigin = 'anonymous';
+                img.onload = () => {
+                    const canvas = document.createElement('canvas');
+                    canvas.width = 64; canvas.height = 64;
+                    canvas.getContext('2d').drawImage(img, 0, 0, 64, 64);
+                    applyFavicon(canvas.toDataURL('image/png'));
+                    URL.revokeObjectURL(url);
+                    console.log('CMS: SVG favicon converted to PNG and applied');
+                };
+                img.onerror = () => applyFavicon(url);
+                img.src = url;
+            } else {
+                applyFavicon(url);
+            }
           })
-          .catch(() => {
-            // Fallback: direct link
-            document.querySelectorAll('link[rel*="icon"]').forEach(el => el.remove());
-            const newFav = document.createElement('link');
-            newFav.rel = 'icon';
-            newFav.href = d.favicon + '?v=' + Date.now();
-            document.head.appendChild(newFav);
-          });
+          .catch(() => applyFavicon(d.favicon + '?v=' + Date.now()));
     }
     
     // Header Socials (used in mobile menu)
