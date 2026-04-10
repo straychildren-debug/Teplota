@@ -512,7 +512,7 @@ window.TepCMS = (() => {
         phoneEl.textContent = d.phone; 
     }
     if (favEl && d.favicon) {
-        favEl.href = d.favicon;
+        favEl.href = d.favicon + '?v=' + Date.now();
     }
     
     // Header Socials (used in mobile menu)
