@@ -1081,7 +1081,7 @@ window.TepCMS = (() => {
 
     try {
       const center = L.latLng(lat, lng);
-      const bounds = center.toBounds(5000); 
+      const bounds = center.toBounds(12000); 
       const mapOptions = {
         dragging: true,
         scrollWheelZoom: false,
