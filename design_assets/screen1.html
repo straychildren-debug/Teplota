@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="ru"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Teplota - Engineering Company</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              orange: '#f36e21',
+              orangeHover: '#d95d18',
+              dark: '#0a0b10',
+              gray: '#1a1b26',
+              grayLight: '#2a2c3a',
+              text: '#e2e8f0',
+              textMuted: '#94a3b8',
+              blue: '#00e5ff',
+            }
+          },
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            serif: ['Merriweather', 'serif'],
+          },
+          backgroundImage: {
+            'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
+            'hero-pattern': "url('https://placehold.co/1920x1080/0a0b10/0a0b10')", // Placeholder for main background
+          }
+        }
+      }
+    }
+  </script>
+<style data-purpose="custom-styles">
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Merriweather:wght@400;700&display=swap');
+
+    body {
+      background-color: #0a0b10;
+      color: #e2e8f0;
+      font-family: 'Inter', sans-serif;
+    }
+
+    .glass-panel {
+      background: rgba(26, 27, 38, 0.6);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+    }
+    
+    .glass-panel-light {
+      background: linear-gradient(135deg, rgba(255,255,255,0.95) 0%, rgba(220,230,240,0.85) 100%);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      color: #1a1b26;
+    }
+
+    .text-glow {
+      text-shadow: 0 0 10px rgba(0, 229, 255, 0.5);
+    }
+    
+    .border-glow-orange {
+      border: 1px solid #f36e21;
+      box-shadow: 0 0 15px rgba(243, 110, 33, 0.3);
+    }
+
+    .border-glow-blue {
+      border: 1px solid #00e5ff;
+      box-shadow: 0 0 15px rgba(0, 229, 255, 0.3);
+    }
+
+    /* Background lines decorative pattern */
+    .bg-lines {
+      background-image: 
+        linear-gradient(to right, rgba(255,255,255,0.03) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(255,255,255,0.03) 1px, transparent 1px);
+      background-size: 50px 50px;
+    }
+    
+    .dot-pattern {
+      background-image: radial-gradient(rgba(255,255,255,0.1) 1px, transparent 1px);
+      background-size: 20px 20px;
+    }
+  </style>
+</head>
+<body class="antialiased min-h-screen flex flex-col bg-brand-dark overflow-x-hidden relative">
+<!-- Background Image Placeholder (Hero area) -->
+<div class="absolute inset-0 z-0 h-[800px] overflow-hidden pointer-events-none">
+<img alt="Background Tubes" class="w-full h-full object-cover opacity-40 mix-blend-screen" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDwygXGmBj4ZTlR65q5mKCcXUbf4uqEbaflPJRYj0TKgfmEEk8V7fB8JoM4LztXMexkSLjl3bake5Lmkjgf1IaT1afz5I5FSBCzKxyLelOZ3OrOmjhq2GpB-c1QJcVVjHKLZNW5JmQq0sIEhtE35naoPNOAYCFz81OsqB510vp4MrVIftw-zO5EoTfm753orbCswgxqwRxGI6UcyBDDY1nY0k79kVLokA5Kr8Y2b3twdBioKE4bwaAObOgh0rmuTZ-WZBgDn554kh4"/>
+<div class="absolute inset-0 bg-gradient-to-b from-transparent to-brand-dark"></div>
+</div>
+<!-- Decorative Lines Background -->
+<div class="fixed inset-0 z-0 bg-lines pointer-events-none"></div>
+<!-- BEGIN: MainHeader -->
+<header class="relative z-50 py-6 border-b border-white/5 bg-brand-dark/50 backdrop-blur-md sticky top-0 w-full">
+<div class="container mx-auto px-4 md:px-8 flex items-center justify-between">
+<!-- Logo -->
+<a class="flex items-center gap-2" href="#">
+<span class="text-white font-bold text-2xl tracking-wider">TEPLOTA</span>
+</a>
+<!-- Navigation -->
+<nav class="hidden md:flex items-center gap-8 text-sm font-medium text-brand-textMuted">
+<a class="hover:text-white transition-colors" href="#">О нас</a>
+<a class="hover:text-white transition-colors" href="#">Услуги</a>
+<a class="hover:text-white transition-colors" href="#">Проекты</a>
+<a class="hover:text-white transition-colors" href="#">Наши работы</a>
+<a class="hover:text-white transition-colors" href="#">Контакты</a>
+</nav>
+<!-- Contact & Action -->
+<div class="flex items-center gap-6">
+<a class="text-white font-medium hover:text-brand-orange transition-colors hidden lg:block" href="tel:+79074236336">
+          +7 907 423-63-36
+        </a>
+<button class="w-10 h-10 flex items-center justify-center rounded-full bg-white/5 hover:bg-white/10 transition-colors hidden md:flex">
+<svg class="text-white" fill="none" height="18" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="18" xmlns="http://www.w3.org/2000/svg"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+</button>
+<button class="bg-brand-orange hover:bg-brand-orangeHover text-white px-6 py-2.5 rounded-full text-sm font-medium transition-colors">
+          Заказать звонок
+        </button>
+</div>
+</div>
+</header>
+<!-- END: MainHeader -->
+<main class="relative z-10 flex-grow">
+<!-- BEGIN: Hero Section -->
+<section class="container mx-auto px-4 md:px-8 pt-20 pb-16 relative">
+<div class="max-w-2xl glass-panel rounded-3xl p-8 md:p-12 border-l-4 border-brand-blue relative overflow-hidden">
+<!-- Glow effect behind text -->
+<div class="absolute -top-20 -left-20 w-64 h-64 bg-brand-blue/20 rounded-full blur-3xl pointer-events-none"></div>
+<p class="text-brand-textMuted text-xs font-semibold tracking-widest uppercase mb-4">Инженерная система под ключ</p>
+<h1 class="font-serif text-4xl md:text-5xl lg:text-6xl text-white font-bold leading-tight mb-6">
+          Комплексный<br/>монтаж
+        </h1>
+<p class="text-brand-textMuted text-sm md:text-base max-w-md mb-8 leading-relaxed">
+          систем отопления, водоснабжения<br/>и канализации в КАЗАНИ
+        </p>
+<div class="flex flex-wrap gap-4">
+<button class="bg-brand-orange hover:bg-brand-orangeHover text-white px-8 py-3 rounded-full text-sm font-medium transition-colors shadow-[0_0_15px_rgba(243,110,33,0.4)]">
+            Получить счет
+          </button>
+<button class="bg-white/10 hover:bg-white/20 text-white px-8 py-3 rounded-full text-sm font-medium transition-colors backdrop-blur-md">
+            Наши работы
+          </button>
+</div>
+</div>
+</section>
+<!-- END: Hero Section -->
+<!-- BEGIN: About / Info Section -->
+<section class="container mx-auto px-4 md:px-8 py-8">
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+<!-- Left Info Card (Light) -->
+<div class="glass-panel-light rounded-3xl p-8 md:p-12 relative overflow-hidden">
+<div class="absolute -bottom-20 -right-20 w-64 h-64 bg-white/40 rounded-full blur-3xl pointer-events-none"></div>
+<p class="text-brand-orange text-xs font-bold tracking-widest uppercase mb-4 flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-brand-orange"></span> О КОМПАНИИ
+           </p>
+<h2 class="font-serif text-3xl md:text-4xl font-bold mb-10 text-brand-gray">
+             Теплота — мы<br/>профессиональная<br/>инженерная компания
+           </h2>
+<div class="flex gap-12">
+<div>
+<div class="text-brand-orange font-bold text-4xl md:text-5xl mb-1">500+</div>
+<div class="text-xs font-semibold tracking-wider text-brand-gray/70 uppercase">ВЫПОЛНЕННЫХ ОБЪЕКТОВ</div>
+</div>
+<div>
+<div class="text-brand-orange font-bold text-4xl md:text-5xl mb-1">15 лет</div>
+<div class="text-xs font-semibold tracking-wider text-brand-gray/70 uppercase">ГАРАНТИЯ НА МАТЕРИАЛЫ</div>
+</div>
+</div>
+</div>
+<!-- Right Info Card (Dark) -->
+<div class="glass-panel rounded-3xl p-8 md:p-12 border-t border-white/10">
+<p class="text-white font-medium text-lg mb-8 leading-relaxed">
+            Огромный опыт в сфере монтажа систем ОВК (отопление,<br/>водоснабжение и канализация)
+          </p>
+<ul class="space-y-4 mb-10">
+<li class="flex items-start gap-3 text-sm text-brand-textMuted">
+<span class="w-1.5 h-1.5 rounded-full bg-brand-orange mt-1.5 shrink-0"></span>
+              С 2010 года мы выполняем монтажные работы в строительном секторе
+            </li>
+<li class="flex items-start gap-3 text-sm text-brand-textMuted">
+<span class="w-1.5 h-1.5 rounded-full bg-brand-orange mt-1.5 shrink-0"></span>
+              Профессионально монтируем любые инженерные системы: Stout, Rehau, Oventrop
+            </li>
+<li class="flex items-start gap-3 text-sm text-brand-textMuted">
+<span class="w-1.5 h-1.5 rounded-full bg-brand-orange mt-1.5 shrink-0"></span>
+              Выполняем работу в строгом соответствии с чертежами заказчика
+            </li>
+<li class="flex items-start gap-3 text-sm text-brand-textMuted">
+<span class="w-1.5 h-1.5 rounded-full bg-brand-orange mt-1.5 shrink-0"></span>
+              Работаем строго по согласованному смете
+            </li>
+<li class="flex items-start gap-3 text-sm text-brand-textMuted">
+<span class="w-1.5 h-1.5 rounded-full bg-brand-orange mt-1.5 shrink-0"></span>
+              Мы предоставляем комплексный подход к объекту
+            </li>
+</ul>
+<div>
+<p class="text-xs text-brand-textMuted uppercase tracking-widest mb-4">НАМ ДОВЕРЯЮТ</p>
+<div class="flex items-center gap-8 opacity-60 grayscale hover:grayscale-0 transition-all duration-300">
+<!-- Placeholder logos for ROMMER and STOUT -->
+<img alt="ROMMER Logo" class="h-6" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCv6hnKVQVhbfwf5x4n77gtuox5r1E_vW33SmkcTSf1OLPf08wJItvN8zAMSuQ6UOZAqaJzeINwt9TypcipLPKh85BwHuTvUZ3kbhYw9UuzVQggudMyOUGxYAkwvxSg2CAK8iMm_y2fnNuZyW9EO2ZbbInxbnQsb5fAOAjV-8qQuZY87BomVG3D53mVRZx6EdH0wHSxcvWgc42M1Ne3zBgsFU5J1_VmMejVYGdTGuDZVlRatQOrOLGYOZs9QYRb_sqKElSFzCpyHMY"/>
+<img alt="STOUT Logo" class="h-6" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB9zK9fTKdBiy1HYAx6s9W2_HDr49ZOt6UdjECfwisn76wt7OLW8qAixoKAiu-xxQ3IGYuCInmWLKP0pM-ZiznQp8J91OSjUVQTfSsyhPNJZ8R3fmmIqmjamIEofb74doqt-cUVK0blpoJg1q7CpXyxB2L2RolyvsFSgDy62EAgXvDODtNiH7TBs_dt_-96IorfloU0umJzTQ1VUHhgQBlZORZataf5jmXj3s8RVlzXGWTPaY18m0X5cXmofeDC_hxq3irlRKOTtyM"/>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- END: About / Info Section -->
+<!-- BEGIN: Services Section -->
+<section class="container mx-auto px-4 md:px-8 py-16 relative">
+<!-- Decorative dots -->
+<div class="absolute left-0 top-20 w-16 h-48 dot-pattern opacity-30 pointer-events-none"></div>
+<div class="flex justify-between items-end mb-10">
+<div>
+<h2 class="font-serif text-3xl md:text-4xl text-white font-bold flex gap-3">
+            НАШИ <span class="text-brand-orange">SERVICES</span>
+</h2>
+<p class="text-brand-textMuted text-sm mt-2">Сертифицированное оборудование для вашего дома</p>
+</div>
+<button class="hidden sm:block border border-white/20 hover:bg-white/5 text-white px-6 py-2 rounded-full text-xs font-medium transition-colors">
+          Все услуги
+        </button>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+<!-- Service Card 1 -->
+<div class="group relative rounded-2xl overflow-hidden glass-panel h-64 cursor-pointer">
+<img alt="Автоматизация котельной" class="absolute inset-0 w-full h-full object-cover opacity-60 group-hover:opacity-80 transition-opacity duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDXb9Zqc6hhIS6kIKkFUJzBs-xq7c26xwjM7i31Lm0JkIB7OhKGDYzXtBiMcDRVeelRjZ2zsYjtInR8PSrigSZsUeEy04Zl-0vopiicG1QogmC7GMe31DZXgR55UrJ6h-1j-VzA8fstJ_TsMESM3wFsleTShkARvXAh8gFnEcoIcglxJ0nLFTVzB6FPUEMdEstR04-WszVWRC5lPOYpwUyylP-FHzOfUEpUA5W4vr4iIYOMay2B3_u2Tlrxo0NIvmbSNyR88dwuVdA"/>
+<div class="absolute inset-0 bg-gradient-to-t from-brand-dark via-brand-dark/50 to-transparent"></div>
+<!-- Play icon overlay -->
+<div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+<svg class="ml-1" fill="white" height="20" viewbox="0 0 24 24" width="20" xmlns="http://www.w3.org/2000/svg"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+</div>
+<div class="absolute bottom-0 left-0 p-6">
+<h3 class="text-white font-semibold text-lg leading-tight">Автоматизация<br/>котельной</h3>
+</div>
+</div>
+<!-- Service Card 2 (Active/Highlighted) -->
+<div class="group relative rounded-2xl overflow-hidden glass-panel h-64 border-glow-orange cursor-pointer">
+<img alt="Системы водоснабжения" class="absolute inset-0 w-full h-full object-cover opacity-80" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBBmhFtTE18WRYOPOzYz225mccyX3VAAvCnjWt8S1Qpo1ViMLvXjGTMkWx_Rv5oeemeWTBSPZigr_LgKJOQWMazPcsxTT9qqOulCpGaekdoBqngtgspi24yIh7QcLmBl80Jm0j4Gcm7MW3PI677i-dDxXzSEggrwivxK4Mo3qTppnu3xIr3a3Dyda2t_WuXVJ2J3d4U4ld6JuBEewxS2uzT_K1DdUTKaqb3fzsKVWNbeSYHCqNN-XZ4gLUohG_6D39O1e4zXpcBtoM"/>
+<div class="absolute inset-0 bg-gradient-to-t from-brand-dark via-brand-dark/20 to-transparent"></div>
+<div class="absolute bottom-0 left-0 p-6">
+<h3 class="text-white font-semibold text-lg leading-tight">Системы<br/>водоснабжения</h3>
+</div>
+</div>
+<!-- Service Card 3 -->
+<div class="group relative rounded-2xl overflow-hidden glass-panel h-64 cursor-pointer">
+<img alt="Монтаж канализации" class="absolute inset-0 w-full h-full object-cover opacity-60 group-hover:opacity-80 transition-opacity duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDylEu3DX9XN9o35mbnpXh0O-Bh89w3aKc2ou8SF7kx_o0PEt8uUZHSl6OStLn3o9iH9s8oJSx7KtZg4aeehCInkR4MtGAnl4uj5jJE9S3Aj_0uyWyOlFuHGyXGsyCrvKVCgyKTYKetK0gq276wWXzdj_dfp1kFkr99jWBYBthdO5JMwMFaNHr_bwqTcgndTYkLWZvlTPaxi1_MDdgvdDaABtf0fR6GhPQ6DqX_9-JDkJEckfixVqoqkPDowrD6bvsCth7lg7nu9_s"/>
+<div class="absolute inset-0 bg-gradient-to-t from-brand-dark via-brand-dark/50 to-transparent"></div>
+<!-- Play icon overlay -->
+<div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+<svg class="ml-1" fill="white" height="20" viewbox="0 0 24 24" width="20" xmlns="http://www.w3.org/2000/svg"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+</div>
+<div class="absolute bottom-0 left-0 p-6">
+<h3 class="text-white font-semibold text-lg leading-tight">Монтаж<br/>канализации</h3>
+</div>
+</div>
+<!-- Service Card 4 (Partial visibility like in mockup) -->
+<div class="group relative rounded-2xl overflow-hidden glass-panel h-64 cursor-pointer">
+<img alt="Системы отопления" class="absolute inset-0 w-full h-full object-cover opacity-60 group-hover:opacity-80 transition-opacity duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDx_h5YVqtZZjNO-5n3icIFexMqIZfJgRKBewT_uvk3PJV1j8hDd6x2Ny24kVhISP1Dgj31_gz4CbpBIUcZinU1MVD3aGuQkaeU3lYyAN7XKREc2IyL4wlMQqgnoV5Mek59OySqLF1GbAmSI2VF3OePR1Rlt-eSnF6_M_zw6zqDMNVaT9HdlBXDuR7TMd2GJwpSO9po_zH6pCrvXXvrYnkQioZSFVAvAeA5PQJvLN6Tt7Hh-Ok0yGkkW1N6TtvQ7Egzz7Wn7kWi8ZY"/>
+<div class="absolute inset-0 bg-gradient-to-t from-brand-dark via-brand-dark/50 to-transparent"></div>
+<div class="absolute bottom-0 left-0 p-6">
+<h3 class="text-white font-semibold text-lg leading-tight">Системы<br/>отопления</h3>
+</div>
+</div>
+</div>
+</section>
+<!-- END: Services Section -->
+<!-- BEGIN: Works Section -->
+<section class="container mx-auto px-4 md:px-8 py-16 relative">
+<!-- Decorative dots -->
+<div class="absolute right-0 top-20 w-16 h-48 dot-pattern opacity-30 pointer-events-none"></div>
+<div class="flex justify-between items-end mb-10">
+<div>
+<h2 class="font-serif text-3xl md:text-4xl text-white font-bold flex gap-3">
+            НАШИ <span class="text-brand-orange">WORKS</span>
+</h2>
+<p class="text-brand-textMuted text-sm mt-2">Примеры реализованных нами работ</p>
+</div>
+<button class="hidden sm:block border border-white/20 hover:bg-white/5 text-white px-6 py-2 rounded-full text-xs font-medium transition-colors">
+          Все работы
+        </button>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+<!-- Work Card 1 -->
+<div class="rounded-2xl overflow-hidden glass-panel aspect-square relative group cursor-pointer">
+<img alt="Work 1" class="absolute inset-0 w-full h-full object-cover opacity-70 group-hover:scale-105 transition-transform duration-700" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCBGPmqsC02jdXy6Y0312mfrGnbjGOvvcChtOaHLvYOCmF86B0RCeJCR0WWV5ZyFr63VIkSdbbyOO5mDK0Gnw-aFizlJt_hvWbfhcWPL_SDvE786iSDLI89i8zThLFsGi-iLoi2yz4b2EJTobsS5um9adQIcVmVoKxnjsn7PHF-Qw0JflFHh6jBbOEm27j74o1EBpmCyxBM-1aTkZZNWfdDgO9g2D2y_R0lnvQ_wJG2-FIvb3Nvo0HemYJUXF8_VnwyKKno-iJWJ5w"/>
+</div>
+<!-- Work Card 2 (Highlighted) -->
+<div class="rounded-2xl overflow-hidden glass-panel aspect-square relative group cursor-pointer border-glow-orange">
+<img alt="Work 2" class="absolute inset-0 w-full h-full object-cover opacity-90 group-hover:scale-105 transition-transform duration-700" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBD3dny7eOmOxTqw2bDarjd0IDiAq6xW84tZqUFhPqkGjud7DR3BZ3BReySi7xy97txe9oQN3NysVmurgLAb4cGIryO4Oly0C8AvS7jdk5Up62Uy_wV4QkOrmfB7FmiSlHJLWD_8gDfZvf65x_GsDSPCnGyYcyA56aIcnD9ay5iOmb6rgAGs2gSR46snQQjl8XB2GAuF7eZk3uNktIVaoXD6wS5bfsuhNr6chMPf08Eqk-jvMPlP7PmF2hf1hFZagA7RUpDzDTXwig"/>
+</div>
+<!-- Work Card 3 (Video/Play icon) -->
+<div class="rounded-2xl overflow-hidden glass-panel aspect-square relative group cursor-pointer border-glow-blue">
+<img alt="Work 3" class="absolute inset-0 w-full h-full object-cover opacity-80 group-hover:scale-105 transition-transform duration-700" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCDS7uxwAd9UPkC1gOBd3A5gY_elGJmcx-OPEPu2WK1ggMsoNMuuTBIIEH8zNG_6x6JGTv1y-eljxhKPXoUYSNwlm4eUgipgCt-up2nBbtwwKR-Hz0YGx-jGhB1ZTI4qJZ2GV_Ewq4ylDfD2iWCl225AoBEj9d0yvww7sbeal9W0x3NyRLvGnfrzuxdXEhYzHVRj1E2lb6lW0bGsqQTQJkxwtGjfn-6xgR6hEZ9BBoi9Nj_0miVrKKE89vmKpGVn-uQDWMXYMNuiiQ"/>
+<div class="absolute inset-0 bg-blue-900/20 mix-blend-overlay"></div>
+<div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-brand-orange/90 backdrop-blur-sm shadow-[0_0_15px_rgba(243,110,33,0.5)] flex items-center justify-center transition-transform group-hover:scale-110">
+<svg class="ml-1" fill="white" height="20" viewbox="0 0 24 24" width="20" xmlns="http://www.w3.org/2000/svg"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+</div>
+</div>
+<!-- Work Card 4 -->
+<div class="rounded-2xl overflow-hidden glass-panel aspect-square relative group cursor-pointer">
+<img alt="Work 4" class="absolute inset-0 w-full h-full object-cover opacity-70 group-hover:scale-105 transition-transform duration-700" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD1grLfE-ZdYKQYGCCT2ew7Qw3yOgeyUg8hdyFAQAVGDdd8jqDkwoXgwsmdBX3IxLgf7o9dQXjb58CVtO14U4qgd6f2dp2iARCZSPA-tScDI219cm-r2kv_WPmRIMBqhPZ5sMvutiTEEDsjM2DJk9_Hkj5ZyITyqw1g_XflgLD1KADGTU8oETdalyspUGIPnQKh4p3z5OHbDpx4KfJNzkQd6Yblxim_dOGvBGdREUKny2UihdxTTRv1Q-jHN-iJp4YowwoLa-mBYDU"/>
+</div>
+</div>
+</section>
+<!-- END: Works Section -->
+<!-- BEGIN: Contact CTA Section -->
+<section class="container mx-auto px-4 md:px-8 py-16 mb-10">
+<div class="glass-panel rounded-3xl overflow-hidden border border-white/10 relative p-1 flex flex-col md:flex-row shadow-[0_0_30px_rgba(0,0,0,0.5)]">
+<!-- Orange glow edge effect on right -->
+<div class="absolute right-0 top-0 bottom-0 w-1/2 bg-gradient-to-r from-transparent to-brand-orange/10 pointer-events-none"></div>
+<!-- Left Area - Title -->
+<div class="bg-gradient-to-br from-brand-grayLight/80 to-brand-gray/80 p-8 md:p-12 md:w-1/3 rounded-2xl relative overflow-hidden border border-white/5">
+<div class="absolute -bottom-10 -left-10 w-40 h-40 bg-brand-blue/20 rounded-full blur-2xl pointer-events-none"></div>
+<p class="text-brand-orange text-xs font-bold tracking-widest uppercase mb-4">КОНТАКТЫ</p>
+<h2 class="font-serif text-3xl text-white font-bold mb-4">
+             CONTACT US
+           </h2>
+<p class="text-brand-textMuted text-xs leading-relaxed max-w-[200px]">
+             Оставьте заявку и мы свяжемся с вами в ближайшее время
+           </p>
+</div>
+<!-- Middle Area - Info -->
+<div class="p-8 md:p-12 md:w-1/3 flex flex-col justify-center space-y-8">
+<div>
+<p class="text-brand-textMuted text-xs font-semibold uppercase tracking-wider mb-2">БЕСПЛАТНЫЙ ЗВОНОК</p>
+<a class="text-white font-bold text-2xl hover:text-brand-orange transition-colors" href="tel:+79053133453">+7 905 313-34-53</a>
+</div>
+<div>
+<p class="text-brand-textMuted text-xs font-semibold uppercase tracking-wider mb-2">ОТДЕЛ ПРОДАЖ</p>
+<a class="text-white font-bold text-2xl hover:text-brand-orange transition-colors" href="tel:+79274328336">+7 927 432-83-36</a>
+</div>
+</div>
+<!-- Right Area - Form & Address -->
+<div class="p-8 md:p-12 md:w-1/3 flex flex-col justify-between">
+<div class="space-y-4 mb-8">
+<div class="flex items-center gap-3">
+<svg class="text-brand-textMuted" fill="none" height="16" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="16" xmlns="http://www.w3.org/2000/svg"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+<a class="text-sm text-brand-textMuted hover:text-white transition-colors" href="mailto:teplota@sgidv.ru">teplota@sgidv.ru</a>
+</div>
+<div class="flex items-start gap-3">
+<svg class="text-brand-textMuted mt-1 shrink-0" fill="none" height="16" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="16" xmlns="http://www.w3.org/2000/svg"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+<span class="text-sm text-brand-textMuted leading-relaxed">
+                  Республика Татарстан, г. Казань, ул. Ротора<br/>Батырова, 12А
+                </span>
+</div>
+</div>
+<form class="space-y-4" onsubmit="event.preventDefault();">
+<div class="grid grid-cols-2 gap-4">
+<input class="bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-sm text-white placeholder:text-brand-textMuted focus:outline-none focus:border-brand-orange transition-colors" placeholder="Ваше имя" type="text"/>
+<input class="bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-sm text-white placeholder:text-brand-textMuted focus:outline-none focus:border-brand-orange transition-colors" placeholder="Номер телефона" type="tel"/>
+</div>
+<button class="w-full bg-brand-orange hover:bg-brand-orangeHover text-white px-6 py-3 rounded-lg text-sm font-medium transition-colors shadow-[0_0_15px_rgba(243,110,33,0.3)]" type="submit">
+               Заказать звонок
+             </button>
+</form>
+</div>
+</div>
+</section>
+<!-- END: Contact CTA Section -->
+</main>
+<!-- BEGIN: MainFooter -->
+<footer class="border-t border-white/5 bg-brand-dark/80 pt-12 pb-6">
+<div class="container mx-auto px-4 md:px-8">
+<div class="flex flex-col md:flex-row justify-between items-center mb-8">
+<!-- Logo -->
+<a class="flex items-center gap-2 mb-6 md:mb-0" href="#">
+<span class="text-white font-bold text-2xl tracking-wider">TEPLOTA</span>
+</a>
+<!-- Social Links -->
+<div class="flex items-center gap-3">
+<a class="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-brand-textMuted hover:text-white hover:bg-white/10 transition-colors" href="#">
+<svg fill="none" height="18" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="18" xmlns="http://www.w3.org/2000/svg"><path d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z"></path></svg>
+</a>
+<a class="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-brand-textMuted hover:text-white hover:bg-white/10 transition-colors" href="#">
+<svg fill="none" height="18" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="18" xmlns="http://www.w3.org/2000/svg"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33 2.78 2.78 0 0 0 1.94 2c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.33 29 29 0 0 0-.46-5.33z"></path><polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02"></polygon></svg>
+</a>
+<a class="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-brand-textMuted hover:text-white hover:bg-white/10 transition-colors" href="#">
+<svg fill="none" height="18" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="18" xmlns="http://www.w3.org/2000/svg"><line x1="22" x2="11" y1="2" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+</a>
+</div>
+</div>
+<div class="flex flex-col md:flex-row justify-between items-center text-xs text-brand-textMuted/60 pt-6 border-t border-white/5">
+<p>© 2024 Teplota. Все права защищены</p>
+<div class="flex gap-6 mt-4 md:mt-0">
+<a class="hover:text-brand-textMuted transition-colors" href="#">Политика конфиденциальности</a>
+<a class="hover:text-brand-textMuted transition-colors" href="#">Оферта</a>
+</div>
+</div>
+</div>
+</footer>
+<!-- END: MainFooter -->
+</body></html>

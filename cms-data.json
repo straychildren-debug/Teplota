@@ -53,7 +53,7 @@
     "background": {
       "_type": "image",
       "asset": {
-        "_ref": "image-3bbb6266511881ac1e1eb5b1f248bc44f0575454-2752x1536-png",
+        "_ref": "image-330b923a11cb4bae8eaee90b6b7a7d7851869026-1024x1024-jpg",
         "_type": "reference"
       }
     },
@@ -61,7 +61,7 @@
     "btnUrl": "https://teplota-rho.vercel.app/#contacts",
     "subtitle": "систем отопления, водоснабжения\nи канализации в КАЗАНИ",
     "title": "Комплексный монтаж",
-    "bg": "https://cdn.sanity.io/images/77e5oip8/production/3bbb6266511881ac1e1eb5b1f248bc44f0575454-2752x1536.png"
+    "bg": "/assets/hero_engineering.png"
   },
   "about": {
     "_createdAt": "2026-04-08T20:53:10Z",
