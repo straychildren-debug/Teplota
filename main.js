@@ -1,9 +1,33 @@
 /**
  * TEPLOTA — main.js
- * Scroll + animation logic. CMS is initialized after DOM ready.
+ * Scroll, animation, mobile menu, and theme toggle logic.
+ * CMS is initialized after DOM ready from cms.js.
  */
+import './index.css';
 
-// ─── Reveal Observer ─────────────────────────────────────────────────────────
+// ─── Dark Mode Toggle ──────────────────────────────────────────────────────────
+const THEME_KEY = 'tep-theme';
+
+function applyTheme(isDark) {
+  document.documentElement.classList.toggle('dark', isDark);
+  const sun = document.getElementById('icon-sun');
+  const moon = document.getElementById('icon-moon');
+  if (sun) sun.classList.toggle('hidden', !isDark);
+  if (moon) moon.classList.toggle('hidden', isDark);
+}
+
+// Apply saved or system theme immediately
+const saved = localStorage.getItem(THEME_KEY);
+const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+applyTheme(saved ? saved === 'dark' : prefersDark);
+
+document.getElementById('theme-toggle')?.addEventListener('click', () => {
+  const isDark = !document.documentElement.classList.contains('dark');
+  applyTheme(isDark);
+  localStorage.setItem(THEME_KEY, isDark ? 'dark' : 'light');
+});
+
+// ─── Reveal Observer ──────────────────────────────────────────────────────────
 const revealOptions = { threshold: 0.12, rootMargin: '0px 0px -40px 0px' };
 
 window.revealObserver = new IntersectionObserver((entries) => {
@@ -18,7 +42,7 @@ window.revealObserver = new IntersectionObserver((entries) => {
 // ─── Header Scroll ────────────────────────────────────────────────────────────
 const header = document.getElementById('main-header');
 window.addEventListener('scroll', () => {
-  header.classList.toggle('scrolled', window.scrollY > 40);
+  header?.classList.toggle('scrolled', window.scrollY > 40);
 });
 
 // ─── Magnetic Buttons ─────────────────────────────────────────────────────────
@@ -34,49 +58,47 @@ function initMagnetic() {
 
 // ─── Smooth Scroll ────────────────────────────────────────────────────────────
 document.addEventListener('click', e => {
-  const a = e.target.closest('nav a');
+  const a = e.target.closest('nav a, #mobile-menu-drawer nav a');
   if (!a) return;
   const href = a.getAttribute('href');
   if (!href || !href.startsWith('#')) return;
   const target = document.querySelector(href);
   if (target) {
     e.preventDefault();
+    closeMobileMenu();
     window.scrollTo({ top: target.offsetTop - 90, behavior: 'smooth' });
   }
 });
-
-// ─── Gallery overlay styles ───────────────────────────────────────────────────
-const galStyle = document.createElement('style');
-galStyle.textContent = `
-  .gallery-item { cursor: pointer; }
-  .gallery-overlay {
-    position: absolute; bottom: 0; left: 0; right: 0;
-    padding: 20px 16px 14px;
-    background: linear-gradient(to top, rgba(0,0,0,0.75), transparent);
-    color: #fff; font-family: 'Outfit', sans-serif;
-    font-size: 15px; font-weight: 700; text-transform: uppercase;
-    letter-spacing: 0.04em; opacity: 0;
-    transition: opacity 0.3s ease;
-    border-radius: 0 0 12px 12px;
-    pointer-events: none;
-  }
-  .gallery-item:hover .gallery-overlay { opacity: 1; }
-  .btn-link {
-    color: #FF5722; font-weight: 700; font-size: 15px;
-    text-decoration: none; font-family: 'Outfit', sans-serif;
-    text-transform: uppercase; letter-spacing: 0.04em;
-    transition: opacity 0.2s;
-  }
-  .btn-link:hover { opacity: 0.7; }
-`;
-document.head.appendChild(galStyle);
 
 // ─── Init ─────────────────────────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
   TepCMS.init();
   initMagnetic();
-
-  // Re-run magnetic on any re-render (gallery/services buttons are dynamic)
   const observer = new MutationObserver(() => initMagnetic());
   observer.observe(document.body, { childList: true, subtree: true });
 });
+
+// ─── Mobile Menu ──────────────────────────────────────────────────────────────
+const mobileMenu = document.getElementById('mobile-menu');
+const mobileDrawer = document.getElementById('mobile-menu-drawer');
+const mobileOverlay = document.getElementById('mobile-menu-overlay');
+
+function openMobileMenu() {
+  if (!mobileMenu) return;
+  mobileMenu.style.pointerEvents = 'auto';
+  mobileOverlay.classList.remove('opacity-0');
+  mobileOverlay.classList.add('opacity-100');
+  mobileDrawer.classList.remove('translate-x-full');
+}
+
+function closeMobileMenu() {
+  if (!mobileMenu) return;
+  mobileMenu.style.pointerEvents = 'none';
+  mobileOverlay.classList.remove('opacity-100');
+  mobileOverlay.classList.add('opacity-0');
+  mobileDrawer.classList.add('translate-x-full');
+}
+
+document.getElementById('mobile-menu-btn')?.addEventListener('click', openMobileMenu);
+document.getElementById('mobile-menu-close')?.addEventListener('click', closeMobileMenu);
+mobileOverlay?.addEventListener('click', closeMobileMenu);
