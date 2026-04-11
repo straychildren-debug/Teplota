@@ -349,7 +349,7 @@ window.TepCMS = (() => {
     const nav = document.querySelector('header nav');
     if (nav && d.navLinks) {
       nav.innerHTML = d.navLinks.map(l => `
-        <a class="hover:text-brand dark:hover:text-brand transition-colors" href="${l.url}">${l.label}</a>
+        <a class="hover:text-gray-900 dark:hover:text-white transition-colors" href="${l.url}">${l.label}</a>
       `).join('');
     }
 
@@ -357,7 +357,7 @@ window.TepCMS = (() => {
     const mobNav = document.querySelector('#mobile-menu-drawer nav');
     if (mobNav && d.navLinks) {
       mobNav.innerHTML = d.navLinks.map(l => `
-        <a href="${l.url}" class="text-2xl font-bold hover:text-brand transition-colors">${l.label}</a>
+        <a href="${l.url}" class="text-xl font-bold hover:text-[#f36e21] transition-colors">${l.label}</a>
       `).join('');
     }
 
@@ -365,10 +365,9 @@ window.TepCMS = (() => {
     const socialEl = document.getElementById('mobile-socials');
     if (socialEl && d.socials) {
       socialEl.innerHTML = d.socials.map(s => `
-        <a href="${s.url}" target="_blank" class="group w-12 h-12 rounded-full bg-gray-100 dark:bg-dark-surface flex items-center justify-center hover:bg-brand transition-all">
-          <img src="${fixPath(s.icon)}" alt="${s.name}" 
-               class="w-6 h-6 object-contain transition-all opacity-70 group-hover:opacity-100 group-hover:brightness-0 group-hover:invert"
-               style="filter: grayscale(1) brightness(0.4);">
+        <a href="${s.url}" target="_blank" class="group w-10 h-10 rounded-full bg-gray-100 dark:bg-white/5 flex items-center justify-center hover:bg-gray-200 dark:hover:bg-white/10 transition-all text-gray-400 hover:text-white">
+          <img src="${fixPath(s.icon)}" alt="${s.name}"
+               class="w-5 h-5 object-contain transition-all opacity-60 group-hover:opacity-100 social-icon-auto">
         </a>
       `).join('');
     }
@@ -380,7 +379,17 @@ window.TepCMS = (() => {
     if (!d) return;
 
     const heroBg = document.getElementById('hero-bg');
-    if (heroBg && d.bg) heroBg.style.backgroundImage = `url('${d.bg}')`;
+    if (heroBg) {
+      if (d.bg) {
+        console.log('CMS: Applying hero background:', d.bg);
+        heroBg.style.backgroundImage = `url('${d.bg}')`;
+        heroBg.classList.remove('bg-hero-pattern');
+      } else {
+        console.log('CMS: No hero background in data — restoring default pattern');
+        heroBg.style.backgroundImage = '';
+        heroBg.classList.add('bg-hero-pattern');
+      }
+    }
 
     const titleEl = document.getElementById('hero-title');
     if (titleEl && d.title) {
@@ -417,9 +426,9 @@ window.TepCMS = (() => {
     const statsGrid = document.getElementById('stats-grid');
     if (statsGrid) {
       statsGrid.innerHTML = (d.stats || []).map((st, i) => `
-        <div class="stat-card reveal-item" data-index="${i}">
-          <div class="stat-num text-4xl md:text-5xl font-black text-brand mb-1">${st.num}</div>
-          <div class="stat-label text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">${st.label}</div>
+        <div class="stat-card" data-index="${i}">
+          <div class="text-[#f36e21] font-bold text-4xl md:text-5xl mb-1">${st.num}</div>
+          <div class="text-xs font-semibold tracking-wider text-[#1a1b26]/70 uppercase">${st.label}</div>
         </div>
       `).join('');
     }
@@ -427,7 +436,7 @@ window.TepCMS = (() => {
     const partnersGrid = document.getElementById('partners-grid');
     if (partnersGrid) {
       partnersGrid.innerHTML = (d.partners || []).map(p => `
-        <img src="${p.img}" alt="${p.name}" class="h-8 w-auto object-contain">
+        <img src="${p.img}" alt="${p.name}" class="h-6 w-auto object-contain partner-icon-auto">
       `).join('');
     }
     reObserve();
@@ -438,15 +447,15 @@ window.TepCMS = (() => {
     const grid = document.getElementById('advantage-grid');
     if (!grid) return;
     grid.innerHTML = (data.advantages || []).map(a => `
-      <div class="advantage-card group bg-white dark:bg-dark-surface rounded-[2.5rem] p-8 md:p-10 border border-gray-100 dark:border-dark-border cursor-default
-                  flex flex-col gap-6 w-[85vw] md:w-auto flex-shrink-0 md:flex-shrink snap-center transition-all duration-300
+      <div class="glass-panel group rounded-2xl p-8 border border-gray-200 dark:border-white/5
+                  flex flex-col gap-5 cursor-default transition-all duration-300 hover:border-[#f36e21]/30 hover:shadow-[0_0_20px_rgba(243,110,33,0.15)]
                   reveal-item">
-        <div class="w-16 h-16 bg-brand/10 dark:bg-brand/20 rounded-2xl flex items-center justify-center transition-colors group-hover:bg-brand duration-500">
-          ${a.icon ? `<img src="${a.icon}" alt="" class="w-8 h-8 object-contain group-hover:brightness-0 group-hover:invert transition-all duration-500">` : ''}
+        <div class="w-14 h-14 bg-[#f36e21]/10 rounded-2xl flex items-center justify-center transition-colors group-hover:bg-[#f36e21] duration-500">
+          ${a.icon ? `<img src="${a.icon}" alt="" class="w-7 h-7 object-contain group-hover:brightness-0 group-hover:invert transition-all duration-500">` : ''}
         </div>
         <div>
-          <h3 class="font-black text-xl text-gray-900 dark:text-white mb-3 tracking-tight">${a.title || ''}</h3>
-          <p class="text-gray-500 dark:text-dark-muted text-sm md:text-base leading-relaxed">${a.description || ''}</p>
+          <h3 class="font-bold text-lg text-gray-900 dark:text-white mb-2">${a.title || ''}</h3>
+          <p class="text-gray-600 dark:text-[#94a3b8] text-sm leading-relaxed">${a.description || ''}</p>
         </div>
       </div>
     `).join('');
@@ -486,47 +495,24 @@ window.TepCMS = (() => {
     const list = data.services || [];
     if (!list.length) return;
 
-    // Helper to update the big preview
-    const updatePreview = (idx) => {
-      const s = list[idx];
-      const img = document.getElementById('service-preview-img');
-      const title = document.getElementById('service-preview-title');
-      const cards = grid.querySelectorAll('.service-item-card');
-      
-      if (!s) return;
-      if (img) img.src = s.image;
-      if (title) title.textContent = s.title;
-      
-      // Update active state without changing layout dimensions
-      cards.forEach((c, i) => {
-        const h4 = c.querySelector('h4');
-        if (i === idx) {
-          c.classList.add('border-brand', 'shadow-lg');
-          c.classList.remove('border-transparent');
-          if (h4) h4.classList.add('text-brand');
-        } else {
-          c.classList.remove('border-brand', 'shadow-lg');
-          c.classList.add('border-transparent');
-          if (h4) h4.classList.remove('text-brand');
-        }
-      });
-    };
-
     grid.innerHTML = list.map((s, i) => `
-      <div class="service-item-card group bg-gray-50/60 dark:bg-dark-surface p-4 md:p-5 rounded-[1.8rem] border-2 border-transparent 
-                  cursor-pointer transition-all duration-300 flex items-center justify-center text-center h-24 md:h-28
-                  hover:bg-white dark:hover:bg-dark-border"
-           data-index="${i}" data-service-id="${s.id}">
-        <h4 class="font-bold text-base md:text-lg text-gray-800 dark:text-white leading-tight transition-colors">${s.title}</h4>
+      <div class="group relative rounded-2xl overflow-hidden glass-panel h-64 cursor-pointer
+                  border border-gray-200 dark:border-white/5 hover:border-[#f36e21]/40 hover:shadow-[0_0_15px_rgba(243,110,33,0.2)]
+                  transition-all duration-300 reveal-item"
+           data-service-id="${s.id}">
+        <img src="${s.image}" alt="${s.title}" class="absolute inset-0 w-full h-full object-cover opacity-60 group-hover:opacity-80 transition-opacity duration-500">
+        <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent"></div>
+        <!-- Play icon overlay -->
+        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+          <svg class="ml-0.5" fill="white" height="18" width="18" viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+        </div>
+        <div class="absolute bottom-0 left-0 p-6">
+          <h3 class="text-white font-semibold text-lg leading-tight">${s.title}</h3>
+        </div>
       </div>
     `).join('');
 
-    // Set initial preview (first item)
-    updatePreview(0);
-
-    // Add Events
-    grid.querySelectorAll('.service-item-card').forEach(card => {
-      card.addEventListener('mouseenter', () => updatePreview(parseInt(card.dataset.index)));
+    grid.querySelectorAll('[data-service-id]').forEach(card => {
       card.addEventListener('click', () => openService(card.dataset.serviceId));
     });
 
@@ -538,13 +524,15 @@ window.TepCMS = (() => {
     const grid = document.getElementById('product-grid');
     if (!grid) return;
     grid.innerHTML = (data.products || []).map(p => `
-      <div class="product-card group bg-white dark:bg-dark-surface rounded-3xl p-6 border border-gray-100 dark:border-dark-border
-                  flex flex-col items-center cursor-pointer hover:shadow-xl hover:scale-[1.02] transition-all duration-500 reveal-item" data-product-id="${p.id}">
-        <div class="aspect-square w-full bg-gray-50 dark:bg-dark-bg rounded-2xl mb-5 flex items-center justify-center p-6 overflow-hidden">
-          <img src="${p.image}" alt="${p.title}" class="max-h-full max-w-full object-contain transition-transform duration-500 group-hover:scale-110">
+      <div class="product-card group flex flex-col
+                  cursor-pointer reveal-item" data-product-id="${p.id}">
+        <div class="product-image h-64 p-6 flex items-center justify-center">
+          <img src="${p.image}" alt="${p.title}" class="max-h-full object-contain filter drop-shadow-xl transition-transform duration-300 group-hover:scale-105">
         </div>
-        <h4 class="font-bold text-lg text-center text-gray-900 dark:text-white group-hover:text-brand transition-colors duration-300">${p.title}</h4>
-        <p class="text-xs text-gray-400 dark:text-dark-muted mt-2 text-center line-clamp-2">${p.description}</p>
+        <div class="p-6">
+          <h3 class="font-semibold text-lg leading-tight group-hover:text-[#f36e21] transition-colors">${p.title}</h3>
+        </div>
+        <div class="product-ring"></div>
       </div>
     `).join('');
 
@@ -555,22 +543,19 @@ window.TepCMS = (() => {
   }
 
   // ─── Render: Gallery ─────────────────────────────────────────────────────────
-  let galleryInterval = null;
   function renderGallery() {
     const grid = document.getElementById('gallery-grid');
     if (!grid) return;
-    if (galleryInterval) clearInterval(galleryInterval);
 
-    grid.innerHTML = (data.gallery || []).map(g => `
-      <div class="gallery-item flex-shrink-0 w-full snap-center rounded-[2.5rem] overflow-hidden relative group cursor-pointer shadow-xl hover:shadow-[0_30px_60px_-15px_rgba(0,0,0,0.3)] transition-all duration-700 reveal-item active:scale-95" data-gallery-id="${g.id}">
-        <div class="h-[400px] md:h-[550px] relative overflow-hidden">
-          <img src="${g.cover}" alt="${g.title}" class="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110">
-          <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent transition-opacity duration-500 group-hover:from-black/100"></div>
-        </div>
-        <div class="absolute bottom-0 left-0 p-8 md:p-14 text-white w-full transform transition-transform duration-500 group-hover:-translate-y-2">
-          <span class="text-xs font-bold text-brand uppercase tracking-[0.2em] mb-3 block opacity-80 group-hover:opacity-100">Реализованный объект</span>
-          <h3 class="text-3xl md:text-5xl font-black leading-tight group-hover:text-brand-light transition-colors">${g.title}</h3>
-          <p class="text-white/60 text-sm mt-4 max-w-xl group-hover:text-white/90 transition-colors line-clamp-2">${g.description}</p>
+    grid.innerHTML = (data.gallery || []).map((g, i) => `
+      <div class="rounded-2xl overflow-hidden glass-panel aspect-square relative group cursor-pointer
+                  border border-gray-200 dark:border-white/5 hover:border-[#f36e21]/40 hover:shadow-[0_0_15px_rgba(243,110,33,0.2)]
+                  transition-all duration-300 reveal-item" data-gallery-id="${g.id}">
+        <img src="${g.cover}" alt="${g.title}" class="absolute inset-0 w-full h-full object-cover opacity-70 group-hover:scale-105 group-hover:opacity-100 transition-all duration-700">
+        <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent"></div>
+        <div class="absolute bottom-0 left-0 p-5">
+          <h3 class="text-white font-semibold text-sm leading-tight">${g.title}</h3>
+          <p class="text-white/50 text-xs mt-1 line-clamp-1">${g.description}</p>
         </div>
       </div>
     `).join('');
@@ -578,37 +563,6 @@ window.TepCMS = (() => {
     grid.querySelectorAll('[data-gallery-id]').forEach(card => {
       card.addEventListener('click', () => openGallery(card.dataset.galleryId));
     });
-
-    const dotsContainer = document.getElementById('gallery-dots');
-    if (dotsContainer) {
-      const count = data.gallery?.length || 0;
-      dotsContainer.innerHTML = Array.from({ length: count }).map((_, i) => `
-        <button class="gallery-dot w-2 h-2 rounded-full bg-gray-300 dark:bg-dark-border transition-all duration-300 hover:bg-brand/50" data-index="${i}"></button>
-      `).join('');
-
-      const dots = dotsContainer.querySelectorAll('.gallery-dot');
-      const updateDots = () => {
-        const activeIndex = Math.round(grid.scrollLeft / grid.offsetWidth);
-        dots.forEach((dot, idx) => {
-          dot.classList.toggle('bg-brand', idx === activeIndex);
-          dot.classList.toggle('w-8', idx === activeIndex);
-          dot.classList.toggle('bg-gray-300', idx !== activeIndex);
-        });
-      };
-      grid.onscroll = updateDots;
-      updateDots();
-      dots.forEach(dot => {
-        dot.onclick = () => grid.scrollTo({ left: parseInt(dot.dataset.index) * grid.offsetWidth, behavior: 'smooth' });
-      });
-    }
-
-    galleryInterval = setInterval(() => {
-      if (!grid) return;
-      const maxScroll = grid.scrollWidth - grid.clientWidth;
-      grid.scrollLeft >= maxScroll - 10
-        ? grid.scrollTo({ left: 0, behavior: 'smooth' })
-        : grid.scrollTo({ left: grid.scrollLeft + grid.offsetWidth, behavior: 'smooth' });
-    }, 8000);
 
     reObserve();
   }
@@ -623,13 +577,13 @@ window.TepCMS = (() => {
     if (container) {
       container.innerHTML = (d.phones || []).map(p => `
         <div class="flex flex-col">
-          <span class="text-xs text-brand uppercase font-black tracking-[0.2em] mb-2">${p.label || 'Телефон'}</span>
-          <a href="tel:${p.number.replace(/[^+\d]/g, '')}" class="text-2xl md:text-3xl font-black text-gray-900 dark:text-white hover:text-brand transition-all duration-300">${p.number}</a>
+          <span class="text-xs text-gray-500 uppercase font-bold tracking-[0.2em] mb-1">${p.label || 'Телефон'}</span>
+          <a href="tel:${p.number.replace(/[^+\d]/g, '')}" class="text-2xl font-bold text-gray-900 dark:text-white hover:text-[#f36e21] transition-all duration-300">${p.number}</a>
         </div>
       `).join('');
     }
-    if (email) email.innerHTML = `<span class="text-brand mr-2">✉</span> ${d.email}`;
-    if (address) address.innerHTML = `<span class="text-brand mr-2">📍</span> ${d.address}`;
+    if (email) email.innerHTML = `<span class="text-xs text-gray-500 uppercase font-bold tracking-[0.2em] block mb-1">Email</span><a href="mailto:${d.email}" class="text-gray-900 dark:text-white hover:text-[#f36e21] transition-colors">${d.email}</a>`;
+    if (address) address.innerHTML = `<span class="text-xs text-gray-500 uppercase font-bold tracking-[0.2em] block mb-1">Адрес</span><span class="text-gray-600 dark:text-[#94a3b8]">${d.address}</span>`;
 
     initMap();
   }
@@ -652,10 +606,9 @@ window.TepCMS = (() => {
     if (socialsEl && (f.socials || h.socials)) {
       const socList = f.socials || h.socials;
       socialsEl.innerHTML = socList.map(s => `
-        <a href="${s.url}" target="_blank" class="group w-12 h-12 rounded-full bg-gray-100 dark:bg-dark-surface flex items-center justify-center transition-all transform hover:-translate-y-1 hover:bg-brand shadow-sm">
-          <img src="${fixPath(s.icon)}" alt="${s.name}" 
-               class="w-6 h-6 object-contain transition-all opacity-70 group-hover:opacity-100 group-hover:brightness-0 group-hover:invert scale-110" 
-               style="filter: grayscale(1) brightness(0.8);">
+        <a href="${s.url}" target="_blank" class="group w-10 h-10 rounded-full bg-gray-100 dark:bg-white/5 flex items-center justify-center transition-all duration-300 hover:bg-[#f36e21] hover:-translate-y-1">
+          <img src="${fixPath(s.icon)}" alt="${s.name}"
+               class="w-5 h-5 object-contain transition-all opacity-70 group-hover:opacity-100 social-icon-auto">
         </a>
       `).join('');
     }

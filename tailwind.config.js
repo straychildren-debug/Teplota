@@ -15,24 +15,26 @@ module.exports = {
       },
       colors: {
         brand: {
-          DEFAULT: '#E65100',
-          dark: '#BF360C',
+          DEFAULT: '#f36e21',
+          hover: '#d95d18',
+          blue: '#00e5ff',
           light: '#FFCC80',
-          bg: '#F5F5F5',
-          text: '#333333',
-          gray: '#757575',
-          border: '#E0E0E0'
+          text: '#e2e8f0',
+          muted: '#94a3b8',
+          gray: '#1a1b26',
+          grayLight: '#2a2c3a',
         },
         dark: {
-          bg: '#111111',
-          surface: '#1C1C1E',
-          text: '#D1D1D1',
-          muted: '#8A8A8E',
+          bg: '#050508',
+          surface: '#1a1b26',
+          surfaceLight: '#2a2c3a',
+          text: '#e2e8f0',
+          muted: '#94a3b8',
           border: '#2C2C2E',
         }
       },
       backgroundImage: {
-        'hero-pattern': "url('assets/premium_warm_floor.png')",
+        'hero-pattern': "url('/assets/hero_engineering.png')",
       }
     },
   },

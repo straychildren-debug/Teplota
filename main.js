@@ -14,6 +14,10 @@ function applyTheme(isDark) {
   const moon = document.getElementById('icon-moon');
   if (sun) sun.classList.toggle('hidden', !isDark);
   if (moon) moon.classList.toggle('hidden', isDark);
+  // Swap logos
+  document.querySelectorAll('img.logo').forEach(img => {
+    img.src = isDark ? 'assets/logo white.svg' : 'assets/logo.svg';
+  });
 }
 
 // Apply saved or system theme immediately
