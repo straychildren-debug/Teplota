@@ -546,9 +546,8 @@ window.TepCMS = (() => {
     }
 
     grid.innerHTML = list.map((s, i) => `
-      <div class="service-list-item group flex items-center gap-4 p-4 rounded-xl cursor-pointer
-                  border border-transparent hover:border-[#f36e21]/30
-                  hover:bg-white/50 dark:hover:bg-white/5
+      <div class="service-list-item group flex items-center gap-4 p-3 rounded-xl cursor-pointer
+                  border border-transparent
                   transition-all duration-300 ${i === 0 ? 'active' : ''} reveal-item"
            data-service-id="${s.id}" data-service-img="${s.image}" data-service-title="${s.title}">
         <div class="w-16 h-16 rounded-lg overflow-hidden flex-shrink-0">
@@ -592,11 +591,11 @@ window.TepCMS = (() => {
     grid.innerHTML = (data.products || []).map(p => `
       <div class="product-card group flex flex-col
                   cursor-pointer reveal-item" data-product-id="${p.id}">
-        <div class="product-image h-44 p-4 flex items-center justify-center">
-          <img src="${p.image}" alt="${p.title}" loading="lazy" class="max-h-full object-contain filter drop-shadow-xl transition-transform duration-300 group-hover:scale-105">
+        <div class="product-image flex-1 p-6 flex items-center justify-center">
+          <img src="${p.image}" alt="${p.title}" loading="lazy" class="max-h-full max-w-full object-contain filter drop-shadow-xl transition-transform duration-300 group-hover:scale-105">
         </div>
-        <div class="p-6">
-          <h3 class="font-semibold text-lg leading-tight group-hover:text-[#f36e21] transition-colors">${p.title}</h3>
+        <div class="px-6 pb-6 pt-4 mt-auto">
+          <h3 class="font-semibold text-base leading-tight group-hover:text-[#f36e21] transition-colors">${p.title}</h3>
         </div>
         <div class="product-ring"></div>
       </div>
@@ -761,6 +760,12 @@ window.TepCMS = (() => {
   }
 
   // ─── Render All ──────────────────────────────────────────────────────────────
+  // Convert *text* to orange <span> for section titles
+  function accentTitle(text) {
+    if (!text) return text;
+    return text.replace(/\*([^*]+)\*/g, '<span class="text-[#f36e21]">$1</span>');
+  }
+
   function renderSections() {
     const sec = data.sections || {};
 
@@ -779,27 +784,27 @@ window.TepCMS = (() => {
     }
 
     // Advantages
-    if (sec.advantages?.title) setHTML('advantages-title', sec.advantages.title);
+    if (sec.advantages?.title) setHTML('advantages-title', accentTitle(sec.advantages.title));
 
     // Services
-    if (sec.services?.title) setHTML('services-title', sec.services.title);
+    if (sec.services?.title) setHTML('services-title', accentTitle(sec.services.title));
     setText('services-subtitle', sec.services?.subtitle);
     setText('services-section-btn', sec.services?.btnText);
 
     // Products
-    if (sec.products?.title) setHTML('products-title', sec.products.title);
+    if (sec.products?.title) setHTML('products-title', accentTitle(sec.products.title));
     setText('products-subtitle', sec.products?.subtitle);
     setText('products-section-btn', sec.products?.btnText);
 
     // Gallery
-    if (sec.gallery?.title) setHTML('gallery-title', sec.gallery.title);
+    if (sec.gallery?.title) setHTML('gallery-title', accentTitle(sec.gallery.title));
     setText('gallery-subtitle', sec.gallery?.subtitle);
 
     // Location
-    if (sec.location?.title) setHTML('location-title', sec.location.title);
+    if (sec.location?.title) setHTML('location-title', accentTitle(sec.location.title));
 
     // Contacts
-    setText('contacts-title', sec.contacts?.title);
+    if (sec.contacts?.title) setHTML('contacts-title', accentTitle(sec.contacts.title));
     setText('contacts-subtitle', sec.contacts?.subtitle);
     setPlaceholder('form-name-input', sec.contacts?.formNameLabel);
     setPlaceholder('form-phone-input', sec.contacts?.formPhoneLabel);

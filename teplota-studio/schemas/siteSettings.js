@@ -120,7 +120,7 @@ export default {
           title: 'Секция "Преимущества"',
           type: 'object',
           fields: [
-            { name: 'title', title: 'Заголовок', type: 'string', description: 'Например: НАШИ ПРЕИМУЩЕСТВА' },
+            { name: 'title', title: 'Заголовок', type: 'string', description: 'Оберните текст в *звёздочки* для оранжевого акцента. Пример: НАШИ *ПРЕИМУЩЕСТВА*' },
           ]
         },
         {
@@ -128,7 +128,7 @@ export default {
           title: 'Секция "Услуги"',
           type: 'object',
           fields: [
-            { name: 'title', title: 'Заголовок', type: 'string', description: 'Например: НАШИ SERVICES' },
+            { name: 'title', title: 'Заголовок', type: 'string', description: '*звёздочки* = оранжевый акцент. Пример: НАШИ *УСЛУГИ*' },
             { name: 'subtitle', title: 'Подзаголовок', type: 'string' },
             { name: 'btnText', title: 'Текст кнопки', type: 'string' },
           ]
@@ -138,7 +138,7 @@ export default {
           title: 'Секция "Товары"',
           type: 'object',
           fields: [
-            { name: 'title', title: 'Заголовок', type: 'string', description: 'Например: OUR PRODUCTS' },
+            { name: 'title', title: 'Заголовок', type: 'string', description: '*звёздочки* = оранжевый акцент. Пример: НАШИ *ТОВАРЫ*' },
             { name: 'subtitle', title: 'Подзаголовок', type: 'string' },
             { name: 'btnText', title: 'Текст кнопки', type: 'string' },
           ]
@@ -148,7 +148,7 @@ export default {
           title: 'Секция "Работы"',
           type: 'object',
           fields: [
-            { name: 'title', title: 'Заголовок', type: 'string', description: 'Например: НАШИ WORKS' },
+            { name: 'title', title: 'Заголовок', type: 'string', description: '*звёздочки* = оранжевый акцент. Пример: НАШИ *РАБОТЫ*' },
             { name: 'subtitle', title: 'Подзаголовок', type: 'string' },
             { name: 'btnText', title: 'Текст кнопки', type: 'string' },
           ]
@@ -158,7 +158,7 @@ export default {
           title: 'Секция "Карта"',
           type: 'object',
           fields: [
-            { name: 'title', title: 'Заголовок', type: 'string', description: 'Например: LOCATION MAP' },
+            { name: 'title', title: 'Заголовок', type: 'string', description: '*звёздочки* = оранжевый акцент. Пример: КАК НАС *НАЙТИ*' },
           ]
         },
         {
@@ -166,7 +166,7 @@ export default {
           title: 'Секция "Контакты"',
           type: 'object',
           fields: [
-            { name: 'title', title: 'Заголовок', type: 'string', description: 'Например: CONTACT US' },
+            { name: 'title', title: 'Заголовок', type: 'string', description: '*звёздочки* = оранжевый акцент. Пример: СВЯЖИТЕСЬ С *НАМИ*' },
             { name: 'subtitle', title: 'Подзаголовок', type: 'string' },
             { name: 'formNameLabel', title: 'Лейбл поля "Имя"', type: 'string' },
             { name: 'formPhoneLabel', title: 'Лейбл поля "Телефон"', type: 'string' },
