@@ -393,6 +393,13 @@ window.TepCMS = (() => {
       `).join('');
     }
 
+    // Header CTA button (text + link from Sanity)
+    const ctaBtn = document.getElementById('header-cta-btn');
+    if (ctaBtn) {
+      if (d.btnText) ctaBtn.textContent = d.btnText;
+      if (d.btnUrl) ctaBtn.href = d.btnUrl;
+    }
+
     if (d.favicon) applyFavicon(d.favicon);
 
     // Nav Links (Desktop)
