@@ -352,8 +352,12 @@ html.dark .service-card {
 
 /* Service list item styles */
 .service-list-item {
-  opacity: 0.5;
+  opacity: 0.7;
   transition: all 0.3s ease;
+}
+html.dark .service-list-item {
+  background: rgba(26, 27, 38, 0.8);
+  border-color: rgba(255, 255, 255, 0.05);
 }
 .service-list-item.active,
 .service-list-item:hover {
@@ -364,7 +368,8 @@ html.dark .service-card {
   border-color: rgba(243, 110, 33, 0.2);
 }
 html.dark .service-list-item.active {
-  background: rgba(243, 110, 33, 0.1);
+  background: rgba(243, 110, 33, 0.15);
+  border-color: rgba(243, 110, 33, 0.3);
 }
 .service-list-item.active h3 {
   color: #f36e21;

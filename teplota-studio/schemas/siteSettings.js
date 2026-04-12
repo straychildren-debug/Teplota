@@ -55,6 +55,9 @@ export default {
         { name: 'subtitle', title: 'Подзаголовок', type: 'text' },
         { name: 'btnText', title: 'Текст кнопки', type: 'string' },
         { name: 'btnUrl', title: 'Ссылка кнопки', type: 'string' },
+        { name: 'secondaryBtnText', title: 'Текст второй кнопки', type: 'string' },
+        { name: 'secondaryBtnUrl', title: 'Ссылка второй кнопки', type: 'string' },
+        { name: 'label', title: 'Лейбл над заголовком', type: 'string' },
         { name: 'background', title: 'Фоновое изображение', type: 'image', options: { hotspot: true } },
       ],
     },
@@ -113,11 +116,19 @@ export default {
       type: 'object',
       fields: [
         {
+          name: 'advantages',
+          title: 'Секция "Преимущества"',
+          type: 'object',
+          fields: [
+            { name: 'title', title: 'Заголовок', type: 'string', description: 'Например: НАШИ ПРЕИМУЩЕСТВА' },
+          ]
+        },
+        {
           name: 'services',
           title: 'Секция "Услуги"',
           type: 'object',
           fields: [
-            { name: 'title', title: 'Заголовок', type: 'string' },
+            { name: 'title', title: 'Заголовок', type: 'string', description: 'Например: НАШИ SERVICES' },
             { name: 'subtitle', title: 'Подзаголовок', type: 'string' },
             { name: 'btnText', title: 'Текст кнопки', type: 'string' },
           ]
@@ -127,7 +138,7 @@ export default {
           title: 'Секция "Товары"',
           type: 'object',
           fields: [
-            { name: 'title', title: 'Заголовок', type: 'string' },
+            { name: 'title', title: 'Заголовок', type: 'string', description: 'Например: OUR PRODUCTS' },
             { name: 'subtitle', title: 'Подзаголовок', type: 'string' },
             { name: 'btnText', title: 'Текст кнопки', type: 'string' },
           ]
@@ -137,9 +148,29 @@ export default {
           title: 'Секция "Работы"',
           type: 'object',
           fields: [
-            { name: 'title', title: 'Заголовок', type: 'string' },
+            { name: 'title', title: 'Заголовок', type: 'string', description: 'Например: НАШИ WORKS' },
             { name: 'subtitle', title: 'Подзаголовок', type: 'string' },
             { name: 'btnText', title: 'Текст кнопки', type: 'string' },
+          ]
+        },
+        {
+          name: 'location',
+          title: 'Секция "Карта"',
+          type: 'object',
+          fields: [
+            { name: 'title', title: 'Заголовок', type: 'string', description: 'Например: LOCATION MAP' },
+          ]
+        },
+        {
+          name: 'contacts',
+          title: 'Секция "Контакты"',
+          type: 'object',
+          fields: [
+            { name: 'title', title: 'Заголовок', type: 'string', description: 'Например: CONTACT US' },
+            { name: 'subtitle', title: 'Подзаголовок', type: 'string' },
+            { name: 'formNameLabel', title: 'Лейбл поля "Имя"', type: 'string' },
+            { name: 'formPhoneLabel', title: 'Лейбл поля "Телефон"', type: 'string' },
+            { name: 'formBtnText', title: 'Текст кнопки формы', type: 'string' },
           ]
         },
       ],

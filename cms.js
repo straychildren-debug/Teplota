@@ -99,9 +99,12 @@ window.TepCMS = (() => {
       { id: 6, title: 'Опыт', description: 'Беремся за любую сложность задач.', icon: '' }
     ],
     sections: {
-      services: { title: '', subtitle: '', btnText: 'Заказать услугу' },
-      products: { title: '', subtitle: '', btnText: 'Заказать оборудование' },
-      gallery:  { title: '', subtitle: '', btnText: '' },
+      advantages: { title: 'НАШИ ПРЕИМУЩЕСТВА' },
+      services: { title: 'НАШИ SERVICES', subtitle: 'Комплексный монтаж инженерных систем любой сложности', btnText: 'Заказать услугу' },
+      products: { title: 'OUR PRODUCTS', subtitle: 'Современное котельное оборудование для вашего дома', btnText: 'Заказать оборудование' },
+      gallery:  { title: 'НАШИ WORKS', subtitle: 'Примеры реализованных нами проектов', btnText: '' },
+      location: { title: 'LOCATION MAP' },
+      contacts: { title: 'CONTACT US', subtitle: 'Оставьте заявку, и мы свяжемся с вами в ближайшее время', formNameLabel: 'Ваше имя', formPhoneLabel: 'Номер телефона', formBtnText: 'Заказать звонок' },
     }
   };
 
@@ -171,10 +174,13 @@ window.TepCMS = (() => {
             })) || DEFAULT.header.socials
           },
           hero: s.siteSettings?.hero ? {
+            label: s.siteSettings.hero.label || DEFAULT.hero.label || '',
             title: s.siteSettings.hero.title,
             subtitle: s.siteSettings.hero.subtitle,
             btnText: s.siteSettings.hero.btnText,
             btnUrl: normalizeNavUrl(s.siteSettings.hero.btnUrl),
+            secondaryBtnText: s.siteSettings.hero.secondaryBtnText || '',
+            secondaryBtnUrl: normalizeNavUrl(s.siteSettings.hero.secondaryBtnUrl || '#gallery'),
             bg: s.siteSettings.hero.background ? builder.image(s.siteSettings.hero.background) : ''
           } : DEFAULT.hero,
           contact: {
@@ -231,6 +237,9 @@ window.TepCMS = (() => {
             icon: typeof item.icon === 'string' ? item.icon : (item.icon ? builder.image(item.icon) : '')
           })) || DEFAULT.advantages,
           sections: {
+            advantages: {
+              title: s.siteSettings?.sections?.advantages?.title || DEFAULT.sections.advantages.title,
+            },
             services: {
               title: s.siteSettings?.sections?.services?.title || DEFAULT.sections.services.title,
               subtitle: s.siteSettings?.sections?.services?.subtitle || DEFAULT.sections.services.subtitle,
@@ -245,6 +254,16 @@ window.TepCMS = (() => {
               title: s.siteSettings?.sections?.gallery?.title || DEFAULT.sections.gallery.title,
               subtitle: s.siteSettings?.sections?.gallery?.subtitle || DEFAULT.sections.gallery.subtitle,
               btnText: s.siteSettings?.sections?.gallery?.btnText || DEFAULT.sections.gallery.btnText,
+            },
+            location: {
+              title: s.siteSettings?.sections?.location?.title || DEFAULT.sections.location.title,
+            },
+            contacts: {
+              title: s.siteSettings?.sections?.contacts?.title || DEFAULT.sections.contacts.title,
+              subtitle: s.siteSettings?.sections?.contacts?.subtitle || DEFAULT.sections.contacts.subtitle,
+              formNameLabel: s.siteSettings?.sections?.contacts?.formNameLabel || DEFAULT.sections.contacts.formNameLabel,
+              formPhoneLabel: s.siteSettings?.sections?.contacts?.formPhoneLabel || DEFAULT.sections.contacts.formPhoneLabel,
+              formBtnText: s.siteSettings?.sections?.contacts?.formBtnText || DEFAULT.sections.contacts.formBtnText,
             },
           }
         };
@@ -742,12 +761,53 @@ window.TepCMS = (() => {
   }
 
   // ─── Render All ──────────────────────────────────────────────────────────────
-  function renderSectionButtons() {
+  function renderSections() {
     const sec = data.sections || {};
-    const svcBtn = document.getElementById('services-section-btn');
-    const prodBtn = document.getElementById('products-section-btn');
-    if (svcBtn && sec.services?.btnText) svcBtn.textContent = sec.services.btnText;
-    if (prodBtn && sec.products?.btnText) prodBtn.textContent = sec.products.btnText;
+
+    // Helper: set text content if element exists and value is truthy
+    function setText(id, val) {
+      const el = document.getElementById(id);
+      if (el && val) el.textContent = val;
+    }
+    function setHTML(id, val) {
+      const el = document.getElementById(id);
+      if (el && val) el.innerHTML = val;
+    }
+    function setPlaceholder(id, val) {
+      const el = document.getElementById(id);
+      if (el && val) el.placeholder = val;
+    }
+
+    // Advantages
+    if (sec.advantages?.title) setHTML('advantages-title', sec.advantages.title);
+
+    // Services
+    if (sec.services?.title) setHTML('services-title', sec.services.title);
+    setText('services-subtitle', sec.services?.subtitle);
+    setText('services-section-btn', sec.services?.btnText);
+
+    // Products
+    if (sec.products?.title) setHTML('products-title', sec.products.title);
+    setText('products-subtitle', sec.products?.subtitle);
+    setText('products-section-btn', sec.products?.btnText);
+
+    // Gallery
+    if (sec.gallery?.title) setHTML('gallery-title', sec.gallery.title);
+    setText('gallery-subtitle', sec.gallery?.subtitle);
+
+    // Location
+    if (sec.location?.title) setHTML('location-title', sec.location.title);
+
+    // Contacts
+    setText('contacts-title', sec.contacts?.title);
+    setText('contacts-subtitle', sec.contacts?.subtitle);
+    setPlaceholder('form-name-input', sec.contacts?.formNameLabel);
+    setPlaceholder('form-phone-input', sec.contacts?.formPhoneLabel);
+    setText('form-submit-btn', sec.contacts?.formBtnText);
+
+    // Hero secondary button
+    const heroSec = data.hero || {};
+    setText('hero-btn-secondary', heroSec.secondaryBtnText);
   }
 
   function renderAll() {
@@ -760,7 +820,7 @@ window.TepCMS = (() => {
     renderGallery();
     renderContact();
     renderFooter();
-    renderSectionButtons();
+    renderSections();
   }
 
   // ─── Map (Yandex Maps) ──────────────────────────────────────────────────────
