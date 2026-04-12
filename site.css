@@ -304,10 +304,7 @@ html.dark .gallery-arrow {
   height: 100%;
   min-height: 400px;
 }
-/* Yandex Maps dark mode: invert + hue shift */
-html.dark #yandex-map ymaps {
-  filter: invert(0.9) hue-rotate(180deg) brightness(1.1) contrast(0.9);
-}
+/* Yandex Maps: keep light map in both themes for readability */
 
 /* ─── Toast ──────────────────────────────────────────── */
 #cms-toast {

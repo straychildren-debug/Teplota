@@ -736,7 +736,6 @@ window.TepCMS = (() => {
   function initMap() {
     const mapEl = document.getElementById('yandex-map');
     if (!mapEl || typeof ymaps === 'undefined') {
-      if (mapEl) mapEl.innerHTML = '<div style="padding:20px;text-align:center;color:#999;">Карта загружается...</div>';
       return;
     }
     const d = data.contact;
