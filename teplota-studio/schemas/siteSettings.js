@@ -108,6 +108,43 @@ export default {
       ]
     },
     {
+      name: 'sections',
+      title: 'Настройки секций',
+      type: 'object',
+      fields: [
+        {
+          name: 'services',
+          title: 'Секция "Услуги"',
+          type: 'object',
+          fields: [
+            { name: 'title', title: 'Заголовок', type: 'string' },
+            { name: 'subtitle', title: 'Подзаголовок', type: 'string' },
+            { name: 'btnText', title: 'Текст кнопки', type: 'string' },
+          ]
+        },
+        {
+          name: 'products',
+          title: 'Секция "Товары"',
+          type: 'object',
+          fields: [
+            { name: 'title', title: 'Заголовок', type: 'string' },
+            { name: 'subtitle', title: 'Подзаголовок', type: 'string' },
+            { name: 'btnText', title: 'Текст кнопки', type: 'string' },
+          ]
+        },
+        {
+          name: 'gallery',
+          title: 'Секция "Работы"',
+          type: 'object',
+          fields: [
+            { name: 'title', title: 'Заголовок', type: 'string' },
+            { name: 'subtitle', title: 'Подзаголовок', type: 'string' },
+            { name: 'btnText', title: 'Текст кнопки', type: 'string' },
+          ]
+        },
+      ],
+    },
+    {
       name: 'footer',
       title: 'Подвал (Footer)',
       type: 'object',

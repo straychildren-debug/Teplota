@@ -97,7 +97,12 @@ window.TepCMS = (() => {
       { id: 4, title: 'Индивидуальность', description: 'Индивидуально проектируем системы от бюджетных до премиальных.', icon: '' },
       { id: 5, title: 'Доступность', description: 'Всегда на связи и беремся за задачи любой сложности.', icon: '' },
       { id: 6, title: 'Опыт', description: 'Беремся за любую сложность задач.', icon: '' }
-    ]
+    ],
+    sections: {
+      services: { title: '', subtitle: '', btnText: 'Заказать услугу' },
+      products: { title: '', subtitle: '', btnText: 'Заказать оборудование' },
+      gallery:  { title: '', subtitle: '', btnText: '' },
+    }
   };
 
   // ─── Helpers ─────────────────────────────────────────────────────────────────
@@ -224,7 +229,24 @@ window.TepCMS = (() => {
             title: item.title,
             description: item.description || item.text || '',
             icon: typeof item.icon === 'string' ? item.icon : (item.icon ? builder.image(item.icon) : '')
-          })) || DEFAULT.advantages
+          })) || DEFAULT.advantages,
+          sections: {
+            services: {
+              title: s.siteSettings?.sections?.services?.title || DEFAULT.sections.services.title,
+              subtitle: s.siteSettings?.sections?.services?.subtitle || DEFAULT.sections.services.subtitle,
+              btnText: s.siteSettings?.sections?.services?.btnText || DEFAULT.sections.services.btnText,
+            },
+            products: {
+              title: s.siteSettings?.sections?.products?.title || DEFAULT.sections.products.title,
+              subtitle: s.siteSettings?.sections?.products?.subtitle || DEFAULT.sections.products.subtitle,
+              btnText: s.siteSettings?.sections?.products?.btnText || DEFAULT.sections.products.btnText,
+            },
+            gallery: {
+              title: s.siteSettings?.sections?.gallery?.title || DEFAULT.sections.gallery.title,
+              subtitle: s.siteSettings?.sections?.gallery?.subtitle || DEFAULT.sections.gallery.subtitle,
+              btnText: s.siteSettings?.sections?.gallery?.btnText || DEFAULT.sections.gallery.btnText,
+            },
+          }
         };
 
 
@@ -720,6 +742,14 @@ window.TepCMS = (() => {
   }
 
   // ─── Render All ──────────────────────────────────────────────────────────────
+  function renderSectionButtons() {
+    const sec = data.sections || {};
+    const svcBtn = document.getElementById('services-section-btn');
+    const prodBtn = document.getElementById('products-section-btn');
+    if (svcBtn && sec.services?.btnText) svcBtn.textContent = sec.services.btnText;
+    if (prodBtn && sec.products?.btnText) prodBtn.textContent = sec.products.btnText;
+  }
+
   function renderAll() {
     renderHeader();
     renderHero();
@@ -730,6 +760,7 @@ window.TepCMS = (() => {
     renderGallery();
     renderContact();
     renderFooter();
+    renderSectionButtons();
   }
 
   // ─── Map (Yandex Maps) ──────────────────────────────────────────────────────

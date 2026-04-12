@@ -304,7 +304,17 @@ html.dark .gallery-arrow {
   height: 100%;
   min-height: 400px;
 }
-/* Yandex Maps: keep light map in both themes for readability */
+/* Dark mode: invert map tiles for dark appearance, keep readable */
+html.dark #yandex-map {
+  filter: invert(0.92) hue-rotate(180deg) saturate(0.6) brightness(0.85) contrast(1.1);
+}
+/* Restore colors on placemarks/controls inside the map */
+html.dark #yandex-map .ymaps-2-1-79-balloon,
+html.dark #yandex-map .ymaps-2-1-79-hint,
+html.dark #yandex-map [class*="copyrights"],
+html.dark #yandex-map [class*="controls"] {
+  filter: invert(1) hue-rotate(180deg) saturate(1.5) brightness(1.2);
+}
 
 /* ─── Toast ──────────────────────────────────────────── */
 #cms-toast {
