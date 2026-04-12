@@ -352,9 +352,10 @@ html.dark .service-card {
 
 /* Service list item styles */
 .service-list-item {
-  background: #f3f4f6;
+  background: #ffffff;
   border-radius: 12px;
   transition: background 0.3s ease;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.06);
 }
 html.dark .service-list-item {
   background: rgba(26, 27, 38, 0.7);
