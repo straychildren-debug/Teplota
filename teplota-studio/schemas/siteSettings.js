@@ -51,7 +51,7 @@ export default {
       title: 'Главный блок (Hero)',
       type: 'object',
       fields: [
-        { name: 'title', title: 'Заголовок (с тегами <span>)', type: 'string' },
+        { name: 'title', title: 'Заголовок', type: 'text', rows: 3, description: 'Каждая строка = новая строка на сайте. *звёздочки* = оранжевый акцент. Пример:\nИнженерные системы\n*Премиум-класса*' },
         { name: 'subtitle', title: 'Подзаголовок', type: 'text' },
         { name: 'btnText', title: 'Текст кнопки', type: 'string' },
         { name: 'btnUrl', title: 'Ссылка кнопки', type: 'string' },

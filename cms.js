@@ -434,8 +434,8 @@ window.TepCMS = (() => {
 
     const titleEl = document.getElementById('hero-title');
     if (titleEl && d.title) {
-      // Support *word* markup → <span class="text-brand">word</span>
-      const html = d.title.replace(/\*([^*]+)\*/g, '<span class="text-brand">$1</span>').replace(/\n/g, '<br/>');
+      // Support *word* markup → orange accent, \n → line break
+      const html = accentTitle(d.title).replace(/\n/g, '<br/>');
       titleEl.innerHTML = html;
     }
 
