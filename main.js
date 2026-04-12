@@ -4,6 +4,7 @@
  * CMS is initialized after DOM ready from cms.js.
  */
 import './index.css';
+import './style.css';
 
 // ─── Dark Mode Toggle ──────────────────────────────────────────────────────────
 const THEME_KEY = 'tep-theme';
@@ -14,6 +15,9 @@ function applyTheme(isDark) {
   const moon = document.getElementById('icon-moon');
   if (sun) sun.classList.toggle('hidden', !isDark);
   if (moon) moon.classList.toggle('hidden', isDark);
+  // Mobile icons
+  document.querySelectorAll('.mobile-icon-sun').forEach(el => el.classList.toggle('hidden', !isDark));
+  document.querySelectorAll('.mobile-icon-moon').forEach(el => el.classList.toggle('hidden', isDark));
   // Swap logos
   document.querySelectorAll('img.logo').forEach(img => {
     img.src = isDark ? 'assets/logo white.svg' : 'assets/logo.svg';
@@ -25,11 +29,14 @@ const saved = localStorage.getItem(THEME_KEY);
 const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
 applyTheme(saved ? saved === 'dark' : prefersDark);
 
-document.getElementById('theme-toggle')?.addEventListener('click', () => {
+function toggleTheme() {
   const isDark = !document.documentElement.classList.contains('dark');
   applyTheme(isDark);
   localStorage.setItem(THEME_KEY, isDark ? 'dark' : 'light');
-});
+}
+
+document.getElementById('theme-toggle')?.addEventListener('click', toggleTheme);
+document.getElementById('mobile-theme-toggle')?.addEventListener('click', toggleTheme);
 
 // ─── Reveal Observer ──────────────────────────────────────────────────────────
 const revealOptions = { threshold: 0.12, rootMargin: '0px 0px -40px 0px' };
@@ -43,10 +50,63 @@ window.revealObserver = new IntersectionObserver((entries) => {
   });
 }, revealOptions);
 
-// ─── Header Scroll ────────────────────────────────────────────────────────────
+// ─── Header Scroll & Parallax ─────────────────────────────────────────────────
 const header = document.getElementById('main-header');
+
 window.addEventListener('scroll', () => {
-  header?.classList.toggle('scrolled', window.scrollY > 40);
+  const scrollY = window.scrollY;
+
+  // Header scrolled state
+  header?.classList.toggle('scrolled', scrollY > 40);
+
+  // Hero parallax — background moves slower
+  const heroImg = document.getElementById('hero-bg');
+  if (heroImg) heroImg.style.transform = `translateY(${scrollY * 0.4}px)`;
+
+  // Parallax on sections — subtle upward float
+  document.querySelectorAll('.parallax-section').forEach(el => {
+    const rect = el.getBoundingClientRect();
+    const speed = parseFloat(el.dataset.speed || '0.05');
+    if (rect.top < window.innerHeight && rect.bottom > 0) {
+      const offset = (window.innerHeight - rect.top) * speed;
+      el.style.transform = `translateY(-${offset}px)`;
+    }
+  });
+}, { passive: true });
+
+// ─── Count-Up Animation ──────────────────────────────────────────────────────
+function animateCountUp(el) {
+  const text = el.textContent.trim();
+  const match = text.match(/^(\d+)/);
+  if (!match) return;
+  const target = parseInt(match[1]);
+  const suffix = text.replace(match[1], '');
+  const duration = 2000;
+  const start = performance.now();
+
+  function update(now) {
+    const elapsed = now - start;
+    const progress = Math.min(elapsed / duration, 1);
+    const eased = 1 - Math.pow(1 - progress, 3); // easeOutCubic
+    const current = Math.round(target * eased);
+    el.textContent = current + suffix;
+    if (progress < 1) requestAnimationFrame(update);
+  }
+  requestAnimationFrame(update);
+}
+
+const countObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.querySelectorAll('[data-count-up]').forEach(animateCountUp);
+      countObserver.unobserve(entry.target);
+    }
+  });
+}, { threshold: 0.3 });
+
+document.addEventListener('DOMContentLoaded', () => {
+  const statsGrid = document.getElementById('stats-grid');
+  if (statsGrid) countObserver.observe(statsGrid);
 });
 
 // ─── Magnetic Buttons ─────────────────────────────────────────────────────────

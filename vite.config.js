@@ -1,8 +1,18 @@
 import { defineConfig } from 'vite';
 import fs from 'fs';
 import path from 'path';
+import tailwindcss from 'tailwindcss';
+import autoprefixer from 'autoprefixer';
 
 export default defineConfig({
+  css: {
+    postcss: {
+      plugins: [
+        tailwindcss(),
+        autoprefixer(),
+      ],
+    },
+  },
   server: {
     port: 5173,
     // Add a simple API middleware to handle CMS saving

@@ -427,7 +427,7 @@ window.TepCMS = (() => {
     if (statsGrid) {
       statsGrid.innerHTML = (d.stats || []).map((st, i) => `
         <div class="stat-card" data-index="${i}">
-          <div class="text-[#f36e21] font-bold text-4xl md:text-5xl mb-1">${st.num}</div>
+          <div class="text-[#f36e21] font-bold text-4xl md:text-5xl mb-1" data-count-up>${st.num}</div>
           <div class="text-xs font-semibold tracking-wider text-[#1a1b26]/70 uppercase">${st.label}</div>
         </div>
       `).join('');
@@ -491,29 +491,54 @@ window.TepCMS = (() => {
   // ─── Render: Services ────────────────────────────────────────────────────────
   function renderServices() {
     const grid = document.getElementById('service-list-grid');
+    const previewImg = document.getElementById('service-preview-img');
+    const previewTitle = document.getElementById('service-preview-title');
     if (!grid) return;
     const list = data.services || [];
     if (!list.length) return;
 
+    // Set initial preview to first service
+    if (previewImg && list[0]) {
+      previewImg.src = list[0].image;
+      previewImg.alt = list[0].title;
+      if (previewTitle) previewTitle.textContent = list[0].title;
+    }
+
     grid.innerHTML = list.map((s, i) => `
-      <div class="group relative rounded-2xl overflow-hidden glass-panel h-64 cursor-pointer
-                  border border-gray-200 dark:border-white/5 hover:border-[#f36e21]/40 hover:shadow-[0_0_15px_rgba(243,110,33,0.2)]
-                  transition-all duration-300 reveal-item"
-           data-service-id="${s.id}">
-        <img src="${s.image}" alt="${s.title}" class="absolute inset-0 w-full h-full object-cover opacity-60 group-hover:opacity-80 transition-opacity duration-500">
-        <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent"></div>
-        <!-- Play icon overlay -->
-        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-          <svg class="ml-0.5" fill="white" height="18" width="18" viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+      <div class="service-list-item group flex items-center gap-4 p-4 rounded-xl cursor-pointer
+                  border border-transparent hover:border-[#f36e21]/30
+                  hover:bg-white/50 dark:hover:bg-white/5
+                  transition-all duration-300 ${i === 0 ? 'active' : ''} reveal-item"
+           data-service-id="${s.id}" data-service-img="${s.image}" data-service-title="${s.title}">
+        <div class="w-16 h-16 rounded-lg overflow-hidden flex-shrink-0">
+          <img src="${s.image}" alt="${s.title}" class="w-full h-full object-cover">
         </div>
-        <div class="absolute bottom-0 left-0 p-6">
-          <h3 class="text-white font-semibold text-lg leading-tight">${s.title}</h3>
+        <div class="flex-1">
+          <h3 class="font-semibold text-sm text-gray-900 dark:text-white group-hover:text-[#f36e21] transition-colors leading-tight">${s.title}</h3>
         </div>
+        <svg class="ml-auto w-5 h-5 flex-shrink-0 text-gray-400 group-hover:text-[#f36e21] transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+        </svg>
       </div>
     `).join('');
 
-    grid.querySelectorAll('[data-service-id]').forEach(card => {
-      card.addEventListener('click', () => openService(card.dataset.serviceId));
+    // Hover interaction — update preview
+    grid.querySelectorAll('[data-service-id]').forEach(item => {
+      item.addEventListener('mouseenter', () => {
+        if (previewImg) {
+          previewImg.style.opacity = '0';
+          setTimeout(() => {
+            previewImg.src = item.dataset.serviceImg;
+            previewImg.alt = item.dataset.serviceTitle;
+            if (previewTitle) previewTitle.textContent = item.dataset.serviceTitle;
+            previewImg.style.opacity = '1';
+          }, 250);
+        }
+        grid.querySelectorAll('.service-list-item').forEach(el => el.classList.remove('active'));
+        item.classList.add('active');
+      });
+
+      item.addEventListener('click', () => openService(item.dataset.serviceId));
     });
 
     reObserve();
@@ -526,7 +551,7 @@ window.TepCMS = (() => {
     grid.innerHTML = (data.products || []).map(p => `
       <div class="product-card group flex flex-col
                   cursor-pointer reveal-item" data-product-id="${p.id}">
-        <div class="product-image h-64 p-6 flex items-center justify-center">
+        <div class="product-image h-44 p-4 flex items-center justify-center">
           <img src="${p.image}" alt="${p.title}" class="max-h-full object-contain filter drop-shadow-xl transition-transform duration-300 group-hover:scale-105">
         </div>
         <div class="p-6">
@@ -546,16 +571,19 @@ window.TepCMS = (() => {
   function renderGallery() {
     const grid = document.getElementById('gallery-grid');
     if (!grid) return;
+    const items = data.gallery || [];
+    if (!items.length) return;
 
-    grid.innerHTML = (data.gallery || []).map((g, i) => `
-      <div class="rounded-2xl overflow-hidden glass-panel aspect-square relative group cursor-pointer
-                  border border-gray-200 dark:border-white/5 hover:border-[#f36e21]/40 hover:shadow-[0_0_15px_rgba(243,110,33,0.2)]
-                  transition-all duration-300 reveal-item" data-gallery-id="${g.id}">
-        <img src="${g.cover}" alt="${g.title}" class="absolute inset-0 w-full h-full object-cover opacity-70 group-hover:scale-105 group-hover:opacity-100 transition-all duration-700">
-        <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent"></div>
-        <div class="absolute bottom-0 left-0 p-5">
-          <h3 class="text-white font-semibold text-sm leading-tight">${g.title}</h3>
-          <p class="text-white/50 text-xs mt-1 line-clamp-1">${g.description}</p>
+    grid.innerHTML = items.map((g, i) => `
+      <div class="gallery-carousel-item">
+        <div class="gallery-carousel-card reveal-item" data-gallery-id="${g.id}">
+          <div class="aspect-video relative overflow-hidden">
+            <img src="${g.cover}" alt="${g.title}" class="w-full h-full object-cover">
+          </div>
+          <div class="p-6">
+            <h3 class="font-semibold text-lg text-gray-900 dark:text-white leading-tight">${g.title}</h3>
+            <p class="text-gray-600 dark:text-[#94a3b8] text-sm mt-2 line-clamp-2">${g.description}</p>
+          </div>
         </div>
       </div>
     `).join('');
@@ -565,6 +593,70 @@ window.TepCMS = (() => {
     });
 
     reObserve();
+    initGalleryCarousel();
+  }
+
+  // ─── Gallery Carousel Logic ─────────────────────────────────────────────────
+  function initGalleryCarousel() {
+    const wrapper = document.getElementById('gallery-carousel-wrapper');
+    const track = document.getElementById('gallery-grid');
+    if (!wrapper || !track) return;
+    const items = track.querySelectorAll('.gallery-carousel-item');
+    if (!items.length) return;
+    let current = 0;
+    const total = items.length;
+
+    function goTo(idx) {
+      current = ((idx % total) + total) % total;
+      track.style.transform = `translateX(-${current * 100}%)`;
+      updateDots();
+    }
+
+    // Build dots
+    const dotsEl = document.getElementById('gallery-dots');
+    if (dotsEl) {
+      dotsEl.innerHTML = Array.from({ length: total }, (_, i) =>
+        `<button class="gallery-dot${i === 0 ? ' active' : ''}" data-idx="${i}"></button>`
+      ).join('');
+      dotsEl.addEventListener('click', e => {
+        const dot = e.target.closest('[data-idx]');
+        if (dot) goTo(+dot.dataset.idx);
+      });
+    }
+
+    function updateDots() {
+      if (!dotsEl) return;
+      dotsEl.querySelectorAll('.gallery-dot').forEach((d, i) => {
+        d.classList.toggle('active', i === current);
+      });
+    }
+
+    document.getElementById('gallery-prev')?.addEventListener('click', () => goTo(current - 1));
+    document.getElementById('gallery-next')?.addEventListener('click', () => goTo(current + 1));
+
+    // Touch/swipe support for mobile
+    let touchStartX = 0;
+    let touchEndX = 0;
+    wrapper.addEventListener('touchstart', e => {
+      touchStartX = e.changedTouches[0].screenX;
+      clearInterval(autoTimer);
+    }, { passive: true });
+    wrapper.addEventListener('touchend', e => {
+      touchEndX = e.changedTouches[0].screenX;
+      const diff = touchStartX - touchEndX;
+      if (Math.abs(diff) > 50) {
+        if (diff > 0) goTo(current + 1);
+        else goTo(current - 1);
+      }
+      autoTimer = setInterval(() => goTo(current + 1), 5000);
+    }, { passive: true });
+
+    // Auto-advance every 5 seconds
+    let autoTimer = setInterval(() => goTo(current + 1), 5000);
+    wrapper.addEventListener('mouseenter', () => clearInterval(autoTimer));
+    wrapper.addEventListener('mouseleave', () => {
+      autoTimer = setInterval(() => goTo(current + 1), 5000);
+    });
   }
 
   // ─── Render: Contact ─────────────────────────────────────────────────────────
@@ -638,35 +730,36 @@ window.TepCMS = (() => {
     const lat = d.mapLat || 55.7961;
     const lng = d.mapLng || 49.1061;
 
-    const isDesktop = window.innerWidth >= 1024;
-    const offset = isDesktop ? 0.025 : 0;
-    const viewLng = lng - offset;
-
     if (map) { map.remove(); map = null; }
 
     try {
-      const bounds = L.latLng(lat, viewLng).toBounds(8000);
       map = L.map('leaflet-map', {
         dragging: true,
         scrollWheelZoom: false,
         doubleClickZoom: true,
         touchZoom: true,
-        zoomControl: true,
-        maxBounds: bounds,
-        maxBoundsViscosity: 1.0
-      }).setView([lat, viewLng], 14);
+        zoomControl: true
+      }).setView([lat, lng], 15);
 
       L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '© OpenStreetMap'
       }).addTo(map);
 
       const marker = L.marker([lat, lng]).addTo(map);
-      marker.bindTooltip('Мы здесь', {
+      marker.bindTooltip('Теплота здесь', {
         permanent: true,
         direction: 'top',
         offset: [0, -10],
         className: 'custom-map-tooltip'
       }).openTooltip();
+
+      // Return map to center after dragging
+      map.on('moveend', () => {
+        clearTimeout(map._returnTimer);
+        map._returnTimer = setTimeout(() => {
+          map.flyTo([lat, lng], map.getZoom(), { duration: 1.2 });
+        }, 2500);
+      });
     } catch (e) {
       console.error('Map init error:', e);
     }
