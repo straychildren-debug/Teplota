@@ -8,13 +8,12 @@
 
     <link id="site-favicon" rel="icon" href="favicon.ico">
 
-    <!-- Google Fonts: Inter + Playfair Display -->
+    <!-- Google Fonts: Inter + Playfair Display (preconnect + preload) -->
     <link href="https://fonts.googleapis.com" rel="preconnect"/>
-    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet"/>
+    <link crossorigin href="https://fonts.gstatic.com" rel="preconnect"/>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet"/>
 
-    <!-- Leaflet Map -->
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+    <!-- Yandex Maps API (loaded lazily via JS) -->
 
     <!-- Tailwind CDN -->
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
@@ -300,7 +299,7 @@
           </h2>
         </div>
         <div class="w-full h-[400px] rounded-3xl overflow-hidden relative glass-panel border border-gray-200 dark:border-white/10">
-          <div id="leaflet-map" style="height:100%;width:100%;"></div>
+          <div id="yandex-map" style="height:100%;width:100%;"></div>
         </div>
       </div>
     </section>
@@ -447,7 +446,28 @@
   <div id="cms-toast"></div>
 
   <!-- Scripts -->
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <!-- Yandex Maps: lazy-load when map section approaches viewport -->
+  <script>
+    (function() {
+      var loaded = false;
+      var obs = new IntersectionObserver(function(entries) {
+        if (entries[0].isIntersecting && !loaded) {
+          loaded = true;
+          var s = document.createElement('script');
+          s.src = 'https://api-maps.yandex.ru/2.1/?apikey=&lang=ru_RU';
+          s.onload = function() {
+            ymaps.ready(function() {
+              if (window.TepCMS && window.TepCMS.initMap) window.TepCMS.initMap();
+            });
+          };
+          document.body.appendChild(s);
+          obs.disconnect();
+        }
+      }, { rootMargin: '400px' });
+      var mapSection = document.getElementById('location');
+      if (mapSection) obs.observe(mapSection);
+    })();
+  </script>
   <script type="module" src="cms.js"></script>
   <script type="module" src="main.js"></script>
 </body>

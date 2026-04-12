@@ -511,7 +511,7 @@ window.TepCMS = (() => {
                   transition-all duration-300 ${i === 0 ? 'active' : ''} reveal-item"
            data-service-id="${s.id}" data-service-img="${s.image}" data-service-title="${s.title}">
         <div class="w-16 h-16 rounded-lg overflow-hidden flex-shrink-0">
-          <img src="${s.image}" alt="${s.title}" class="w-full h-full object-cover">
+          <img src="${s.image}" alt="${s.title}" loading="lazy" class="w-full h-full object-cover">
         </div>
         <div class="flex-1">
           <h3 class="font-semibold text-sm text-gray-900 dark:text-white group-hover:text-[#f36e21] transition-colors leading-tight">${s.title}</h3>
@@ -552,7 +552,7 @@ window.TepCMS = (() => {
       <div class="product-card group flex flex-col
                   cursor-pointer reveal-item" data-product-id="${p.id}">
         <div class="product-image h-44 p-4 flex items-center justify-center">
-          <img src="${p.image}" alt="${p.title}" class="max-h-full object-contain filter drop-shadow-xl transition-transform duration-300 group-hover:scale-105">
+          <img src="${p.image}" alt="${p.title}" loading="lazy" class="max-h-full object-contain filter drop-shadow-xl transition-transform duration-300 group-hover:scale-105">
         </div>
         <div class="p-6">
           <h3 class="font-semibold text-lg leading-tight group-hover:text-[#f36e21] transition-colors">${p.title}</h3>
@@ -578,7 +578,7 @@ window.TepCMS = (() => {
       <div class="gallery-carousel-item">
         <div class="gallery-carousel-card reveal-item" data-gallery-id="${g.id}">
           <div class="aspect-video relative overflow-hidden">
-            <img src="${g.cover}" alt="${g.title}" class="w-full h-full object-cover">
+            <img src="${g.cover}" alt="${g.title}" loading="lazy" class="w-full h-full object-cover">
           </div>
           <div class="p-6">
             <h3 class="font-semibold text-lg text-gray-900 dark:text-white leading-tight">${g.title}</h3>
@@ -639,7 +639,7 @@ window.TepCMS = (() => {
     let touchEndX = 0;
     wrapper.addEventListener('touchstart', e => {
       touchStartX = e.changedTouches[0].screenX;
-      clearInterval(autoTimer);
+      stopAutoTimer();
     }, { passive: true });
     wrapper.addEventListener('touchend', e => {
       touchEndX = e.changedTouches[0].screenX;
@@ -648,15 +648,28 @@ window.TepCMS = (() => {
         if (diff > 0) goTo(current + 1);
         else goTo(current - 1);
       }
-      autoTimer = setInterval(() => goTo(current + 1), 5000);
+      startAutoTimer();
     }, { passive: true });
 
-    // Auto-advance every 5 seconds
-    let autoTimer = setInterval(() => goTo(current + 1), 5000);
-    wrapper.addEventListener('mouseenter', () => clearInterval(autoTimer));
-    wrapper.addEventListener('mouseleave', () => {
+    // Auto-advance every 5 seconds (pauses when off-screen)
+    let autoTimer = null;
+    function startAutoTimer() {
+      clearInterval(autoTimer);
       autoTimer = setInterval(() => goTo(current + 1), 5000);
-    });
+    }
+    function stopAutoTimer() { clearInterval(autoTimer); autoTimer = null; }
+
+    wrapper.addEventListener('mouseenter', stopAutoTimer);
+    wrapper.addEventListener('mouseleave', startAutoTimer);
+
+    // Only auto-advance when gallery is visible
+    const visibilityObs = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) startAutoTimer();
+        else stopAutoTimer();
+      });
+    }, { threshold: 0.1 });
+    visibilityObs.observe(wrapper);
   }
 
   // ─── Render: Contact ─────────────────────────────────────────────────────────
@@ -719,45 +732,57 @@ window.TepCMS = (() => {
     renderFooter();
   }
 
-  // ─── Map (Leaflet) ───────────────────────────────────────────────────────────
+  // ─── Map (Yandex Maps) ──────────────────────────────────────────────────────
   function initMap() {
-    const mapEl = document.getElementById('leaflet-map');
-    if (!mapEl || typeof L === 'undefined') {
-      if (mapEl) mapEl.innerHTML = '<div style="padding:20px;text-align:center;color:#999;">Карта временно недоступна</div>';
+    const mapEl = document.getElementById('yandex-map');
+    if (!mapEl || typeof ymaps === 'undefined') {
+      if (mapEl) mapEl.innerHTML = '<div style="padding:20px;text-align:center;color:#999;">Карта загружается...</div>';
       return;
     }
     const d = data.contact;
     const lat = d.mapLat || 55.7961;
     const lng = d.mapLng || 49.1061;
 
-    if (map) { map.remove(); map = null; }
+    if (map) { map.destroy(); map = null; }
 
     try {
-      map = L.map('leaflet-map', {
-        dragging: true,
-        scrollWheelZoom: false,
-        doubleClickZoom: true,
-        touchZoom: true,
-        zoomControl: true
-      }).setView([lat, lng], 15);
+      const isDark = document.documentElement.classList.contains('dark');
 
-      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '© OpenStreetMap'
-      }).addTo(map);
+      map = new ymaps.Map('yandex-map', {
+        center: [lat, lng],
+        zoom: 15,
+        controls: ['zoomControl']
+      }, {
+        suppressMapOpenBlock: true
+      });
 
-      const marker = L.marker([lat, lng]).addTo(map);
-      marker.bindTooltip('Теплота здесь', {
-        permanent: true,
-        direction: 'top',
-        offset: [0, -10],
-        className: 'custom-map-tooltip'
-      }).openTooltip();
+      // Disable scroll zoom, allow drag and touch
+      map.behaviors.disable('scrollZoom');
+
+      const placemark = new ymaps.Placemark([lat, lng], {
+        balloonContent: 'Теплота — инженерные системы',
+        hintContent: 'Теплота здесь'
+      }, {
+        preset: 'islands#redDotIcon',
+        iconColor: '#f36e21'
+      });
+
+      map.geoObjects.add(placemark);
+
+      // Custom label above pin
+      const label = new ymaps.Placemark([lat, lng], {
+        iconContent: 'Теплота здесь'
+      }, {
+        preset: 'islands#orangeStretchyIcon'
+      });
+      map.geoObjects.add(label);
 
       // Return map to center after dragging
-      map.on('moveend', () => {
-        clearTimeout(map._returnTimer);
-        map._returnTimer = setTimeout(() => {
-          map.flyTo([lat, lng], map.getZoom(), { duration: 1.2 });
+      let returnTimer = null;
+      map.events.add('actionend', () => {
+        clearTimeout(returnTimer);
+        returnTimer = setTimeout(() => {
+          map.panTo([lat, lng], { flying: true, duration: 800 });
         }, 2500);
       });
     } catch (e) {
@@ -855,6 +880,7 @@ window.TepCMS = (() => {
     openService, openProduct, openGallery,
     galleryNext, galleryPrev,
     viewImage,
-    toast
+    toast,
+    initMap
   };
 })();

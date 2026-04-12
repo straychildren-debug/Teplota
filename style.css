@@ -203,6 +203,7 @@ main { padding-top: 0; }
   background-position: center;
   position: relative; overflow: hidden;
   padding-top: 80px;
+  will-change: transform;
 }
 .hero::after {
   content: '';
@@ -398,6 +399,9 @@ html.dark #service-preview-window {
   overflow: hidden;
   border: 1px solid rgba(0, 0, 0, 0.08);
   box-shadow: var(--shadow-soft);
+}
+.product-card {
+  contain: layout style;
 }
 .product-card:hover {
   border-color: #fed7aa;

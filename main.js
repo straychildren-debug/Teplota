@@ -50,28 +50,46 @@ window.revealObserver = new IntersectionObserver((entries) => {
   });
 }, revealOptions);
 
-// ─── Header Scroll & Parallax ─────────────────────────────────────────────────
+// ─── Header Scroll & Parallax (rAF-throttled) ───────────────────────────────
 const header = document.getElementById('main-header');
+const heroImg = document.getElementById('hero-bg');
+let parallaxSections = null; // cached NodeList
+let scrollTicking = false;
 
-window.addEventListener('scroll', () => {
+function onScroll() {
   const scrollY = window.scrollY;
 
   // Header scrolled state
   header?.classList.toggle('scrolled', scrollY > 40);
 
+  // Skip parallax on mobile for performance
+  if (window.innerWidth < 768) {
+    scrollTicking = false;
+    return;
+  }
+
   // Hero parallax — background moves slower
-  const heroImg = document.getElementById('hero-bg');
   if (heroImg) heroImg.style.transform = `translateY(${scrollY * 0.4}px)`;
 
-  // Parallax on sections — subtle upward float
-  document.querySelectorAll('.parallax-section').forEach(el => {
+  // Parallax on sections — subtle upward float (cached query)
+  if (!parallaxSections) parallaxSections = document.querySelectorAll('.parallax-section');
+  const vh = window.innerHeight;
+  parallaxSections.forEach(el => {
     const rect = el.getBoundingClientRect();
-    const speed = parseFloat(el.dataset.speed || '0.05');
-    if (rect.top < window.innerHeight && rect.bottom > 0) {
-      const offset = (window.innerHeight - rect.top) * speed;
-      el.style.transform = `translateY(-${offset}px)`;
+    if (rect.top < vh && rect.bottom > 0) {
+      const speed = parseFloat(el.dataset.speed || '0.05');
+      el.style.transform = `translateY(-${(vh - rect.top) * speed}px)`;
     }
   });
+
+  scrollTicking = false;
+}
+
+window.addEventListener('scroll', () => {
+  if (!scrollTicking) {
+    requestAnimationFrame(onScroll);
+    scrollTicking = true;
+  }
 }, { passive: true });
 
 // ─── Count-Up Animation ──────────────────────────────────────────────────────
@@ -109,14 +127,23 @@ document.addEventListener('DOMContentLoaded', () => {
   if (statsGrid) countObserver.observe(statsGrid);
 });
 
-// ─── Magnetic Buttons ─────────────────────────────────────────────────────────
+// ─── Magnetic Buttons (throttled) ────────────────────────────────────────────
 function initMagnetic() {
-  document.querySelectorAll('.btn').forEach(btn => {
+  document.querySelectorAll('.btn:not([data-magnetic])').forEach(btn => {
+    btn.dataset.magnetic = '1';
+    let rafId = null;
     btn.addEventListener('mousemove', e => {
-      const r = btn.getBoundingClientRect();
-      btn.style.transform = `translate(${(e.clientX - r.left - r.width/2) * 0.12}px, ${(e.clientY - r.top - r.height/2) * 0.12}px)`;
+      if (rafId) return; // throttle to 1 per frame
+      rafId = requestAnimationFrame(() => {
+        const r = btn.getBoundingClientRect();
+        btn.style.transform = `translate(${(e.clientX - r.left - r.width/2) * 0.12}px, ${(e.clientY - r.top - r.height/2) * 0.12}px)`;
+        rafId = null;
+      });
     });
-    btn.addEventListener('mouseleave', () => { btn.style.transform = ''; });
+    btn.addEventListener('mouseleave', () => {
+      if (rafId) { cancelAnimationFrame(rafId); rafId = null; }
+      btn.style.transform = '';
+    });
   });
 }
 
@@ -138,7 +165,12 @@ document.addEventListener('click', e => {
 document.addEventListener('DOMContentLoaded', () => {
   TepCMS.init();
   initMagnetic();
-  const observer = new MutationObserver(() => initMagnetic());
+  // Debounced MutationObserver — only re-init magnetic when new buttons appear
+  let mutationTimer = null;
+  const observer = new MutationObserver(() => {
+    clearTimeout(mutationTimer);
+    mutationTimer = setTimeout(initMagnetic, 200);
+  });
   observer.observe(document.body, { childList: true, subtree: true });
 });
 

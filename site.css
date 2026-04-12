@@ -298,42 +298,15 @@ html.dark .gallery-arrow {
 }
 .gallery-item:hover .gallery-overlay { opacity: 1; }
 
-/* ─── Map ────────────────────────────────────────────── */
-#leaflet-map {
+/* ─── Map (Yandex) ──────────────────────────────────── */
+#yandex-map {
   width: 100%;
   height: 100%;
   min-height: 400px;
 }
-
-.leaflet-div-icon { background: transparent !important; border: none !important; }
-
-.custom-map-tooltip {
-  background: var(--surface) !important;
-  border: none !important;
-  border-radius: 100px !important;
-  padding: 6px 16px !important;
-  font-family: 'Inter', sans-serif !important;
-  font-weight: 800 !important;
-  color: var(--primary) !important;
-  box-shadow: 0 10px 25px rgba(0,0,0,0.15) !important;
-  font-size: 13px !important;
-  text-transform: uppercase !important;
-  letter-spacing: 0.05em !important;
-}
-html.dark .custom-map-tooltip {
-  box-shadow: 0 10px 25px rgba(0,0,0,0.4) !important;
-}
-.custom-map-tooltip::before {
-  border-top-color: var(--surface) !important;
-  bottom: -6px !important;
-  left: 50% !important;
-  margin-left: -6px !important;
-  border-width: 6px !important;
-}
-
-/* Dark mode map tile inversion */
-html.dark #leaflet-map .leaflet-tile {
-  filter: invert(1) hue-rotate(180deg) brightness(0.85) contrast(0.9);
+/* Yandex Maps dark mode: invert + hue shift */
+html.dark #yandex-map ymaps {
+  filter: invert(0.9) hue-rotate(180deg) brightness(1.1) contrast(0.9);
 }
 
 /* ─── Toast ──────────────────────────────────────────── */
