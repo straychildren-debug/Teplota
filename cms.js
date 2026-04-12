@@ -979,6 +979,25 @@ window.TepCMS = (() => {
     overlay.classList.add('open');
   }
 
+  // ─── Form Submit (mailto) ─────────────────────────────────────────────────────
+  function submitForm() {
+    const name = document.getElementById('form-name-input')?.value.trim();
+    const phone = document.getElementById('form-phone-input')?.value.trim();
+    if (!name || !phone) {
+      toast('Пожалуйста, заполните имя и телефон');
+      return;
+    }
+    const email = data.contact?.email || 'teplota16@bk.ru';
+    const subject = encodeURIComponent('Заявка с сайта Теплота');
+    const body = encodeURIComponent(`Имя: ${name}\nТелефон: ${phone}\n\nОтправлено с сайта teplota.ru`);
+    window.location.href = `mailto:${email}?subject=${subject}&body=${body}`;
+
+    // Show confirmation
+    toast('Открываем почтовый клиент...');
+    // Reset form
+    document.getElementById('contact-form')?.reset();
+  }
+
   // ─── Public API ───────────────────────────────────────────────────────────────
   return {
     async init() {
@@ -991,6 +1010,7 @@ window.TepCMS = (() => {
     galleryNext, galleryPrev,
     viewImage,
     toast,
-    initMap
+    initMap,
+    submitForm
   };
 })();

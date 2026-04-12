@@ -330,10 +330,10 @@
                   <span id="contact-address" class="text-sm text-gray-600 dark:text-[#94a3b8] leading-relaxed">г. Казань, ул. Техническая, д. 23</span>
                 </div>
               </div>
-              <form class="space-y-4" onsubmit="event.preventDefault();">
+              <form id="contact-form" class="space-y-4" onsubmit="event.preventDefault(); window.TepCMS.submitForm();">
                 <div class="grid grid-cols-2 gap-4">
-                  <input id="form-name-input" class="bg-white/50 dark:bg-white/5 border border-gray-200 dark:border-white/10 rounded-lg px-4 py-2.5 text-sm text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:border-[#f36e21] transition-colors" placeholder="Ваше имя" type="text"/>
-                  <input id="form-phone-input" class="bg-white/50 dark:bg-white/5 border border-gray-200 dark:border-white/10 rounded-lg px-4 py-2.5 text-sm text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:border-[#f36e21] transition-colors" placeholder="Номер телефона" type="tel"/>
+                  <input id="form-name-input" class="bg-white/50 dark:bg-white/5 border border-gray-200 dark:border-white/10 rounded-lg px-4 py-2.5 text-sm text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:border-[#f36e21] transition-colors" placeholder="Ваше имя" type="text" required/>
+                  <input id="form-phone-input" class="bg-white/50 dark:bg-white/5 border border-gray-200 dark:border-white/10 rounded-lg px-4 py-2.5 text-sm text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:border-[#f36e21] transition-colors" placeholder="Номер телефона" type="tel" required/>
                 </div>
                 <button id="form-submit-btn" class="w-full bg-[#f36e21] hover:bg-[#d95d18] text-white py-3 rounded-lg font-medium transition-all shadow-[0_0_15px_rgba(243,110,33,0.3)]" type="submit">
                   Заказать звонок
