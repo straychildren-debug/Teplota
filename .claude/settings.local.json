@@ -3,7 +3,22 @@
     "allow": [
       "mcp__mcp-registry__search_mcp_registry",
       "mcp__stitch__list_projects",
-      "mcp__Claude_Preview__preview_start"
+      "mcp__Claude_Preview__preview_start",
+      "Bash(gh run:*)",
+      "Bash(curl -s \"https://77e5oip8.api.sanity.io/v2023-05-03/data/query/production?query=*%5B_type%20%3D%3D%20%22siteSettings%22%5D%5B0%5D%7Bheader%7D\")",
+      "Bash(npm run:*)",
+      "Bash(npx sanity:*)",
+      "Bash(npm install:*)",
+      "Bash(curl -s \"https://77e5oip8.api.sanity.io/v2023-05-03/data/query/production?query=*%5B_type%20%3D%3D%20%22siteSettings%22%5D%5B0%5D%7Bsections%7D\")",
+      "Bash(node -e \"const pkg = require\\('@sanity/image-url/package.json'\\); console.log\\('version:', pkg.version\\); console.log\\('exports:', Object.keys\\(pkg.exports || {}\\)\\)\")",
+      "Bash(node -e \"import\\('@sanity/image-url'\\).then\\(m => console.log\\('exports:', Object.keys\\(m\\)\\)\\)\")",
+      "Bash(curl -s https://77e5oip8.apicdn.sanity.io/v2023-05-03/data/query/production --data-urlencode 'query={:*)",
+      "Bash(python3 -c \"import sys,json; d=json.load\\(sys.stdin\\); print\\('siteSettings:', bool\\(d['result'].get\\('siteSettings'\\)\\)\\); print\\('about:', bool\\(d['result'].get\\('about'\\)\\)\\); print\\('services:', len\\(d['result'].get\\('services',[]\\)\\), 'items'\\); print\\('products:', len\\(d['result'].get\\('products',[]\\)\\), 'items'\\); print\\('gallery:', len\\(d['result'].get\\('gallery',[]\\)\\), 'items'\\); print\\('advantages:', len\\(d['result'].get\\('advantages',[]\\)\\),'items'\\)\")",
+      "Bash(curl -s \"https://77e5oip8.apicdn.sanity.io/v2023-05-03/data/query/production\" --data-urlencode 'query={\"siteSettings\": *[_type == \"siteSettings\"][0]{...,header{...,favicon{asset->{url}}}},\"about\": *[_type == \"about\"][0],\"services\": *[_type == \"service\"] | order\\(_createdAt asc\\),\"products\": *[_type == \"product\"] | order\\(_createdAt asc\\),\"gallery\": *[_type == \"gallery\"] | order\\(_createdAt asc\\),\"advantages\": *[_type == \"advantage\"] | order\\(_createdAt asc\\)}')",
+      "Bash(curl -sG \"https://77e5oip8.apicdn.sanity.io/v2023-05-03/data/query/production\" --data-urlencode 'query={\"siteSettings\": *[_type == \"siteSettings\"][0]}')",
+      "Bash(curl -sI -H \"Origin: https://teplota.su\" \"https://77e5oip8.apicdn.sanity.io/v2023-05-03/data/query/production?query=*%5B_type%3D%3D%22siteSettings%22%5D%5B0%5D%7B_id%7D\")",
+      "Bash(curl -sI \"https://77e5oip8.apicdn.sanity.io/v2023-05-03/data/query/production?query=*%5B_type%3D%3D%22siteSettings%22%5D%5B0%5D%7B_id%7D\")",
+      "Bash(curl -s -H \"Origin: https://teplota.su\" \"https://77e5oip8.apicdn.sanity.io/v2023-05-03/data/query/production?query=*%5B_type%3D%3D%22siteSettings%22%5D%5B0%5D%7B_id%7D\" -D - -o /dev/null)"
     ]
   }
 }

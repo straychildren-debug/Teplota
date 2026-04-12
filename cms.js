@@ -381,8 +381,17 @@ window.TepCMS = (() => {
       phoneEl.href = `tel:${d.phone.replace(/[^+\d]/g, '')}`;
       phoneEl.textContent = d.phone;
     }
-    const mobilePhone = document.getElementById('mobile-phone-val');
-    if (mobilePhone) mobilePhone.textContent = d.phone;
+    // Mobile menu phones (from contact.phones)
+    const mobilePhonesList = document.getElementById('mobile-phones-list');
+    if (mobilePhonesList) {
+      const phones = data.contact?.phones || [{ number: d.phone, label: '' }];
+      mobilePhonesList.innerHTML = phones.map(p => `
+        <a href="tel:${p.number.replace(/[^+\d]/g, '')}" class="block">
+          <div class="text-xl font-bold text-gray-900 dark:text-white">${p.number}</div>
+          ${p.label ? `<div class="text-xs text-gray-500 dark:text-gray-400 mt-0.5">${p.label}</div>` : ''}
+        </a>
+      `).join('');
+    }
 
     if (d.favicon) applyFavicon(d.favicon);
 
