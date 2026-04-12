@@ -547,8 +547,7 @@ window.TepCMS = (() => {
 
     grid.innerHTML = list.map((s, i) => `
       <div class="service-list-item group flex items-center gap-4 p-3 rounded-xl cursor-pointer
-                  border border-transparent
-                  transition-all duration-300 ${i === 0 ? 'active' : ''} reveal-item"
+                  transition-all duration-300 ${i === 0 ? 'selected' : ''} reveal-item"
            data-service-id="${s.id}" data-service-img="${s.image}" data-service-title="${s.title}">
         <div class="w-16 h-16 rounded-lg overflow-hidden flex-shrink-0">
           <img src="${s.image}" alt="${s.title}" loading="lazy" class="w-full h-full object-cover">
@@ -574,8 +573,8 @@ window.TepCMS = (() => {
             previewImg.style.opacity = '1';
           }, 250);
         }
-        grid.querySelectorAll('.service-list-item').forEach(el => el.classList.remove('active'));
-        item.classList.add('active');
+        grid.querySelectorAll('.service-list-item').forEach(el => el.classList.remove('selected'));
+        item.classList.add('selected');
       });
 
       item.addEventListener('click', () => openService(item.dataset.serviceId));
@@ -594,8 +593,8 @@ window.TepCMS = (() => {
         <div class="product-image flex-1 p-6 flex items-center justify-center">
           <img src="${p.image}" alt="${p.title}" loading="lazy" class="max-h-full max-w-full object-contain filter drop-shadow-xl transition-transform duration-300 group-hover:scale-105">
         </div>
-        <div class="px-6 pb-6 pt-4 mt-auto">
-          <h3 class="font-semibold text-base leading-tight group-hover:text-[#f36e21] transition-colors">${p.title}</h3>
+        <div class="px-6 pb-5 mt-auto">
+          <h3 class="font-semibold text-base leading-tight group-hover:text-[#f36e21] transition-colors m-0">${p.title}</h3>
         </div>
         <div class="product-ring"></div>
       </div>
