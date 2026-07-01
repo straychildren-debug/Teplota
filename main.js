@@ -1,10 +1,10 @@
 /**
- * TEPLOTA — main.js
- * Scroll, animation, mobile menu, and theme toggle logic.
- * CMS is initialized after DOM ready from cms.js.
+ * TEPLOTA — main.js  (PREMIUM drop-in)
+ * Scroll, animation, mobile menu, theme toggle. CMS is initialized here.
+ * Only two changes vs the original: CSS import → premium.css, and the
+ * default theme is now DARK.
  */
-import './index.css';
-import './style.css';
+import './premium.css';
 
 // ─── Dark Mode Toggle ──────────────────────────────────────────────────────────
 const THEME_KEY = 'tep-theme';
@@ -15,32 +15,27 @@ function applyTheme(isDark) {
   const moon = document.getElementById('icon-moon');
   if (sun) sun.classList.toggle('hidden', !isDark);
   if (moon) moon.classList.toggle('hidden', isDark);
-  // Mobile icons
   document.querySelectorAll('.mobile-icon-sun').forEach(el => el.classList.toggle('hidden', !isDark));
   document.querySelectorAll('.mobile-icon-moon').forEach(el => el.classList.toggle('hidden', isDark));
-  // Swap logos
   document.querySelectorAll('img.logo').forEach(img => {
-    img.src = isDark ? 'assets/logo white.svg' : 'assets/logo.svg';
+    img.src = isDark ? '/assets/logo white.svg' : '/assets/logo.svg';
   });
 }
 
-// Apply saved or system theme immediately
+// Default theme is DARK (was: system preference)
 const saved = localStorage.getItem(THEME_KEY);
-const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-applyTheme(saved ? saved === 'dark' : prefersDark);
+applyTheme(saved ? saved === 'dark' : true);
 
 function toggleTheme() {
   const isDark = !document.documentElement.classList.contains('dark');
   applyTheme(isDark);
   localStorage.setItem(THEME_KEY, isDark ? 'dark' : 'light');
 }
-
 document.getElementById('theme-toggle')?.addEventListener('click', toggleTheme);
 document.getElementById('mobile-theme-toggle')?.addEventListener('click', toggleTheme);
 
 // ─── Reveal Observer ──────────────────────────────────────────────────────────
 const revealOptions = { threshold: 0.12, rootMargin: '0px 0px -40px 0px' };
-
 window.revealObserver = new IntersectionObserver((entries) => {
   entries.forEach(entry => {
     if (entry.isIntersecting) {
@@ -49,29 +44,20 @@ window.revealObserver = new IntersectionObserver((entries) => {
     }
   });
 }, revealOptions);
+// Observe static reveal items present at load
+document.querySelectorAll('.reveal-item').forEach(el => revealObserver.observe(el));
 
 // ─── Header Scroll & Parallax (rAF-throttled) ───────────────────────────────
 const header = document.getElementById('main-header');
 const heroImg = document.getElementById('hero-bg');
-let parallaxSections = null; // cached NodeList
+let parallaxSections = null;
 let scrollTicking = false;
 
 function onScroll() {
   const scrollY = window.scrollY;
-
-  // Header scrolled state
   header?.classList.toggle('scrolled', scrollY > 40);
-
-  // Skip parallax on mobile for performance
-  if (window.innerWidth < 768) {
-    scrollTicking = false;
-    return;
-  }
-
-  // Hero parallax — background moves slower
-  if (heroImg) heroImg.style.transform = `translateY(${scrollY * 0.4}px)`;
-
-  // Parallax on sections — subtle upward float (cached query)
+  if (window.innerWidth < 768) { scrollTicking = false; return; }
+  if (heroImg && scrollY < window.innerHeight * 1.1) heroImg.style.transform = `translateY(${scrollY * 0.28}px)`;
   if (!parallaxSections) parallaxSections = document.querySelectorAll('.parallax-section');
   const vh = window.innerHeight;
   parallaxSections.forEach(el => {
@@ -81,15 +67,10 @@ function onScroll() {
       el.style.transform = `translateY(-${(vh - rect.top) * speed}px)`;
     }
   });
-
   scrollTicking = false;
 }
-
 window.addEventListener('scroll', () => {
-  if (!scrollTicking) {
-    requestAnimationFrame(onScroll);
-    scrollTicking = true;
-  }
+  if (!scrollTicking) { requestAnimationFrame(onScroll); scrollTicking = true; }
 }, { passive: true });
 
 // ─── Count-Up Animation ──────────────────────────────────────────────────────
@@ -101,18 +82,14 @@ function animateCountUp(el) {
   const suffix = text.replace(match[1], '');
   const duration = 2000;
   const start = performance.now();
-
   function update(now) {
-    const elapsed = now - start;
-    const progress = Math.min(elapsed / duration, 1);
-    const eased = 1 - Math.pow(1 - progress, 3); // easeOutCubic
-    const current = Math.round(target * eased);
-    el.textContent = current + suffix;
+    const progress = Math.min((now - start) / duration, 1);
+    const eased = 1 - Math.pow(1 - progress, 3);
+    el.textContent = Math.round(target * eased) + suffix;
     if (progress < 1) requestAnimationFrame(update);
   }
   requestAnimationFrame(update);
 }
-
 const countObserver = new IntersectionObserver((entries) => {
   entries.forEach(entry => {
     if (entry.isIntersecting) {
@@ -122,18 +99,13 @@ const countObserver = new IntersectionObserver((entries) => {
   });
 }, { threshold: 0.3 });
 
-document.addEventListener('DOMContentLoaded', () => {
-  const statsGrid = document.getElementById('stats-grid');
-  if (statsGrid) countObserver.observe(statsGrid);
-});
-
-// ─── Magnetic Buttons (throttled) ────────────────────────────────────────────
+// ─── Magnetic Buttons (primary CTAs) ─────────────────────────────────────────
 function initMagnetic() {
   document.querySelectorAll('.btn:not([data-magnetic])').forEach(btn => {
     btn.dataset.magnetic = '1';
     let rafId = null;
     btn.addEventListener('mousemove', e => {
-      if (rafId) return; // throttle to 1 per frame
+      if (rafId) return;
       rafId = requestAnimationFrame(() => {
         const r = btn.getBoundingClientRect();
         btn.style.transform = `translate(${(e.clientX - r.left - r.width/2) * 0.12}px, ${(e.clientY - r.top - r.height/2) * 0.12}px)`;
@@ -149,23 +121,30 @@ function initMagnetic() {
 
 // ─── Smooth Scroll ────────────────────────────────────────────────────────────
 document.addEventListener('click', e => {
-  const a = e.target.closest('nav a, #mobile-menu-drawer nav a');
+  const a = e.target.closest('nav a, #mobile-menu-drawer nav a, a[href^="#"]');
   if (!a) return;
   const href = a.getAttribute('href');
-  if (!href || !href.startsWith('#')) return;
+  if (!href || !href.startsWith('#') || href.length < 2) return;
   const target = document.querySelector(href);
   if (target) {
     e.preventDefault();
     closeMobileMenu();
-    window.scrollTo({ top: target.offsetTop - 90, behavior: 'smooth' });
+    window.scrollTo({ top: target.offsetTop - 84, behavior: 'smooth' });
   }
 });
 
 // ─── Init ─────────────────────────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
-  TepCMS.init();
+  TepCMS.init().then(() => {
+    // Re-observe items the CMS injected, and start the count-up
+    document.querySelectorAll('.reveal-item').forEach(el => {
+      if (!el.classList.contains('active')) window.revealObserver.observe(el);
+    });
+    const statsGrid = document.getElementById('stats-grid');
+    if (statsGrid) countObserver.observe(statsGrid);
+    initMagnetic();
+  });
   initMagnetic();
-  // Debounced MutationObserver — only re-init magnetic when new buttons appear
   let mutationTimer = null;
   const observer = new MutationObserver(() => {
     clearTimeout(mutationTimer);
@@ -186,7 +165,6 @@ function openMobileMenu() {
   mobileOverlay.classList.add('opacity-100');
   mobileDrawer.classList.remove('translate-x-full');
 }
-
 function closeMobileMenu() {
   if (!mobileMenu) return;
   mobileMenu.style.pointerEvents = 'none';
@@ -194,7 +172,6 @@ function closeMobileMenu() {
   mobileOverlay.classList.add('opacity-0');
   mobileDrawer.classList.add('translate-x-full');
 }
-
 document.getElementById('mobile-menu-btn')?.addEventListener('click', openMobileMenu);
 document.getElementById('mobile-menu-close')?.addEventListener('click', closeMobileMenu);
 mobileOverlay?.addEventListener('click', closeMobileMenu);
