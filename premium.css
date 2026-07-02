@@ -155,9 +155,14 @@ img.logo { height: 26px !important; width: auto !important; transition: height .
 
 /* ─── About ──────────────────────────────────────────────────────────── */
 .tp-about { display: grid; grid-template-columns: 1.05fr .95fr; gap: 56px; align-items: center; }
-.tp-about-figure { position: relative; border-radius: var(--radius-lg); overflow: hidden; aspect-ratio: 4/5; box-shadow: var(--shadow-lg); }
-.tp-about-figure img { width: 100%; height: 100%; object-fit: cover; transition: transform 1.1s var(--ease); }
-.tp-about-figure:hover img { transform: scale(1.06); }
+/* photo is a transparent-background cutout: give the card a visible surface
+   so the shape reads in dark theme, and contain the image so the head
+   isn't cropped by the 4/5 frame */
+.tp-about-figure { position: relative; border-radius: var(--radius-lg); overflow: hidden; aspect-ratio: 4/5; box-shadow: var(--shadow-lg);
+  border: 1px solid var(--edge);
+  background: radial-gradient(115% 85% at 72% 18%, var(--brand-tint), transparent 62%), linear-gradient(180deg, var(--surface-2), var(--surface-low)); }
+.tp-about-figure img { width: 100%; height: 100%; object-fit: contain; object-position: bottom center; transform-origin: bottom center; transition: transform 1.1s var(--ease); }
+.tp-about-figure:hover img { transform: scale(1.04); }
 .tp-about-figure .tag { position: absolute; left: 20px; right: 20px; bottom: 20px; padding: 18px 20px; border-radius: 18px;
   background: rgba(10,10,16,.55); backdrop-filter: blur(14px); border: 1px solid rgba(255,255,255,.12); color: #fff; }
 .tp-about-figure .tag b { display: block; font-family: var(--font-display); font-size: 20px; }
@@ -177,9 +182,13 @@ img.logo { height: 26px !important; width: auto !important; transition: height .
 #stats-grid .stat-card > div:last-child { margin-top: 8px; font-size: 11px !important; font-weight: 600; text-transform: uppercase; letter-spacing: .12em; color: var(--text-muted) !important; }
 /* partners */
 #partners-grid { display: flex; flex-wrap: wrap; gap: 40px; align-items: center; margin-top: 8px; }
-#partners-grid img { height: 30px !important; width: auto; object-fit: contain; opacity: .5; filter: grayscale(1); transition: opacity .3s, filter .3s; }
-html.dark #partners-grid img { filter: brightness(0) invert(1); opacity: .55; }
-#partners-grid img:hover { opacity: 1; filter: none; }
+/* logos are JPGs with a white background: multiply hides the white on light
+   surfaces, invert+screen hides it on dark — a plain invert filter would
+   render solid rectangles */
+#partners-grid img { height: 30px !important; width: auto; object-fit: contain; opacity: .55; filter: grayscale(1); mix-blend-mode: multiply; transition: opacity .3s, filter .3s; }
+html.dark #partners-grid img { filter: grayscale(1) invert(1) brightness(1.35); mix-blend-mode: screen; }
+#partners-grid img:hover { opacity: 1; }
+html:not(.dark) #partners-grid img:hover { filter: none; }
 
 /* ─── Advantages (cms injects into #advantage-grid) ─────────────────── */
 #advantage-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 22px; }
@@ -236,7 +245,7 @@ html.dark #product-grid .product-image { background: linear-gradient(160deg, rgb
 #product-grid .product-ring { display: none; }
 
 /* ─── Gallery carousel (cms fills #gallery-grid) ────────────────────── */
-#gallery-carousel-wrapper { position: relative; max-width: 980px; margin: 0 auto; padding: 0 60px; }
+#gallery-carousel-wrapper { position: relative; }
 .gallery-carousel-track { overflow: hidden; border-radius: var(--radius-lg); }
 #gallery-grid { display: flex; transition: transform .7s var(--ease); }
 .gallery-carousel-item { min-width: 100%; }
@@ -253,7 +262,7 @@ html.dark #product-grid .product-image { background: linear-gradient(160deg, rgb
   background: var(--surface); border: 1px solid var(--edge); box-shadow: var(--shadow-soft); color: var(--text-head);
   display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 5; transition: all .3s; }
 .gallery-arrow:hover { background: var(--primary); color: #fff; border-color: var(--primary); }
-.gallery-arrow-left { left: 0; } .gallery-arrow-right { right: 0; }
+.gallery-arrow-left { left: 20px; } .gallery-arrow-right { right: 20px; }
 .gallery-dots { display: flex; justify-content: center; gap: 9px; margin-top: 26px; }
 .gallery-dot { width: 9px; height: 9px; border-radius: 999px; border: none; cursor: pointer; padding: 0; background: var(--text-muted); opacity: .5; transition: all .4s var(--ease); }
 .gallery-dot.active { opacity: 1; width: 30px; background: var(--primary); }
