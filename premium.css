@@ -124,6 +124,8 @@ main, footer { position: relative; z-index: 1; }
 .tp-btn--ghost:hover { border-color: var(--edge-hover); background: color-mix(in srgb, var(--surface) 82%, transparent); }
 .tp-btn .ic { transition: transform .35s var(--ease); }
 .tp-btn:hover .ic { transform: translateX(4px); }
+/* Header CTA — slimmer than the default pill so it fits the compact header */
+#header-cta-btn { padding: 10px 24px; font-size: 13px; }
 
 /* ─── Header ─────────────────────────────────────────────────────────── */
 #main-header { position: sticky; top: 0; z-index: 60; height: 84px;
@@ -220,8 +222,8 @@ html.dark #service-list-grid .service-list-item { background: rgba(26,27,38,.6) 
 #service-list-grid .service-list-item:first-child { grid-column: span 2; grid-row: span 2; }
 /* thumbnail wrapper → full-bleed image */
 #service-list-grid .service-list-item .w-16 { position: absolute !important; inset: 0; width: 100% !important; height: 100% !important; border-radius: 0 !important; flex: none !important; }
-#service-list-grid .service-list-item .w-16 img { width: 100%; height: 100%; object-fit: cover; opacity: .72; transform: scale(1.02); transition: transform 1.1s var(--ease), opacity .5s ease; }
-#service-list-grid .service-list-item::after { content: ""; position: absolute; inset: 0; z-index: 1; background: linear-gradient(to top, rgba(0,0,0,.78) 4%, transparent 58%); pointer-events: none; }
+#service-list-grid .service-list-item .w-16 img { width: 100%; height: 100%; object-fit: cover; opacity: 1; transform: scale(1.02); transition: transform 1.1s var(--ease), opacity .5s ease; }
+#service-list-grid .service-list-item::after { content: ""; position: absolute; inset: 0; z-index: 1; background: linear-gradient(to top, rgba(0,0,0,.72) 0%, transparent 42%); pointer-events: none; }
 /* title block pinned bottom-left */
 #service-list-grid .service-list-item .flex-1 { position: absolute; left: 24px; right: 24px; bottom: 22px; z-index: 2; }
 #service-list-grid .service-list-item h3 { font-family: var(--font-sans); font-size: 18px !important; font-weight: 600; color: #fff !important; margin: 0; line-height: 1.25; }
@@ -232,7 +234,7 @@ html.dark #service-list-grid .service-list-item { background: rgba(26,27,38,.6) 
 /* orange ring + zoom on hover / selected */
 #service-list-grid .service-list-item::before { content: ""; position: absolute; inset: 0; z-index: 3; border-radius: 22px; border: 1.5px solid transparent; transition: border-color .4s ease; pointer-events: none; }
 #service-list-grid .service-list-item:hover::before, #service-list-grid .service-list-item.selected::before { border-color: rgba(243,110,33,.55); }
-#service-list-grid .service-list-item:hover .w-16 img, #service-list-grid .service-list-item.selected .w-16 img { transform: scale(1.1); opacity: .85; }
+#service-list-grid .service-list-item:hover .w-16 img, #service-list-grid .service-list-item.selected .w-16 img { transform: scale(1.1); opacity: 1; }
 #service-list-grid .service-list-item:hover { box-shadow: var(--glow-orange-soft); }
 
 /* ─── Products: BENTO (cms fills #product-grid) ─────────────────────── */
