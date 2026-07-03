@@ -976,6 +976,20 @@ window.TepCMS = (() => {
     }
   });
 
+  // Touch/swipe navigation for gallery modal (arrows are hidden on mobile)
+  (() => {
+    const overlay = document.getElementById('gallery-modal-overlay');
+    if (!overlay) return;
+    let touchStartX = 0;
+    overlay.addEventListener('touchstart', e => {
+      touchStartX = e.changedTouches[0].screenX;
+    }, { passive: true });
+    overlay.addEventListener('touchend', e => {
+      const diff = touchStartX - e.changedTouches[0].screenX;
+      if (Math.abs(diff) > 50) diff > 0 ? galleryNext() : galleryPrev();
+    }, { passive: true });
+  })();
+
   // ─── Image Viewer ─────────────────────────────────────────────────────────────
   function viewImage(src) {
     const overlay = document.getElementById('img-viewer-overlay');
