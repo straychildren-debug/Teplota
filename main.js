@@ -5,6 +5,7 @@
  * default theme is now DARK.
  */
 import './premium.css';
+import './teplota-industrial-redesign.css';
 
 // ─── Dark Mode Toggle ──────────────────────────────────────────────────────────
 const THEME_KEY = 'tep-theme';

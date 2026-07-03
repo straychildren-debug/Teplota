@@ -1,0 +1,88 @@
+/* =====================================================================
+   TEPLOTA — INDUSTRIAL REDESIGN (drop-in override)
+   Подключать ПОСЛЕ premium.css:
+     <link rel="stylesheet" href="/premium.css">
+     <link rel="stylesheet" href="/teplota-industrial-redesign.css">
+   (или import './teplota-industrial-redesign.css' в main.js после premium.css)
+
+   Меняет: шрифты, палитру (тёмная тема = индастриал), радиусы,
+   тени и фон (убирает клеточку + орбы, ставит чертёж-текстуру).
+   Разметку и классы твоего сайта НЕ трогает.
+   ===================================================================== */
+
+/* ── Шрифты: единый премиальный гротеск Manrope (с кириллицей) ──────── */
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&display=swap');
+
+:root {
+  --font-display: 'Manrope', system-ui, -apple-system, sans-serif;
+  --font-sans:    'Manrope', system-ui, -apple-system, sans-serif;
+
+  /* Тугие технические радиусы (кнопки остаются pill) */
+  --radius:    10px;
+  --radius-lg: 12px;
+}
+
+/* ── Тёмная тема = ИНДАСТРИАЛ ───────────────────────────────────────── */
+html.dark {
+  --primary:        #f36e21;
+  --primary-hover:  #d95d18;
+  --brand-tint:     rgba(243,110,33,.10);
+
+  --background:     #08090A;   /* холодный near-black */
+  --surface:        #111318;   /* чёткая угольная карточка */
+  --surface-2:      #181B21;
+  --surface-low:    #0B0D10;
+
+  --text-head:      #F2F4F7;
+  --text-body:      #9AA3AF;
+  --text-muted:     #5E6672;
+
+  --edge:           rgba(255,255,255,.14);   /* контрастнее хайрлайны */
+  --edge-hover:     rgba(243,110,33,.60);
+  --glass-bg:       rgba(17,19,24,.60);
+  --glass-border:   rgba(255,255,255,.12);
+
+  /* Плоская, точная модель теней */
+  --shadow-soft: 0 1px 0 rgba(255,255,255,.04);
+  --shadow-med:  0 8px 30px rgba(0,0,0,.35);
+  --shadow-lg:   0 18px 50px rgba(0,0,0,.45);
+}
+
+/* ── Тугие радиусы для карточек, у которых в premium.css радиус задан
+      жёстко (!important) ──────────────────────────────────────────── */
+#advantage-grid > *,
+#service-list-grid .service-list-item,
+#service-list-grid .service-list-item::before,
+#product-grid .product-card {
+  border-radius: 8px !important;
+}
+#advantage-grid .w-14 { border-radius: 8px !important; }   /* иконочный чип */
+
+/* Заголовки — чуть компактнее hero */
+#hero-title { font-size: clamp(3rem, 5.5vw, 5rem); }
+
+/* ── ФОН: убираем клеточку и орбы, ставим чертёж-текстуру ───────────── */
+.tp-bg .grid,
+.tp-bg .orb { display: none !important; }
+
+/* Инженерный чертёж, закреплён в правом верхнем углу и уведён маской */
+.tp-bg::before {
+  content: "";
+  position: absolute; inset: 0;
+  background: url('/assets/blueprint_pattern.webp') no-repeat right top / 860px auto;
+  opacity: .07;
+  filter: invert(1) grayscale(1) brightness(1.5);
+  -webkit-mask-image: radial-gradient(110% 100% at 90% 0%, #000 0%, transparent 66%);
+          mask-image: radial-gradient(110% 100% at 90% 0%, #000 0%, transparent 66%);
+}
+html:not(.dark) .tp-bg::before {
+  filter: grayscale(.4);
+  opacity: .08;
+}
+
+/* Одна сдержанная тёплая заливка сверху */
+.tp-bg::after {
+  content: "";
+  position: absolute; inset: 0;
+  background: radial-gradient(120% 60% at 50% -12%, rgba(243,110,33,.06), transparent 50%);
+}
