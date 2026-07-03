@@ -34,7 +34,7 @@ module.exports = {
         }
       },
       backgroundImage: {
-        'hero-pattern': "url('/assets/hero_engineering.png')",
+        'hero-pattern': "url('/assets/hero_engineering.webp')",
       }
     },
   },
