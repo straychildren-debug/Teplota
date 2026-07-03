@@ -12,11 +12,15 @@ const client = createClient({
 
 const builder = (imageUrlBuilder.default || imageUrlBuilder)(client);
 
-function urlFor(source) {
+// Mirrors the browser builder in sanity-client.js: auto('format') serves WebP/AVIF,
+// fit('max') caps size without upscaling, quality 75 is visually lossless here.
+function urlFor(source, opts = {}) {
   if (!source) return '';
   if (typeof source === 'string') return source;
   try {
-    return builder.image(source).url();
+    let b = builder.image(source).auto('format').fit('max').quality(opts.quality || 75);
+    if (opts.width) b = b.width(opts.width);
+    return b.url();
   } catch (e) {
     return '';
   }
@@ -72,14 +76,15 @@ async function sync() {
       },
       hero: {
         ...s.siteSettings?.hero,
-        bg: urlFor(s.siteSettings?.hero?.background)
+        bg: urlFor(s.siteSettings?.hero?.background, { width: 1920 })
       },
       about: {
         ...s.about,
+        image: urlFor(s.about?.image, { width: 900 }),
         text2: renderHTML(s.about?.text2),
         partners: s.about?.partners?.map(p => ({
             ...p,
-            img: urlFor(p.img)
+            img: urlFor(p.img, { width: 240 })
         }))
       },
       advantages: (s.advantages || s.siteSettings?.advantages || []).map(a => ({
@@ -89,14 +94,14 @@ async function sync() {
       services: s.services?.map(item => ({
         id: item._id,
         title: item.title,
-        image: urlFor(item.image),
+        image: urlFor(item.image, { width: 800 }),
         description: renderHTML(item.content) || item.description || '',
-        photos: item.photos?.map(p => urlFor(p)) || []
+        photos: item.photos?.map(p => urlFor(p, { width: 1400 })) || []
       })),
       products: s.products?.map(item => ({
         id: item._id,
         title: item.title,
-        image: urlFor(item.image),
+        image: urlFor(item.image, { width: 800 }),
         description: item.description || '',
         details: renderHTML(item.details) || ''
       })),
@@ -104,8 +109,8 @@ async function sync() {
         id: item._id,
         title: item.title,
         description: item.description,
-        cover: urlFor(item.cover),
-        photos: item.photos?.map(p => urlFor(p)) || []
+        cover: urlFor(item.cover, { width: 800 }),
+        photos: item.photos?.map(p => urlFor(p, { width: 1600 })) || []
       })),
       contact: s.siteSettings?.contact || {
         address: 'г. Казань, ул. Техническая, д. 23',

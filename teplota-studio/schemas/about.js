@@ -6,6 +6,7 @@ export default {
   fields: [
     { name: 'label', title: 'Ярлык', type: 'string' },
     { name: 'title', title: 'Заголовок', type: 'string' },
+    { name: 'image', title: 'Изображение (рабочий)', type: 'image', options: { hotspot: true } },
     { name: 'text1', title: 'Текст 1', type: 'text' },
     { name: 'text2', title: 'Текст 2 (Rich)', type: 'array', of: [{ type: 'block' }] },
     {

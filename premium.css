@@ -7,8 +7,15 @@
    Loaded via main.js:  import './premium.css';
    ===================================================================== */
 
-/* ─── Fonts (same as production) ─────────────────────────────────────── */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@600;700&display=swap');
+/* ─── Fonts ──────────────────────────────────────────────────────────
+   Manrope is loaded and applied by teplota-industrial-redesign.css, which
+   overrides --font-display / --font-sans below. Inter/Playfair were removed
+   as they are never rendered (the redesign override always wins). */
+
+/* ─── Tailwind (built via PostCSS, replaces the CDN runtime) ──────────── */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 /* ─── Design tokens ──────────────────────────────────────────────────── */
 :root {
@@ -31,8 +38,8 @@
   --radius: 20px; --radius-lg: 28px;
   --container: 1240px;
 
-  --font-display: 'Playfair Display', Georgia, serif;
-  --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+  --font-display: 'Manrope', system-ui, -apple-system, sans-serif;
+  --font-sans: 'Manrope', system-ui, -apple-system, sans-serif;
 }
 html.dark {
   --primary: #f36e21; --primary-hover: #d95d18;

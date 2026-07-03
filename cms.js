@@ -37,6 +37,7 @@ window.TepCMS = (() => {
     about: {
       label: 'О компании',
       title: 'Более 10 лет *заботимся*\nо вашем комфорте',
+      image: '/assets/about_worker_1775505633914.png',
       text1: 'Мы специализируемся на проектировании и монтаже инженерных систем любой сложности.',
       text2: 'Наши специалисты проходят регулярную сертификацию у ведущих мировых производителей оборудования.',
       stats: [
@@ -181,7 +182,7 @@ window.TepCMS = (() => {
             btnUrl: normalizeNavUrl(s.siteSettings.hero.btnUrl),
             secondaryBtnText: s.siteSettings.hero.secondaryBtnText || '',
             secondaryBtnUrl: normalizeNavUrl(s.siteSettings.hero.secondaryBtnUrl || '#gallery'),
-            bg: s.siteSettings.hero.background ? builder.image(s.siteSettings.hero.background) : ''
+            bg: s.siteSettings.hero.background ? builder.image(s.siteSettings.hero.background, { width: 1920 }) : ''
           } : DEFAULT.hero,
           contact: {
             phones: s.siteSettings?.contact?.phones || DEFAULT.contact.phones,
@@ -201,25 +202,26 @@ window.TepCMS = (() => {
           about: {
             label: s.about?.label || DEFAULT.about.label,
             title: s.about?.title || DEFAULT.about.title,
+            image: s.about?.image ? builder.image(s.about.image, { width: 900 }) : DEFAULT.about.image,
             text1: s.about?.text1 || DEFAULT.about.text1,
             text2: s.about?.text2 ? (typeof s.about.text2 === 'string' ? s.about.text2 : toHTML(s.about.text2)) : DEFAULT.about.text2,
             stats: s.about?.stats || DEFAULT.about.stats,
             partners: s.about?.partners?.map(p => ({
               name: p.name,
-              img: typeof p.img === 'string' ? p.img : (p.img ? builder.image(p.img) : '')
+              img: typeof p.img === 'string' ? p.img : (p.img ? builder.image(p.img, { width: 240 }) : '')
             })) || DEFAULT.about.partners
           },
           services: s.services?.map(item => ({
             id: item._id,
             title: item.title,
-            image: item.image ? builder.image(item.image) : '',
+            image: item.image ? builder.image(item.image, { width: 800 }) : '',
             description: item.content ? toHTML(item.content) : (item.description || ''),
-            photos: (item.photos || []).map(p => typeof p === 'string' ? { url: p, caption: '' } : { url: builder.image(p), caption: p.caption || '' })
+            photos: (item.photos || []).map(p => typeof p === 'string' ? { url: p, caption: '' } : { url: builder.image(p, { width: 1400 }), caption: p.caption || '' })
           })) || DEFAULT.services,
           products: s.products?.map(item => ({
             id: item._id,
             title: item.title,
-            image: item.image ? builder.image(item.image) : '',
+            image: item.image ? builder.image(item.image, { width: 800 }) : '',
             description: item.description || '',
             details: item.details ? (typeof item.details === 'string' ? item.details : toHTML(item.details)) : ''
           })) || DEFAULT.products,
@@ -227,8 +229,8 @@ window.TepCMS = (() => {
             id: item._id,
             title: item.title,
             description: item.description || '',
-            cover: item.cover ? builder.image(item.cover) : '',
-            photos: (item.photos || []).map(p => typeof p === 'string' ? { url: p, caption: '' } : { url: builder.image(p), caption: p.caption || '' })
+            cover: item.cover ? builder.image(item.cover, { width: 800 }) : '',
+            photos: (item.photos || []).map(p => typeof p === 'string' ? { url: p, caption: '' } : { url: builder.image(p, { width: 1600 }), caption: p.caption || '' })
           })) || DEFAULT.gallery,
           advantages: (s.advantages?.length ? s.advantages : s.siteSettings?.advantages)?.map((item, idx) => ({
             id: item._id || idx,
@@ -479,6 +481,9 @@ window.TepCMS = (() => {
     setEl('about-title', d.title);
     setEl('about-text1', d.text1);
     setEl('about-text2', d.text2);
+
+    const aboutImg = document.getElementById('about-image');
+    if (aboutImg && d.image) aboutImg.src = d.image;
 
     const statsGrid = document.getElementById('stats-grid');
     if (statsGrid) {

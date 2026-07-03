@@ -18,18 +18,9 @@
   <link href="https://fonts.googleapis.com" rel="preconnect"/>
   <link crossorigin href="https://fonts.gstatic.com" rel="preconnect"/>
 
-  <!-- Tailwind CDN kept: cms.js injects utility classes into the dynamic cards -->
-  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-  <script>
-    tailwind.config = {
-      darkMode: 'class',
-      theme: { extend: {
-        colors: { brand: { DEFAULT: '#EA580C', dark: '#C2410C' } },
-        fontFamily: { serif: ['Playfair Display','serif'], sans: ['Inter','sans-serif'] }
-      } }
-    };
-  </script>
-  <!-- premium.css is imported by main.js (Vite) — see deploy notes -->
+  <!-- Tailwind is compiled at build time via PostCSS (see tailwind.config.js);
+       utility classes used by cms.js dynamic cards are picked up from the content globs.
+       premium.css (which includes @tailwind directives) is imported by main.js (Vite). -->
 
   <!-- Yandex.Metrika counter -->
   <script type="text/javascript">
@@ -115,7 +106,7 @@
     <div class="tp-wrap">
       <div class="tp-about">
         <div class="tp-about-figure reveal-item">
-          <img src="/assets/about_worker_1775505633914.png" alt="Монтаж инженерных систем"/>
+          <img id="about-image" src="/assets/about_worker_1775505633914.png" alt="Монтаж инженерных систем"/>
           <div class="tag"><b>Теплота</b><span>Инженерная компания · Казань · с 2010 года</span></div>
         </div>
         <div class="reveal-item">
