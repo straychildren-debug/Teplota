@@ -82,16 +82,16 @@
   "about": {
     "_createdAt": "2026-04-08T20:53:10Z",
     "_id": "5a858a07-0ebb-4c19-8f27-b44ba65d6ca7",
-    "_rev": "tf6DGwL4K9iQqYknlr4UcJ",
+    "_rev": "v6fPI7wqA7fdSHckDfpQm4",
     "_system": {
       "base": {
         "id": "5a858a07-0ebb-4c19-8f27-b44ba65d6ca7",
-        "rev": "v6fPI7wqA7fdSHckDfd3Uy"
+        "rev": "tf6DGwL4K9iQqYknlr4UcJ"
       }
     },
     "_type": "about",
-    "_updatedAt": "2026-07-03T06:23:50Z",
-    "image": "https://cdn.sanity.io/images/77e5oip8/production/cbe6894fe24cd6dbe93e0d738e0dcaa32fb8dc6c-1024x1536.png?w=900&q=75&fit=max&auto=format",
+    "_updatedAt": "2026-07-03T07:22:26Z",
+    "image": "https://cdn.sanity.io/images/77e5oip8/production/ab634c543ade0b9eb9fb6a2c9d109a4f61030558-1024x1536.png?w=900&q=75&fit=max&auto=format",
     "label": "О Компании",
     "partners": [
       {

@@ -42,6 +42,14 @@ function prerenderCms() {
         const re = new RegExp(`(<${tag}\\b[^>]*\\bid="${id}"[^>]*>)[\\s\\S]*?(</${tag}>)`);
         html = html.replace(re, `$1${value}$2`);
       }
+      // <img> src attributes — bake the real URL so the placeholder image is
+      // never requested and never flashes before cms.js hydrates.
+      if (a.image) {
+        html = html.replace(
+          /(<img\b[^>]*\bid="about-image"[^>]*\bsrc=")[^"]*(")/,
+          `$1${a.image}$2`
+        );
+      }
       return html;
     },
   };
