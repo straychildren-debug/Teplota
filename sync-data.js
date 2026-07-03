@@ -128,10 +128,16 @@ async function sync() {
       }
     };
 
-    fs.writeFileSync('cms-data.json', JSON.stringify(data, null, 2));
-    console.log('SUCCESS: Social icons fixed to local assets fallback.');
+    const json = JSON.stringify(data, null, 2);
+    // Root copy feeds the build-time pre-render (vite.config.js);
+    // public copy is served at /cms-data.json as the runtime fallback.
+    fs.writeFileSync('cms-data.json', json);
+    fs.writeFileSync('public/cms-data.json', json);
+    console.log('SUCCESS: synced cms-data.json (root + public).');
   } catch (err) {
-    console.error('FAILED to sync:', err.message);
+    // Don't fail the build — keep the last-good snapshot so deploys still work
+    // if Sanity is unreachable.
+    console.error('WARN: sync failed, keeping existing snapshot:', err.message);
   }
 }
 
