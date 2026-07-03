@@ -56,7 +56,11 @@ let scrollTicking = false;
 
 function onScroll() {
   const scrollY = window.scrollY;
-  header?.classList.toggle('scrolled', scrollY > 40);
+  // Hysteresis: engage the compact header well past the top and only release
+  // near it, so momentum scrolling around the threshold can't flip-flop the
+  // 16px height change and shake the page.
+  if (scrollY > 80) header?.classList.add('scrolled');
+  else if (scrollY < 30) header?.classList.remove('scrolled');
   if (window.innerWidth < 768) { scrollTicking = false; return; }
   if (heroImg && scrollY < window.innerHeight * 1.1) heroImg.style.transform = `translateY(${scrollY * 0.28}px)`;
   if (!parallaxSections) parallaxSections = document.querySelectorAll('.parallax-section');

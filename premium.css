@@ -128,7 +128,8 @@ main, footer { position: relative; z-index: 1; }
 #header-cta-btn { padding: 10px 24px; font-size: 13px; }
 
 /* ─── Header ─────────────────────────────────────────────────────────── */
-#main-header { position: sticky; top: 0; z-index: 60; height: 84px;
+#main-header { position: fixed; top: 0; left: 0; right: 0; z-index: 60; height: 84px;
+  transition: height .35s var(--ease), background .35s var(--ease), box-shadow .35s var(--ease);
   background: color-mix(in srgb, var(--background) 72%, transparent);
   backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border-bottom: 1px solid transparent; }
 #main-header.scrolled { height: 68px; border-bottom-color: var(--edge); background: color-mix(in srgb, var(--background) 88%, transparent); box-shadow: var(--shadow-soft); }
