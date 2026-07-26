@@ -50,6 +50,16 @@ function prerenderCms() {
           `$1${a.image}$2`
         );
       }
+      // Hero video — bake the clip URL and both toggles onto the <video> so
+      // main.js can decide whether to download it on first paint, without
+      // waiting for cms.js to reach Sanity.
+      html = html.replace(/<video\b[^>]*\bid="hero-video"[^>]*>/, (tag) => {
+        let t = tag;
+        if (h.video) t = t.replace(/\bdata-src="[^"]*"/, `data-src="${h.video}"`);
+        t = t.replace(/\bdata-enabled="[^"]*"/, `data-enabled="${h.videoEnabled === false ? 'false' : 'true'}"`);
+        t = t.replace(/\bdata-mobile="[^"]*"/, `data-mobile="${h.videoOnMobile === true ? 'true' : 'false'}"`);
+        return t;
+      });
       return html;
     },
   };

@@ -83,7 +83,17 @@
 <main>
   <!-- ═══ HERO ═══ -->
   <section id="home">
-    <div id="hero-bg"></div>
+    <div id="hero-bg">
+      <!-- Video is the hero backdrop; the div's background image (default asset
+           or the CMS one) stays underneath as the fallback for browsers that
+           block autoplay, and is what shows when the clip is switched off.
+           No src here on purpose — main.js attaches it only when the clip will
+           actually be watched, so phones never pay for a download they can't
+           see. data-* is baked from the CMS snapshot at build time. -->
+      <video id="hero-video" muted loop playsinline preload="none" hidden
+             aria-hidden="true" tabindex="-1"
+             data-src="/assets/hero_video.mp4" data-enabled="true" data-mobile="false"></video>
+    </div>
     <div class="hero-scrim-v"></div>
     <div class="hero-scrim-h"></div>
     <div class="hero-inner">

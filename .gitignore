@@ -3,3 +3,6 @@ node_modules/
 dist/
 *.log
 .env
+# Raw/uncut video masters kept locally for re-editing. Never in the build:
+# anything under public/ is copied into dist/ wholesale and shipped.
+_source/

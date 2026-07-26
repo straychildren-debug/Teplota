@@ -32,7 +32,10 @@ window.TepCMS = (() => {
       title: 'Монтаж отопления, водоснабжения\nи *канализации*',
       subtitle: 'Комплексный монтаж инженерных систем в частном доме под ключ — Казань, Набережные Челны и вся Республика Татарстан.',
       btnText: 'Получить консультацию',
-      btnUrl: '#contacts'
+      btnUrl: '#contacts',
+      video: '/assets/hero_video.mp4',
+      videoEnabled: true,
+      videoOnMobile: false
     },
     about: {
       label: 'О компании',
@@ -142,7 +145,8 @@ window.TepCMS = (() => {
       const query = `{
         "siteSettings": *[_type == "siteSettings"][0]{
           ...,
-          header{ ..., favicon{ asset->{url} } }
+          header{ ..., favicon{ asset->{url} } },
+          hero{ ..., "videoUrl": video.asset->url }
         },
         "about": *[_type == "about"][0],
         "services": *[_type == "service"] | order(_createdAt asc),
@@ -182,7 +186,10 @@ window.TepCMS = (() => {
             btnUrl: normalizeNavUrl(s.siteSettings.hero.btnUrl),
             secondaryBtnText: s.siteSettings.hero.secondaryBtnText || '',
             secondaryBtnUrl: normalizeNavUrl(s.siteSettings.hero.secondaryBtnUrl || '#gallery'),
-            bg: s.siteSettings.hero.background ? builder.image(s.siteSettings.hero.background, { width: 1920 }) : ''
+            bg: s.siteSettings.hero.background ? builder.image(s.siteSettings.hero.background, { width: 1920 }) : '',
+            video: s.siteSettings.hero.videoUrl || DEFAULT.hero.video,
+            videoEnabled: s.siteSettings.hero.videoEnabled !== false,
+            videoOnMobile: s.siteSettings.hero.videoOnMobile === true
           } : DEFAULT.hero,
           contact: {
             phones: s.siteSettings?.contact?.phones || DEFAULT.contact.phones,
@@ -448,6 +455,16 @@ window.TepCMS = (() => {
         heroBg.style.backgroundImage = '';
         heroBg.classList.add('bg-hero-pattern');
       }
+    }
+
+    // Hand the clip + toggles to main.js, which decides whether this device
+    // should download it at all.
+    const heroVideo = document.getElementById('hero-video');
+    if (heroVideo) {
+      if (d.video) heroVideo.dataset.src = d.video;
+      heroVideo.dataset.enabled = d.videoEnabled === false ? 'false' : 'true';
+      heroVideo.dataset.mobile = d.videoOnMobile === true ? 'true' : 'false';
+      window.syncHeroVideo?.();
     }
 
     const titleEl = document.getElementById('hero-title');

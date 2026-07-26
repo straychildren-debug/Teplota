@@ -78,6 +78,52 @@ window.addEventListener('scroll', () => {
   if (!scrollTicking) { requestAnimationFrame(onScroll); scrollTicking = true; }
 }, { passive: true });
 
+// ─── Hero Video ───────────────────────────────────────────────────────────────
+// The clip carries no src in the markup; it is attached only when it will
+// actually be watched — never under reduced-motion, and on narrow screens only
+// if the CMS opts in, since the copy covers nearly the whole frame there and a
+// couple of megabytes of cellular data buys almost nothing. Detached, the hero
+// falls back to #hero-bg's background image, which is what the CMS already
+// paints. Called again by cms.js once live Sanity values land.
+const heroVideo = document.getElementById('hero-video');
+const heroNarrowQuery = window.matchMedia('(max-width: 1000px)');
+const heroReducedQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+function syncHeroVideo() {
+  if (!heroVideo) return;
+  const src = heroVideo.dataset.src;
+  const wanted = !!src
+    && heroVideo.dataset.enabled !== 'false'
+    && !heroReducedQuery.matches
+    && (!heroNarrowQuery.matches || heroVideo.dataset.mobile === 'true');
+
+  if (!wanted) {
+    // removeAttribute + load() is what actually cancels an in-flight download;
+    // hiding alone would keep the bytes coming.
+    if (heroVideo.hasAttribute('src')) {
+      heroVideo.pause();
+      heroVideo.removeAttribute('src');
+      heroVideo.load();
+    }
+    heroVideo.hidden = true;
+    return;
+  }
+
+  if (heroVideo.getAttribute('src') !== src) {
+    heroVideo.src = src;
+    heroVideo.load();
+  }
+  heroVideo.hidden = false;
+  // Autoplay can still be refused (iOS Low Power Mode, data saver). The
+  // background image behind the video is the fallback, so nothing to handle.
+  heroVideo.play().catch(() => {});
+}
+
+window.syncHeroVideo = syncHeroVideo;
+syncHeroVideo();
+heroNarrowQuery.addEventListener('change', syncHeroVideo);
+heroReducedQuery.addEventListener('change', syncHeroVideo);
+
 // ─── Count-Up Animation ──────────────────────────────────────────────────────
 function animateCountUp(el) {
   const text = el.textContent.trim();

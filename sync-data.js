@@ -36,13 +36,19 @@ function renderHTML(blocks) {
 }
 
 const query = `{
-    "siteSettings": *[_type == "siteSettings"][0],
+    "siteSettings": *[_type == "siteSettings"][0]{
+        ...,
+        hero { ..., "videoUrl": video.asset->url }
+    },
     "about": *[_type == "about"][0],
     "services": *[_type == "service"],
     "products": *[_type == "product"],
     "gallery": *[_type == "gallery"],
     "advantages": *[_type == "advantage"]
 }`;
+
+// Used when no clip has been uploaded in Sanity.
+const DEFAULT_HERO_VIDEO = '/assets/hero_video.mp4';
 
 // CORRECT FALLBACKS for social icons from assets/icons
 const DEFAULT_SOCIALS = [
@@ -75,8 +81,15 @@ async function sync() {
         favicon: urlFor(s.siteSettings?.header?.favicon)
       },
       hero: {
-        ...s.siteSettings?.hero,
-        bg: urlFor(s.siteSettings?.hero?.background, { width: 1920 })
+        // videoUrl is only the raw GROQ projection — it is resolved into `video`
+        // below, so keep it out of the committed snapshot.
+        ...(({ videoUrl, ...rest }) => rest)(s.siteSettings?.hero || {}),
+        bg: urlFor(s.siteSettings?.hero?.background, { width: 1920 }),
+        // Hero video: CMS upload wins, otherwise the clip shipped in public/assets.
+        // Both toggles default to the safe side — video on, but not on phones.
+        video: s.siteSettings?.hero?.videoUrl || DEFAULT_HERO_VIDEO,
+        videoEnabled: s.siteSettings?.hero?.videoEnabled !== false,
+        videoOnMobile: s.siteSettings?.hero?.videoOnMobile === true
       },
       about: {
         ...s.about,

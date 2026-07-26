@@ -150,9 +150,13 @@ img.logo { height: 26px !important; width: auto !important; transition: height .
 /* ─── Hero ───────────────────────────────────────────────────────────── */
 #home { position: relative; min-height: 90vh; display: flex; align-items: center; overflow: hidden; }
 #hero-bg { position: absolute; inset: -6%; z-index: 0;
-  background-image: url('/assets/hero_engineering.webp'); background-size: cover; background-position: center; opacity: .6; will-change: transform; }
+  background-image: url('/assets/hero_engineering.webp'); background-size: cover; background-position: center; opacity: .82; will-change: transform; }
+#hero-video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center;
+  pointer-events: none; user-select: none; }
+/* Respect reduced-motion: hide the clip and fall back to the still backdrop. */
+@media (prefers-reduced-motion: reduce) { #hero-video { display: none; } }
 .hero-scrim-v { position: absolute; inset: 0; z-index: 1; background: linear-gradient(to top, var(--background) 2%, transparent 40%, transparent 66%, var(--background) 100%); }
-.hero-scrim-h { position: absolute; inset: 0; z-index: 1; background: linear-gradient(to right, var(--background) 0%, color-mix(in srgb, var(--background) 78%, transparent) 44%, transparent 100%); }
+.hero-scrim-h { position: absolute; inset: 0; z-index: 1; background: linear-gradient(to right, color-mix(in srgb, var(--background) 96%, transparent) 0%, color-mix(in srgb, var(--background) 76%, transparent) 44%, transparent 100%); }
 .hero-inner { position: relative; z-index: 3; width: 100%; }
 #hero-title { font-family: var(--font-display); font-weight: 700; letter-spacing: -.025em; line-height: 1.05; color: var(--text-head);
   font-size: clamp(3.2rem,6.2vw,5.6rem); margin: 22px 0 26px; }
@@ -339,6 +343,12 @@ footer .footer-bot { display: flex; justify-content: space-between; align-items:
   #main-header nav, #header-phone-val { display: none; }
   .tp-burger { display: inline-flex; }
   #header-cta-btn { display: none; }
+  /* Narrow layouts put the hero copy across the full width, where the
+     left-to-right scrim has already faded out and protects nothing. Dim the
+     whole frame evenly instead so the text stays legible over bright frames. */
+  .hero-scrim-h { background: linear-gradient(to bottom,
+    color-mix(in srgb, var(--background) 76%, transparent) 0%,
+    color-mix(in srgb, var(--background) 80%, transparent) 100%); }
   .tp-about { grid-template-columns: 1fr; gap: 40px; }
   #advantage-grid { grid-template-columns: repeat(2,1fr); }
   #service-list-grid { grid-template-columns: repeat(2,1fr); grid-auto-rows: 200px; }

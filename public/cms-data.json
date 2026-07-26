@@ -77,7 +77,10 @@
     "secondaryBtnUrl": "https://teplota.su/#gallery",
     "subtitle": "Комплексный монтаж инженерных систем под ключ — Казань, Набережные Челны и вся Республика Татарстан.",
     "title": "Монтаж *отопления*\nводоснабжения\nи канализации",
-    "bg": "https://cdn.sanity.io/images/77e5oip8/production/4aa13f7c7eb5dea36abcfba14241ed97768801f2-1678x937.png?w=1920&q=75&fit=max&auto=format"
+    "bg": "https://cdn.sanity.io/images/77e5oip8/production/4aa13f7c7eb5dea36abcfba14241ed97768801f2-1678x937.png?w=1920&q=75&fit=max&auto=format",
+    "video": "/assets/hero_video.mp4",
+    "videoEnabled": true,
+    "videoOnMobile": false
   },
   "about": {
     "_createdAt": "2026-04-08T20:53:10Z",
