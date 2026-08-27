@@ -1,0 +1,35 @@
+{
+ "hero": "hero.jpg",
+ "about": "manifest-plate.jpg",
+ "services": {
+  "Тёплый пол": "srv-teplyy-pol.jpg",
+  "Монтаж отопления": "srv-montazh-otopleniya.jpg",
+  "Автоматизация": "srv-avtomatizaciya.jpg",
+  "Канализация": "srv-kanalizaciya.jpg",
+  "Системы водоснабжения": "srv-sistemy-vodosnabzheniya.jpg"
+ },
+ "products": {
+  "Арматура для радиаторов": "prod-armatura-dlya-radiatorov.jpg",
+  "Радиаторы": "prod-radiatory.jpg",
+  "Запорно-регулирующая арматура": "prod-zaporno-reguliruyuschaya-armatura.jpg",
+  "Насосы": "prod-nasosy.jpg",
+  "Котлы": "prod-kotly.jpg",
+  "Фитинги для труб": "prod-fitingi-dlya-trub.jpg",
+  "Трубы": "prod-truby.jpg",
+  "Водонагреватели": "prod-vodonagrevateli.jpg"
+ },
+ "gallery": {
+  "Монтаж радиаторного отопления": "work-montazh-radiatornogo-otopleniya.jpg",
+  "Котельная под ключ в коттедже": "work-kotelnaya-pod-klyuch-v-kottedzhe.jpg",
+  "Водоснабжение и канализация в доме": "work-vodosnabzhenie-i-kanalizaciya-v-dome.jpg",
+  "Отопление и тёплый пол в частном доме": "work-otoplenie-i-teplyy-pol-v-chastnom-dome.jpg",
+  "Реконструкция инженерных систем": "work-rekonstrukciya-inzhenernyh-sistem.jpg",
+  "Тёплый пол в загородном доме": "work-teplyy-pol-v-zagorodnom-dome.jpg"
+ },
+ "partners": {
+  "Aeeowhead": "partner-aeeowhead.jpg",
+  "Rommer": "partner-rommer.jpg",
+  "Stout": "partner-stout.jpg"
+ },
+ "values": "values-boiler.jpg"
+}

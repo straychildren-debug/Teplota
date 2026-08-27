@@ -6,9 +6,10 @@
   "scripts": {
     "dev": "vite",
     "sync": "node sync-data.js",
-    "prebuild": "node sync-data.js",
+    "prebuild": "node sync-data.js && python build-page.py",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "page": "python build-page.py"
   },
   "keywords": [],
   "author": "",
