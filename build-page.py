@@ -28,6 +28,20 @@ MAP_JSON = os.environ.get('MAP_JSON') or _first(
 
 OUT_HTML = os.environ.get('OUT_HTML') or os.path.join(HERE, 'index.html')
 
+# Статику отдаём с отпечатком содержимого: после деплоя браузер обязан
+# забрать новые стили и скрипт, а не показывать посетителю прежние из кэша.
+ASSET_DIR = os.path.join(HERE, 'public') if os.path.exists(os.path.join(HERE, 'public', 'css')) else HERE
+
+
+def stamp(rel):
+    import hashlib
+    path = os.path.join(ASSET_DIR, rel)
+    try:
+        h = hashlib.sha1(io.open(path, 'rb').read()).hexdigest()[:8]
+    except OSError:
+        return ''
+    return '?v=' + h
+
 data = json.load(io.open(CMS_JSON, encoding='utf-8'))
 imap = json.load(io.open(MAP_JSON, encoding='utf-8'))
 
@@ -533,7 +547,7 @@ PAGE = u'''<!DOCTYPE html>
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet"
     href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600;700;900&family=JetBrains+Mono:wght@400;500;700&display=swap">
-  <link rel="stylesheet" href="%(pfx)scss/styles.css">
+  <link rel="stylesheet" href="%(pfx)scss/styles.css%(css_v)s">
 
   <!-- Yandex.Metrika counter -->
   <script type="text/javascript">
@@ -603,7 +617,7 @@ PAGE = u'''<!DOCTYPE html>
   <main id="top">
 %(hero)s%(stats)s%(manifest)s%(services)s%(steps)s%(advantages)s%(products)s%(works)s%(contacts)s  </main>
 %(footer)s
-  <script src="%(pfx)sjs/app.js" defer></script>
+  <script src="%(pfx)sjs/app.js%(js_v)s" defer></script>
 </body>
 
 </html>
@@ -615,6 +629,8 @@ stats_html = stats().replace('</div>\n      </div>\n    </section>',
 
 page = PAGE % {
     'pfx': PREFIX,
+    'css_v': stamp(os.path.join('css', 'styles.css')),
+    'js_v': stamp(os.path.join('js', 'app.js')),
     'tel': PHONE_TEL, 'phone': E(PHONE_MAIN), 'cta': E(data['header']['btnText']),
     'hero': hero(), 'stats': stats_html, 'manifest': manifest(), 'services': services(),
     'steps': steps(), 'advantages': advantages(), 'products': products(),

@@ -1,6 +1,6 @@
 /* ============================================================
-   ПИОНЕРЫ — интерфейс лендинга
-   Меню · аккордеон · маска телефона · валидация · появление блоков
+   ТЕПЛОТА — интерфейс лендинга
+   Меню · маска телефона · валидация · отправка заявки · появление блоков
    ============================================================ */
 (function () {
   'use strict';
@@ -9,15 +9,16 @@
      КУДА УХОДИТ ЗАЯВКА
 
      Заявка отправляется POST-запросом на FORM_ENDPOINT, а оттуда
-     серверная функция (api/lead.js) кладёт её в MAX. Токен бота
+     серверная функция (api/lead.js) кладёт её в Telegram. Токен бота
      живёт в переменных окружения хостинга и в браузер не попадает.
 
-     Важно: функция работает только там, где хостинг умеет их
-     выполнять (Vercel, Netlify, Cloudflare). На GitHub Pages
-     статика без сервера — там /api/lead вернёт 404.
+     Функция выполняется только там, где хостинг это умеет: Vercel,
+     Netlify, Cloudflare. На статическом хостинге вроде GitHub Pages
+     адрес вернёт 404 — тогда включается запасной путь: письмо через
+     почтовый клиент посетителя на FORM_EMAIL. Заявка не теряется,
+     ошибку посетитель не видит.
 
-     Если FORM_ENDPOINT очистить, включится запасной путь: письмо
-     через почтовый клиент посетителя на FORM_EMAIL.
+     Тот же запасной путь работает, если FORM_ENDPOINT очистить.
      ============================================================ */
   var FORM_ENDPOINT = '/api/lead';
   var FORM_PHONE = '+7 927 432-63-36';
@@ -233,30 +234,35 @@
         card.scrollIntoView({ block: 'center', behavior: reduceMotion ? 'auto' : 'smooth' });
       }
 
-      if (errBox) errBox.hidden = true;
       var payload = collect();
 
-      if (FORM_ENDPOINT) {
-        busy(true);
-        fetch(FORM_ENDPOINT, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-          body: JSON.stringify(payload)
-        }).then(function (r) {
-          if (!r.ok) throw new Error('HTTP ' + r.status);
-          succeed();
-        }).catch(function () {
-          fail('Не удалось отправить заявку. Позвоните нам: ' + FORM_PHONE + ' — или напишите на ' + FORM_EMAIL + '.');
-        });
-        return;
+      /* Запасной путь без сервера: письмо через почтовый клиент посетителя */
+      function byMail() {
+        var lines = Object.keys(payload).map(function (k) { return k + ': ' + payload[k]; });
+        window.location.href = 'mailto:' + FORM_EMAIL
+          + '?subject=' + encodeURIComponent(FORM_SUBJECT)
+          + '&body=' + encodeURIComponent(lines.join('\n'));
+        succeed();
       }
 
-      /* Запасной путь без сервера: письмо через почтовый клиент посетителя */
-      var lines = Object.keys(payload).map(function (k) { return k + ': ' + payload[k]; });
-      window.location.href = 'mailto:' + FORM_EMAIL
-        + '?subject=' + encodeURIComponent(FORM_SUBJECT)
-        + '&body=' + encodeURIComponent(lines.join('\n'));
-      succeed();
+      if (errBox) errBox.hidden = true;
+
+      if (!FORM_ENDPOINT) return byMail();
+
+      busy(true);
+      fetch(FORM_ENDPOINT, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+        body: JSON.stringify(payload)
+      }).then(function (r) {
+        /* Обработчика по адресу нет — например, сайт на статическом хостинге.
+           Это не сбой: молча уводим заявку письмом, чтобы она не потерялась. */
+        if (r.status === 404 || r.status === 405) return byMail();
+        if (!r.ok) throw new Error('HTTP ' + r.status);
+        succeed();
+      }).catch(function () {
+        fail('Не удалось отправить заявку. Позвоните нам: ' + FORM_PHONE + ' — или напишите на ' + FORM_EMAIL + '.');
+      });
     });
   }
 
