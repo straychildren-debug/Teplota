@@ -20,7 +20,7 @@
 
      Тот же запасной путь работает, если FORM_ENDPOINT очистить.
      ============================================================ */
-  var FORM_ENDPOINT = 'https://maratismag.temp.swtest.ru/send.php';
+  var FORM_ENDPOINT = 'https://functions.yandexcloud.net/d4e0dp7ecii85f4ckhdq';
   var FORM_PHONE = '+7 927 432-63-36';
   var FORM_EMAIL = 'teplota16@bk.ru';
   var FORM_SUBJECT = 'Заявка с сайта «Теплота»';
