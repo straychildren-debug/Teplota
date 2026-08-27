@@ -63,12 +63,18 @@ function sendToTelegram(token, payload) {
       (res) => {
         let out = '';
         res.on('data', (c) => { out += c; });
-        res.on('end', () => resolve({ code: res.statusCode, body: out }));
+        res.on('end', () => done({ code: res.statusCode, body: out }));
       }
     );
 
-    req.on('timeout', () => { req.destroy(); resolve({ code: 0, body: 'timeout' }); });
-    req.on('error', (e) => resolve({ code: 0, body: String(e && e.message) }));
+    const deadline = setTimeout(() => {
+      req.destroy();
+      resolve({ code: 0, body: 'timeout: соединение не установилось' });
+    }, 8000);
+
+    const done = (r) => { clearTimeout(deadline); resolve(r); };
+    req.on('timeout', () => { req.destroy(); done({ code: 0, body: 'timeout' }); });
+    req.on('error', (e) => done({ code: 0, body: String(e && e.message) }));
     req.write(body);
     req.end();
   });
@@ -86,8 +92,48 @@ function reply(statusCode, origin, payload) {
   return { statusCode, headers, body: JSON.stringify(payload) };
 }
 
+/* Диагностика: GET ?selftest=1 — проверяет, достучится ли функция
+   до Telegram. Токен не используется, секретов не отдаёт. */
+function selftest() {
+  return new Promise((resolve) => {
+    const started = Date.now();
+    const req = https.request(
+      { host: 'api.telegram.org', path: '/', method: 'HEAD', timeout: 8000 },
+      (res) => resolve({ reachable: true, status: res.statusCode, ms: Date.now() - started })
+    );
+    const deadline = setTimeout(() => {
+      req.destroy();
+      resolve({ reachable: false, error: 'timeout', ms: Date.now() - started });
+    }, 8000);
+    req.on('error', (e) => {
+      clearTimeout(deadline);
+      resolve({ reachable: false, error: String(e && e.message), ms: Date.now() - started });
+    });
+    req.on('timeout', () => req.destroy());
+    req.end();
+  });
+}
+
 module.exports.handler = async (event) => {
   const headers = event.headers || {};
+
+  const q = event.queryStringParameters || {};
+  if (q.selftest) {
+    const r = await selftest();
+    return {
+      statusCode: 200,
+      headers: { 'Content-Type': 'application/json; charset=utf-8' },
+      body: JSON.stringify({
+        telegram: r,
+        env: {
+          token: process.env.TELEGRAM_BOT_TOKEN ? 'задан' : 'НЕТ',
+          chatId: process.env.TELEGRAM_CHAT_ID ? 'задан' : 'НЕТ',
+          origins: process.env.ALLOWED_ORIGINS || 'НЕТ'
+        }
+      })
+    };
+  }
+
   const origin = headers.Origin || headers.origin || '';
 
   const allowed = String(process.env.ALLOWED_ORIGINS || '')
