@@ -116,7 +116,9 @@ module.exports.handler = async (event) => {
          не укладываются в лимит выполнения функции. */
       const [me, up] = await Promise.all([
         maxRequest('GET', '/me', token, null, 5000),
-        maxRequest('GET', '/updates?limit=3', token, null, 5000)
+        /* timeout=0 обязателен: без него /updates висит длинным опросом
+           до 30 секунд и упирается в наш дедлайн */
+        maxRequest('GET', '/updates?limit=3&timeout=0', token, null, 5000)
       ]);
 
       if (me.code === 200) {
