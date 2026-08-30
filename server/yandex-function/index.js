@@ -8,8 +8,11 @@
  * Переменные окружения (задаются на странице функции в консоли):
  *   MAX_BOT_TOKEN   — токен бота из MAX: Чат-боты → Расширенные
  *                     настройки → Настроить
- *   MAX_CHAT_ID     — id чата, куда падают заявки
- *   MAX_USER_ID     — можно вместо чата: id получателя в личку
+ *   MAX_CHAT_ID     — id чата, куда падают заявки. Можно несколько
+ *                     через запятую: 123,-456
+ *   MAX_USER_ID     — id получателей в личку, тоже списком через
+ *                     запятую. Можно вместе с MAX_CHAT_ID —
+ *                     заявка уйдёт всем перечисленным
  *   ALLOWED_ORIGINS — домены сайта через запятую, например:
  *                     https://teplota.su,https://www.teplota.su
  *
@@ -154,7 +157,15 @@ module.exports.handler = async (event) => {
   if (event.httpMethod !== 'POST') return reply(405, okOrigin, { error: 'method_not_allowed' });
   if (origin && !okOrigin) return reply(403, '', { error: 'forbidden_origin' });
 
-  if (!token || (!chatId && !userId)) {
+  /* Получателей может быть несколько: и MAX_CHAT_ID, и MAX_USER_ID
+     принимают список через запятую. Заявка уходит каждому. */
+  const targets = [];
+  String(chatId || '').split(',').map((v) => v.trim()).filter(Boolean)
+    .forEach((id) => targets.push({ вид: 'чат', q: 'chat_id=' + encodeURIComponent(id), id }));
+  String(userId || '').split(',').map((v) => v.trim()).filter(Boolean)
+    .forEach((id) => targets.push({ вид: 'личка', q: 'user_id=' + encodeURIComponent(id), id }));
+
+  if (!token || !targets.length) {
     console.error('не заданы MAX_BOT_TOKEN или MAX_CHAT_ID/MAX_USER_ID');
     return reply(500, okOrigin, { error: 'not_configured' });
   }
@@ -181,20 +192,22 @@ module.exports.handler = async (event) => {
   const digits = clean(data['Телефон']).replace(/\D/g, '');
   if (digits.length < 10) return reply(400, okOrigin, { error: 'bad_phone' });
 
-  const target = chatId
-    ? 'chat_id=' + encodeURIComponent(chatId)
-    : 'user_id=' + encodeURIComponent(userId);
+  const text = buildMessage(data);
+  const results = await Promise.all(targets.map((t) =>
+    maxRequest('POST', '/messages?' + t.q, token, { text, notify: true })
+      .then((r) => ({ t, r }))
+  ));
 
-  const r = await maxRequest('POST', '/messages?' + target, token, {
-    text: buildMessage(data),
-    notify: true
+  const delivered = results.filter((x) => x.r.code === 200);
+
+  results.filter((x) => x.r.code !== 200).forEach(({ t, r }) => {
+    /* Подробности только в лог функции, наружу не отдаём */
+    console.error('MAX не принял для', t.вид, t.id, '—', r.code, String(r.body).slice(0, 200));
   });
 
-  if (r.code !== 200) {
-    /* Подробности только в лог функции, наружу не отдаём */
-    console.error('MAX ответил', r.code, String(r.body).slice(0, 300));
-    return reply(502, okOrigin, { error: 'upstream' });
-  }
+  /* Хотя бы один получатель — заявка доставлена. Если не дошло никому,
+     сайт уведёт её письмом, поэтому здесь честно отдаём ошибку. */
+  if (!delivered.length) return reply(502, okOrigin, { error: 'upstream' });
 
-  return reply(200, okOrigin, { ok: true });
+  return reply(200, okOrigin, { ok: true, доставлено: delivered.length, всего: targets.length });
 };
