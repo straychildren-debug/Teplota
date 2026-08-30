@@ -136,12 +136,42 @@ module.exports.handler = async (event) => {
       updates = { код: up.code, ответ: String(up.body).slice(0, 700) };
     }
 
+    /* ?selftest=1&send=1 — пробная отправка каждому получателю.
+       Показывает точную причину отказа: неверный id, бот заблокирован,
+       диалог не начат. Ответ MAX не содержит секретов. */
+    let проба = 'добавьте &send=1, чтобы проверить отправку';
+    if (token && q.send) {
+      const list = [];
+      String(chatId || '').split(',').map((v) => v.trim()).filter(Boolean)
+        .forEach((id) => list.push({ вид: 'chat_id', id }));
+      String(userId || '').split(',').map((v) => v.trim()).filter(Boolean)
+        .forEach((id) => list.push({ вид: 'user_id', id }));
+
+      проба = list.length
+        ? await Promise.all(list.map(async (t) => {
+          const r = await maxRequest(
+            'POST',
+            '/messages?' + t.вид + '=' + encodeURIComponent(t.id),
+            token,
+            { text: 'Проверка связи с сайтом «Теплота». Это тестовое сообщение.', notify: true },
+            6000
+          );
+          return {
+            кому: t.вид + ' ' + t.id,
+            код: r.code,
+            ответ: String(r.body).slice(0, 200)
+          };
+        }))
+        : 'получатели не заданы';
+    }
+
     return {
       statusCode: 200,
       headers: { 'Content-Type': 'application/json; charset=utf-8' },
       body: JSON.stringify({
         бот: bot,
         события: updates,
+        проба_отправки: проба,
         переменные: {
           MAX_BOT_TOKEN: token ? 'задан' : 'НЕТ',
           MAX_CHAT_ID: chatId || 'НЕТ',
