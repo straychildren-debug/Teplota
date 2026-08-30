@@ -6,6 +6,7 @@
  */
 import './premium.css';
 import './teplota-industrial-redesign.css';
+import './form.js';
 
 // ─── Dark Mode Toggle ──────────────────────────────────────────────────────────
 const THEME_KEY = 'tep-theme';

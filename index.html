@@ -205,12 +205,63 @@
           <span id="contact-address"></span>
         </div>
         <div class="right">
-          <form id="contact-form" onsubmit="event.preventDefault(); window.TepCMS.submitForm();">
-            <input id="form-name-input" type="text" placeholder="Ваше имя" required/>
-            <input id="form-phone-input" type="tel" placeholder="Номер телефона" required/>
-            <button id="form-submit-btn" class="btn btn-primary" type="submit" style="width:100%">Заказать звонок <span class="ic">→</span></button>
-            <p style="font-size:11.5px;color:var(--text-muted);margin:14px 0 0;text-align:center">Нажимая кнопку, вы соглашаетесь с политикой конфиденциальности</p>
+          <form id="contact-form" novalidate>
+            <div class="tp-field-row">
+              <div class="tp-field">
+                <label for="form-name-input">Ваше имя</label>
+                <input id="form-name-input" name="name" type="text" placeholder="Как к вам обращаться"
+                  autocomplete="name" data-required/>
+                <span class="tp-field-err">Напишите, как к вам обращаться</span>
+              </div>
+              <div class="tp-field">
+                <label for="form-phone-input">Телефон</label>
+                <input id="form-phone-input" name="phone" type="tel" placeholder="+7 (___) ___-__-__"
+                  inputmode="tel" autocomplete="tel" data-required data-rule="phone"/>
+                <span class="tp-field-err">Введите номер полностью</span>
+              </div>
+            </div>
+
+            <div class="tp-field">
+              <label for="form-service-input">Что нужно сделать</label>
+              <select id="form-service-input" name="service" data-required>
+                <option value="">Выберите услугу</option>
+                <option>Другое / несколько систем</option>
+              </select>
+              <span class="tp-field-err">Выберите услугу</span>
+            </div>
+
+            <div class="tp-field">
+              <label for="form-object-input">Объект <span class="tp-opt">— по желанию</span></label>
+              <input id="form-object-input" name="object" type="text"
+                placeholder="Например: частный дом 140 м², два этажа"/>
+            </div>
+
+            <div class="tp-field">
+              <label for="form-note-input">Комментарий <span class="tp-opt">— по желанию</span></label>
+              <textarea id="form-note-input" name="note"
+                placeholder="Сроки, стадия строительства, пожелания по оборудованию"></textarea>
+            </div>
+
+            <div class="tp-field">
+              <label class="tp-consent" for="form-consent-input">
+                <input id="form-consent-input" name="consent" type="checkbox" data-required/>
+                <span>Согласен на обработку персональных данных и ознакомлен с политикой конфиденциальности</span>
+              </label>
+              <span class="tp-field-err">Без согласия отправить заявку нельзя</span>
+            </div>
+
+            <button id="form-submit-btn" class="btn btn-primary" type="submit" style="width:100%">Отправить заявку <span class="ic">→</span></button>
+            <p class="tp-form-fail" id="form-fail" role="alert" hidden></p>
           </form>
+
+          <div class="tp-form-done" id="form-done" role="status" aria-live="polite" hidden>
+            <div class="tp-done-ico" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"
+                stroke-linejoin="round"><path d="m5 12.5 4.5 4.5L19 7"/></svg>
+            </div>
+            <h3>Заявка принята</h3>
+            <p>Перезвоним в рабочее время и рассчитаем смету.</p>
+          </div>
         </div>
       </div>
     </div>

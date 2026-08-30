@@ -291,10 +291,146 @@ html.dark .tp-contact .right { background: rgba(243,110,33,.06); }
 #contact-phones-list a:hover { color: var(--primary); }
 #contact-phones-list span { color: var(--text-muted); }
 #contact-email, #contact-address { display: block; margin-top: 16px; font-size: 13.5px; color: var(--text-body); }
+/* ─── Форма заявки ───────────────────────────────────────────────────── */
+/* Собрана на тех же переменных, что и остальной сайт, поэтому работает
+   и в светлой, и в тёмной теме без отдельных правил. */
+
 #contact-form { display: flex; flex-direction: column; gap: 14px; }
-#contact-form input { width: 100%; padding: 16px; border-radius: 14px; border: 1px solid var(--edge); background: var(--glass-bg); color: var(--text-head); font-size: 14px; font-family: var(--font-sans); outline: none; transition: border-color .3s, box-shadow .3s; }
-#contact-form input:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(243,110,33,.14); }
-#contact-form input::placeholder { color: var(--text-muted); }
+
+.tp-field-row { display: grid; grid-template-columns: 1fr; gap: 14px; }
+@media (min-width: 560px) { .tp-field-row { grid-template-columns: 1fr 1fr; } }
+
+.tp-field { display: flex; flex-direction: column; gap: 7px; }
+
+.tp-field > label {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+.tp-field .tp-opt { font-weight: 400; letter-spacing: 0; text-transform: none; }
+
+#contact-form input:not([type="checkbox"]),
+#contact-form select,
+#contact-form textarea {
+  width: 100%;
+  padding: 16px;
+  border-radius: 14px;
+  border: 1px solid var(--edge);
+  background: var(--glass-bg);
+  color: var(--text-head);
+  font-size: 14px;
+  font-family: var(--font-sans);
+  outline: none;
+  transition: border-color .3s, box-shadow .3s;
+}
+#contact-form textarea { min-height: 104px; resize: vertical; }
+
+#contact-form input:not([type="checkbox"]):focus,
+#contact-form select:focus,
+#contact-form textarea:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(243, 110, 33, .14);
+}
+#contact-form input::placeholder,
+#contact-form textarea::placeholder { color: var(--text-muted); }
+
+/* Стрелка у выпадающего списка — своя, чтобы вид совпадал в обеих темах */
+#contact-form select {
+  appearance: none;
+  -webkit-appearance: none;
+  padding-right: 44px;
+  background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%239CA3AF' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 16px center;
+  background-size: 18px;
+}
+
+/* ─── Согласие ─── */
+.tp-consent {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--text-muted);
+  cursor: pointer;
+  /* перебиваем оформление подписей полей */
+  font-weight: 400;
+  letter-spacing: 0;
+  text-transform: none;
+}
+.tp-consent input[type="checkbox"] {
+  appearance: none;
+  -webkit-appearance: none;
+  flex: none;
+  width: 22px;
+  height: 22px;
+  margin: 0;
+  padding: 0;
+  border: 1px solid var(--edge);
+  border-radius: 6px;
+  background: var(--glass-bg);
+  cursor: pointer;
+  position: relative;
+  transition: background .2s, border-color .2s;
+}
+.tp-consent input[type="checkbox"]:checked {
+  background: var(--primary);
+  border-color: var(--primary);
+}
+.tp-consent input[type="checkbox"]:checked::after {
+  content: "";
+  position: absolute;
+  left: 7px;
+  top: 3px;
+  width: 6px;
+  height: 11px;
+  border: solid #fff;
+  border-width: 0 2px 2px 0;
+  transform: rotate(43deg);
+}
+
+/* ─── Ошибки ─── */
+.tp-field-err { display: none; font-size: 12.5px; color: #dc2626; }
+.tp-field.has-error .tp-field-err { display: block; }
+.tp-field.has-error input:not([type="checkbox"]),
+.tp-field.has-error select { border-color: #dc2626; }
+.tp-field.has-error .tp-consent input[type="checkbox"] { border-color: #dc2626; }
+
+.tp-form-fail {
+  margin: 0;
+  padding: 12px 14px;
+  border: 1px solid rgba(220, 38, 38, .35);
+  border-radius: 12px;
+  background: rgba(220, 38, 38, .07);
+  color: #dc2626;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+/* ─── Экран «Заявка принята» ─── */
+.tp-form-done { text-align: center; padding: 28px 0; }
+.tp-done-ico {
+  width: 58px;
+  height: 58px;
+  margin: 0 auto 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  background: var(--primary);
+  color: #fff;
+}
+.tp-done-ico svg { width: 28px; height: 28px; }
+.tp-form-done h3 {
+  font-family: var(--font-display);
+  font-size: 20px;
+  color: var(--text-head);
+  margin: 0 0 10px;
+}
+.tp-form-done p { color: var(--text-body); font-size: 14px; margin: 0; }
 #yandex-map { width: 100%; height: 100%; min-height: 400px; }
 html.dark #yandex-map { filter: invert(.92) hue-rotate(180deg) saturate(.6) brightness(.85) contrast(1.1); }
 
