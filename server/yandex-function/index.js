@@ -105,22 +105,41 @@ module.exports.handler = async (event) => {
      Показывает, доступен ли MAX с этой площадки и заданы ли
      переменные. Значение токена наружу не отдаётся. */
   if (q.selftest) {
-    const r = token
-      ? await maxRequest('GET', '/updates?limit=1', token, null)
-      : { code: 0, body: 'токен не задан' };
+    let bot = 'токен не задан';
+    let updates = 'токен не задан';
+
+    if (token) {
+      /* Чей это бот — имя, никнейм и id. Токен наружу не отдаётся. */
+      const me = await maxRequest('GET', '/me', token, null);
+      if (me.code === 200) {
+        try {
+          const j = JSON.parse(me.body);
+          bot = { имя: j.first_name, никнейм: j.username, id: j.user_id };
+        } catch (e) {
+          bot = { код: me.code, ответ: String(me.body).slice(0, 200) };
+        }
+      } else {
+        bot = { код: me.code, ответ: String(me.body).slice(0, 200) };
+      }
+
+      /* Последние события — в них видно chat_id нужного чата */
+      const up = await maxRequest('GET', '/updates?limit=3', token, null);
+      updates = { код: up.code, ответ: String(up.body).slice(0, 700) };
+    }
 
     return {
       statusCode: 200,
       headers: { 'Content-Type': 'application/json; charset=utf-8' },
       body: JSON.stringify({
-        max: { код: r.code, ответ: String(r.body).slice(0, 400) },
+        бот: bot,
+        события: updates,
         переменные: {
           MAX_BOT_TOKEN: token ? 'задан' : 'НЕТ',
           MAX_CHAT_ID: chatId || 'НЕТ',
           MAX_USER_ID: userId || 'НЕТ',
           ALLOWED_ORIGINS: process.env.ALLOWED_ORIGINS || 'НЕТ'
         }
-      })
+      }, null, 2)
     };
   }
 
