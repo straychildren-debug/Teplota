@@ -6,6 +6,3 @@ dist/
 # Raw/uncut video masters kept locally for re-editing. Never in the build:
 # anything under public/ is copied into dist/ wholesale and shipped.
 _source/
-
-# Конфиг обработчика заявок: в нём токен бота
-server/config.php
