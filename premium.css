@@ -401,14 +401,37 @@ html.dark .tp-contact .right { background: rgba(243,110,33,.06); }
 
 .tp-form-fail {
   margin: 0;
-  padding: 12px 14px;
+  padding: 14px 16px;
   border: 1px solid rgba(220, 38, 38, .35);
   border-radius: 12px;
   background: rgba(220, 38, 38, .07);
   color: #dc2626;
   font-size: 13px;
   line-height: 1.5;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
+.tp-fail-phones { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
+.tp-fail-phones a {
+  color: var(--text-head);
+  font-size: 17px;
+  font-weight: 700;
+  text-decoration: none;
+}
+.tp-fail-phones a:hover { color: var(--primary); }
+.tp-fail-sep { color: var(--text-muted); }
+.tp-fail-mail {
+  align-self: flex-start;
+  padding: 9px 16px;
+  border: 1px solid var(--edge);
+  border-radius: 999px;
+  color: var(--text-head);
+  font-size: 13px;
+  text-decoration: none;
+  transition: border-color .3s, color .3s;
+}
+.tp-fail-mail:hover { border-color: var(--primary); color: var(--primary); }
 
 /* ─── Экран «Заявка принята» ─── */
 .tp-form-done { text-align: center; padding: 28px 0; }

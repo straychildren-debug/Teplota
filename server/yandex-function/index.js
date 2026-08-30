@@ -53,7 +53,7 @@ function buildMessage(data) {
 
 /* Один запрос к MAX с жёстким дедлайном: штатный socket timeout не
    срабатывает, когда соединение режут на этапе установки. */
-function maxRequest(method, path, token, payload) {
+function maxRequest(method, path, token, payload, deadlineMs) {
   const body = payload ? JSON.stringify(payload) : null;
 
   return new Promise((resolve) => {
@@ -64,7 +64,7 @@ function maxRequest(method, path, token, payload) {
     }
 
     const req = https.request(
-      { host: MAX_HOST, path, method, headers, timeout: 8000 },
+      { host: MAX_HOST, path, method, headers, timeout: deadlineMs || 8000 },
       (res) => {
         let out = '';
         res.on('data', (c) => { out += c; });
@@ -75,7 +75,7 @@ function maxRequest(method, path, token, payload) {
     const deadline = setTimeout(() => {
       req.destroy();
       resolve({ code: 0, body: 'timeout: соединение не установилось' });
-    }, 8000);
+    }, deadlineMs || 8000);
 
     const done = (r) => { clearTimeout(deadline); resolve(r); };
     req.on('timeout', () => { req.destroy(); done({ code: 0, body: 'timeout' }); });
@@ -112,8 +112,13 @@ module.exports.handler = async (event) => {
     let updates = 'токен не задан';
 
     if (token) {
-      /* Чей это бот — имя, никнейм и id. Токен наружу не отдаётся. */
-      const me = await maxRequest('GET', '/me', token, null);
+      /* Оба запроса разом и с коротким дедлайном: последовательно они
+         не укладываются в лимит выполнения функции. */
+      const [me, up] = await Promise.all([
+        maxRequest('GET', '/me', token, null, 5000),
+        maxRequest('GET', '/updates?limit=3', token, null, 5000)
+      ]);
+
       if (me.code === 200) {
         try {
           const j = JSON.parse(me.body);
@@ -126,7 +131,6 @@ module.exports.handler = async (event) => {
       }
 
       /* Последние события — в них видно chat_id нужного чата */
-      const up = await maxRequest('GET', '/updates?limit=3', token, null);
       updates = { код: up.code, ответ: String(up.body).slice(0, 700) };
     }
 

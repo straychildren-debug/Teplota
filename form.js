@@ -14,14 +14,14 @@
    в MAX. Токен живёт в переменных окружения функции и в
    браузер не попадает.
 
-   Если обработчик недоступен или ответил ошибкой — заявка не
-   теряется: открывается почтовый клиент с готовым письмом,
-   ошибку посетитель не видит. Тот же путь включается, если
-   очистить FORM_ENDPOINT.
+   Если обработчик недоступен или ответил ошибкой — показываем
+   телефоны и кнопку «Отправить письмом». Почтовое приложение
+   открывается только по нажатию: подставлять его самим нельзя,
+   посетитель этого не ждёт.
    ------------------------------------------------------------ */
 const FORM_ENDPOINT = 'https://functions.yandexcloud.net/d4e0dp7ecii85f4ckhdq';
 const FORM_EMAIL = 'teplota16@bk.ru';
-const FORM_PHONE = '+7 927 432-63-36';
+const FORM_PHONES = ['+7 905 313-34-53', '+7 927 432-63-36'];
 const FORM_SUBJECT = 'Заявка с сайта «Теплота»';
 
 const form = document.getElementById('contact-form');
@@ -120,11 +120,22 @@ if (form) {
     btn.innerHTML = on ? 'Отправляем…' : btnLabel;
   }
 
-  function fail(text) {
+  function fail(text, mailHref) {
     busy(false);
     if (!failBox) return;
-    failBox.textContent = text;
+
+    const phones = FORM_PHONES
+      .map((p) => '<a href="tel:' + p.replace(/\D/g, '') + '">' + p + '</a>')
+      .join('<span class="tp-fail-sep">·</span>');
+
+    failBox.innerHTML = '<b>' + text + '</b>'
+      + '<span class="tp-fail-phones">' + phones + '</span>'
+      + (mailHref
+        ? '<a class="tp-fail-mail" href="' + mailHref + '">Отправить письмом</a>'
+        : '');
+
     failBox.hidden = false;
+    failBox.scrollIntoView({ block: 'center', behavior: reduceMotion ? 'auto' : 'smooth' });
   }
 
   function succeed() {
@@ -170,16 +181,19 @@ if (form) {
 
     const payload = collect();
 
-    function byMail() {
-      const lines = Object.keys(payload).map((k) => k + ': ' + payload[k]);
-      window.location.href = 'mailto:' + FORM_EMAIL
-        + '?subject=' + encodeURIComponent(FORM_SUBJECT)
-        + '&body=' + encodeURIComponent(lines.join('\n'));
-      succeed();
-    }
+    /* Письмо готовим заранее, но открываем только по нажатию:
+       подставлять почтовое приложение самим нельзя — посетитель
+       этого не ждёт. */
+    const lines = Object.keys(payload).map((k) => k + ': ' + payload[k]);
+    const mailHref = 'mailto:' + FORM_EMAIL
+      + '?subject=' + encodeURIComponent(FORM_SUBJECT)
+      + '&body=' + encodeURIComponent(lines.join('\n'));
 
     if (failBox) failBox.hidden = true;
-    if (!FORM_ENDPOINT) return byMail();
+
+    if (!FORM_ENDPOINT) {
+      return fail('Заявка пока не отправляется автоматически. Позвоните нам:', mailHref);
+    }
 
     busy(true);
     fetch(FORM_ENDPOINT, {
@@ -189,10 +203,11 @@ if (form) {
     }).then((r) => {
       if (r.ok) return succeed();
       if (r.status === 429) {
-        return fail('Вы уже отправили несколько заявок. Позвоните нам: ' + FORM_PHONE + '.');
+        return fail('Вы уже отправили несколько заявок. Позвоните нам:');
       }
-      /* Обработчик недоступен или ответил ошибкой — уводим письмом */
-      byMail();
-    }).catch(byMail);
+      fail('Не удалось отправить заявку. Позвоните нам:', mailHref);
+    }).catch(() => {
+      fail('Не удалось отправить заявку. Позвоните нам:', mailHref);
+    });
   });
 }
